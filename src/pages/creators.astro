@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Hub from '../components/creators/Hub.astro';
+import Credit from '../components/creators/Credit.astro';
+import Earnings from '../components/creators/Earnings.astro';
+import Waitlist from '../components/Waitlist.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="Comarket for creators"
+  description="Your own storefronts, credit no extension can take, and commission on every customer you bring. Free for creators."
+  plate="hero"
+  side="creators"
+  og="/og/og-creators.jpg"
+>
+  <Nav side="creators" />
+  <main>
+    <Hero
+      side="creators"
+      eyebrow="For creators · Free to join"
+      title="Earn on every customer you bring."
+      host="comarket.co/"
+      path=""
+      slugs={['sarah', 'devon', 'mika', 'lena', 'theo']}
+      note="Paid out through Stripe"
+      next="#page"
+    />
+    <Hub />
+    <Credit />
+    <Earnings />
+    <Waitlist side="creator" />
+  </main>
+  <Footer side="creators" />
+</Base>

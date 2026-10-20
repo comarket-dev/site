@@ -1,0 +1,336 @@
+---
+import { env } from 'cloudflare:workers';
+interface Props {
+  side: 'brand' | 'creator';
+}
+const { side } = Astro.props;
+const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY || '';
+const brand = side === 'brand';
+---
+
+<section class="section band-ink on-ink waitlist" id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
+  <div class="wrap grid">
+    <div class="intro">
+      <span class="label">Waitlist</span>
+      <h2 class="display-l" id="wl-h">{brand ? 'See your storefront first.' : 'Claim your page.'}</h2>
+      <p class="lede muted">
+        {brand ? 'Enter your site. We dress a creator storefront in your brand before you join.' : 'Pick your handle. Your page and your pass are ready when you join.'}
+      </p>
+
+      <div class="preview" data-preview>
+        {
+          brand ? (
+            <div class="mini" data-mini style="--brand:#1E6B47">
+              <span class="url num" data-mini-url>
+                yourapp.comarket.co/creators/sarah
+              </span>
+              <div class="mini-body">
+                <span class="lock num" data-mini-lock>
+                  YOUR BRAND × SARAH K.
+                </span>
+                <span class="mini-h">Sarah’s pick</span>
+                <div class="mini-prod">
+                  <span class="mini-logo" data-mini-logo />
+                  <b data-mini-name>Your brand</b>
+                </div>
+                <span class="mini-cta">Start your trial</span>
+              </div>
+            </div>
+          ) : (
+            <div class="hub">
+              <span class="url num" data-hub-url>
+                comarket.co/<b data-hub-handle>yourname</b>
+              </span>
+              <div class="hub-body">
+                <span class="ava" data-hub-ava>
+                  Y
+                </span>
+                <b data-hub-name>@yourname</b>
+                <span class="hub-row">Your first storefront</span>
+                <span class="hub-row dim">Your next one</span>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="formcol">
+      <form class="form" data-form novalidate>
+        {
+          brand ? (
+            <div class="field">
+              <label class="label" for="wl-site">
+                Your website
+              </label>
+              <div class="inline">
+                <input id="wl-site" name="site" inputmode="url" autocomplete="url" placeholder="yourapp.com" required />
+                <button type="button" class="btn ghost" data-preview-btn>
+                  Preview
+                </button>
+              </div>
+              <span class="err" data-err="site" />
+            </div>
+          ) : (
+            <>
+              <div class="field">
+                <label class="label" for="wl-handle">
+                  Handle
+                </label>
+                <div class="at">
+                  <span aria-hidden="true">@</span>
+                  <input id="wl-handle" name="handle" autocomplete="nickname" placeholder="yourname" required />
+                </div>
+                <span class="err" data-err="handle" />
+              </div>
+              <div class="field">
+                <label class="label" for="wl-platform">
+                  Where your audience is
+                </label>
+                <select id="wl-platform" name="platform">
+                  <option value="youtube">YouTube</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="substack">Substack</option>
+                  <option value="reddit">Reddit</option>
+                  <option value="x">X</option>
+                  <option value="podcast">Podcast</option>
+                  <option value="blog">Blog</option>
+                  <option value="other">Somewhere else</option>
+                </select>
+              </div>
+            </>
+          )
+        }
+        <div class="field">
+          <label class="label" for="wl-email">
+            {brand ? 'Work email' : 'Email'}
+          </label>
+          <input id="wl-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+          <span class="err" data-err="email"></span>
+        </div>
+        {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
+        <button class="btn submit" type="submit">Join the waitlist <span class="arr" aria-hidden="true">→</span></button>
+        <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
+        <p class="err form-err" data-err="form" role="alert"></p>
+      </form>
+
+      <div class="issued" data-issued hidden>
+        <div class="stage">
+          <canvas data-pass-canvas aria-label="Your Comarket pass"></canvas>
+          <img data-pass-still alt="" hidden />
+        </div>
+        <div class="meta">
+          <span class="label" data-issued-kind>{brand ? 'Brand pass' : 'Creator pass'}</span>
+          <h3 class="display-m" data-issued-h>You’re in.</h3>
+          <p class="muted" data-issued-p>Drag the pass to turn it over.</p>
+          <div class="acts">
+            <button type="button" class="btn" data-save>Save image</button>
+            <a class="btn ghost" data-share target="_blank" rel="noopener">Share on X</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+  .intro {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+  }
+  .intro h2 {
+    max-width: 12ch;
+  }
+  .preview {
+    margin-top: 12px;
+  }
+  .mini,
+  .hub {
+    width: min(440px, 100%);
+    border-radius: 20px;
+    background: var(--white);
+    color: #16201b;
+    overflow: hidden;
+    border: 1px solid var(--ink-rule);
+    box-shadow: 0 40px 80px -50px rgb(0 0 0 / 0.6);
+    transition: transform 0.6s var(--ease);
+  }
+  .mini.bump {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+  .url {
+    display: block;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #4b5650;
+    border-bottom: 1px solid #e3e8e4;
+    background: #f6f8f5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mini-body,
+  .hub-body {
+    padding: 22px;
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+  }
+  .lock {
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: var(--brand);
+  }
+  .mini-h {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .mini-prod {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .mini-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--brand) center / cover no-repeat;
+    border: 1px solid #e3e8e4;
+  }
+  .mini-cta {
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .hub-body {
+    justify-items: center;
+    text-align: center;
+  }
+  .hub .ava {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 26px;
+    background: conic-gradient(from 210deg, #c9d9cf, #00978d, #c9d9cf);
+    color: #fff;
+  }
+  .hub-row {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e3e8e4;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .hub-row.dim {
+    color: #9aa4aa;
+    border-style: dashed;
+  }
+  .formcol {
+    position: relative;
+  }
+  .form {
+    display: grid;
+    gap: 18px;
+    padding: clamp(20px, 3vw, 36px);
+    border: 1px solid var(--ink-rule);
+    border-radius: 24px;
+    background: #071533;
+  }
+  .inline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  .inline .btn {
+    --h: 56px;
+  }
+  .at {
+    position: relative;
+  }
+  .at span {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--on-ink-muted);
+  }
+  .at input {
+    padding-left: 36px;
+  }
+  .submit {
+    --h: 60px;
+    font-size: 16px;
+    width: 100%;
+  }
+  .fine a {
+    color: var(--on-ink);
+  }
+  .form-err {
+    min-height: 0;
+  }
+  .issued {
+    display: grid;
+    gap: 20px;
+  }
+  .stage {
+    position: relative;
+    aspect-ratio: 1.35;
+    max-width: 100%;
+    border-radius: 24px;
+    background: radial-gradient(120% 90% at 50% 30%, #12234d 0%, #051230 70%);
+    border: 1px solid var(--ink-rule);
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: grab;
+  }
+  .stage canvas,
+  .stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .meta {
+    display: grid;
+    gap: 10px;
+  }
+  .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  import { mountWaitlist } from '../scripts/waitlist';
+  import { onPage } from '../scripts/ui';
+  onPage(() => {
+    const el = document.querySelector<HTMLElement>('[data-waitlist]');
+    return el ? [mountWaitlist(el)] : [];
+  });
+</script>

@@ -1,0 +1,59 @@
+---
+/* The persistent WebGL plate. Lives across page transitions so the fork can flow into a hero. */
+---
+
+<div id="plate" class="plate" transition:persist="plate" aria-hidden="true">
+  <canvas></canvas>
+</div>
+
+<style>
+  .plate {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .plate canvas {
+    width: 100%;
+    height: 100%;
+  }
+  :global(.no-gl) .plate {
+    display: none;
+  }
+</style>
+
+<script>
+  import { plate, type PlateMode, type Side } from '../scripts/plate/engine';
+
+  let hero: HTMLElement | null = null;
+
+  function onScroll() {
+    if (!hero) return;
+    const h = hero.offsetHeight || 1;
+    plate.setScroll(window.scrollY / h);
+  }
+
+  function apply() {
+    const body = document.body;
+    const mode = (body.dataset.plate || 'none') as PlateMode;
+    const side = (body.dataset.side || undefined) as Side | undefined;
+    if (!plate.ready) {
+      const canvas = document.querySelector<HTMLCanvasElement>('#plate canvas');
+      if (canvas && plate.init(canvas)) plate.setWords(['Brands', 'Creators']);
+    }
+    let first = false;
+    try {
+      first = !sessionStorage.getItem('cm_cut');
+      sessionStorage.setItem('cm_cut', '1');
+    } catch {
+      first = false;
+    }
+    plate.setMode(mode, side, { intro: first && mode !== 'none' });
+    hero = mode === 'hero' ? document.querySelector<HTMLElement>('[data-hero]') : null;
+    onScroll();
+  }
+
+  document.documentElement.classList.add('js');
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('astro:page-load', apply);
+</script>

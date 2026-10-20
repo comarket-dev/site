@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Find from '../components/brands/Find.astro';
+import Build from '../components/brands/Build.astro';
+import Verify from '../components/brands/Verify.astro';
+import Split from '../components/brands/Split.astro';
+import Pricing from '../components/brands/Pricing.astro';
+import Waitlist from '../components/Waitlist.astro';
+import Footer from '../components/Footer.astro';
+import { priceArm } from '../lib/experiments';
+
+const arm = priceArm(Astro.locals.arms ?? {});
+---
+
+<Base
+  title="Comarket for brands"
+  description="An AI agent recruits creators, builds each a storefront in your brand, and you pay only for first-time customers."
+  plate="hero"
+  side="brands"
+  og="/og/og-brands.jpg"
+>
+  <Nav side="brands" />
+  <main>
+    <Hero
+      side="brands"
+      eyebrow="For brands · SaaS first"
+      title="Every commission is a customer you didn’t have."
+      host="fernwood.comarket.co"
+      path="/creators/"
+      slugs={['sarah', 'devon', 'mika', 'lena', 'theo']}
+      note="$0 upfront"
+      next="#find"
+    />
+    <Find />
+    <Build />
+    <Verify />
+    <Split arm={arm} />
+    <Pricing arm={arm} />
+    <Waitlist side="brand" />
+  </main>
+  <Footer side="brands" />
+</Base>

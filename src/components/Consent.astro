@@ -1,0 +1,66 @@
+---
+/* Shown only where the law asks us to ask first. Until a choice, nothing is tracked. */
+---
+
+<aside class="consent" id="consent" aria-label="Cookie choice" transition:persist="consent">
+  <p>
+    We’d like to remember your visit to improve this page. Nothing is shared with advertisers.
+    <a href="/privacy">Privacy</a>
+  </p>
+  <div class="row">
+    <button type="button" class="btn ghost" data-consent="0">No thanks</button>
+    <button type="button" class="btn" data-consent="1">Allow</button>
+  </div>
+</aside>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 60;
+    left: max(16px, env(safe-area-inset-left, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    width: min(420px, calc(100vw - 32px));
+    background: var(--white);
+    border: 1px solid var(--ink);
+    border-radius: 18px;
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+    box-shadow: 0 24px 60px -30px rgb(5 18 48 / 0.35);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .row {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .btn {
+    --h: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+</style>
+
+<script>
+  function bind() {
+    const box = document.getElementById('consent');
+    if (!box || box.dataset.bound) return;
+    box.dataset.bound = '1';
+    box.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((b) =>
+      b.addEventListener('click', async () => {
+        box.hidden = true;
+        try {
+          await fetch('/api/consent', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ value: b.dataset.consent }),
+          });
+        } catch {
+          /* the banner returns next visit */
+        }
+      }),
+    );
+  }
+  document.addEventListener('astro:page-load', bind);
+</script>

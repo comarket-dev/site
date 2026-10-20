@@ -1,0 +1,306 @@
+---
+// 40 checkouts. 12 are first-time buyers, at fixed positions so the picture is stable.
+const NEW = new Set([2, 5, 9, 13, 17, 20, 24, 27, 31, 34, 36, 39]);
+const dots = Array.from({ length: 40 }, (_, i) => NEW.has(i));
+const sites = ['dealsite', 'promohub', 'codevault', 'couponly', 'savemore', 'dealdrop', 'promo.zone', 'codehaus'];
+const log = [
+  { who: 'j•••@gmail.com', why: 'email new · phone new · card new', isNew: true },
+  { who: 'm•••@northpeak.io', why: 'customer since 2024', isNew: false },
+  { who: 't•••@proton.me', why: 'email new · phone new · card new', isNew: true },
+  { who: 'a•••@outlook.com', why: 'card matches an existing account', isNew: false },
+];
+---
+
+<section class="verify band-2" id="verify" aria-labelledby="verify-h" data-verify>
+  <div class="pin">
+    <div class="wrap">
+      <div class="step-head">
+        <span class="label">03 · Verify</span>
+        <h2 class="display-l" id="verify-h">Only first-time buyers count.</h2>
+      </div>
+
+      <div class="cols">
+        <article class="col code">
+          <header>
+            <span class="label">A coupon code</span>
+            <div class="ticket" aria-hidden="true"><span class="num">SARAH20</span></div>
+          </header>
+          <ul class="leaks num" aria-label="Coupon sites that copied the code">
+            {sites.map((s, i) => <li style={`--i:${i}`}>{s}<span>SARAH20</span></li>)}
+          </ul>
+          <div class="dots" aria-hidden="true">
+            {dots.map((_, i) => <i class="d" style={`--i:${i}`} />)}
+          </div>
+          <p class="sum">
+            <b class="num" data-paid-code>40</b>
+            <span class="muted">commissions paid. 28 went to people who were already customers.</span>
+          </p>
+        </article>
+
+        <article class="col store">
+          <header>
+            <span class="label">A Comarket storefront</span>
+            <div class="seal" aria-hidden="true"><span class="label">Net-new only</span></div>
+          </header>
+          <ul class="checks num" aria-label="Every buyer checked against existing customers">
+            {
+              log.map((r, i) => (
+                <li style={`--i:${i}`} class={r.isNew ? 'is-new' : 'is-ret'}>
+                  <span class="who">{r.who}</span>
+                  <span class="why">{r.why}</span>
+                  <span class={`chip ${r.isNew ? 'new' : 'ret'}`}>{r.isNew ? 'Net-new' : 'Returning'}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="dots" aria-hidden="true">
+            {dots.map((n, i) => <i class={`d ${n ? 'n' : 'r'}`} style={`--i:${i}`} />)}
+          </div>
+          <p class="sum">
+            <b class="num" data-paid-store>12</b>
+            <span class="muted">commissions paid. Every one is a customer you didn’t have.</span>
+          </p>
+        </article>
+      </div>
+      <p class="verdict display-m">You pay on 12, not 40.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .verify {
+    position: relative;
+    z-index: 2;
+    height: 260vh;
+  }
+  .pin {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    padding-block: clamp(80px, 10vh, 120px) 48px;
+  }
+  .step-head {
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2.5vw, 32px);
+  }
+  .col {
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    border-radius: 22px;
+    padding: clamp(18px, 2.4vw, 28px);
+    display: grid;
+    gap: 20px;
+    align-content: start;
+  }
+  .col.store {
+    border-color: var(--ink);
+  }
+  .col header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .ticket {
+    position: relative;
+    padding: 8px 18px;
+    border: 1px dashed var(--graphite);
+    border-radius: 8px;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    background:
+      radial-gradient(circle at 0 50%, var(--paper-2) 7px, transparent 7.5px),
+      radial-gradient(circle at 100% 50%, var(--paper-2) 7px, transparent 7.5px),
+      var(--paper);
+  }
+  .seal {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: var(--jasper);
+    transform: rotate(-12deg) scale(calc(0.6 + var(--seal, 0) * 0.4));
+    opacity: var(--seal, 0);
+  }
+  .seal .label {
+    color: var(--ink);
+    font-size: 8.5px;
+    line-height: 1.15;
+    max-width: 6ch;
+  }
+  .leaks,
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    min-height: 168px;
+    align-content: start;
+    font-size: 12.5px;
+  }
+  .leaks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .leaks li {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--paper-2);
+    color: var(--graphite);
+    opacity: clamp(0, calc((var(--p, 0) - 0.08 - var(--i) * 0.035) * 12), 1);
+    transform: translateX(calc((1 - clamp(0, calc((var(--p, 0) - 0.08 - var(--i) * 0.035) * 12), 1)) * -12px));
+  }
+  .leaks li span {
+    color: var(--ink);
+  }
+  .checks li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--paper-2);
+    opacity: clamp(0, calc((var(--p, 0) - 0.2 - var(--i) * 0.06) * 10), 1);
+  }
+  .checks .who {
+    color: var(--ink);
+  }
+  .checks .why {
+    grid-column: 1;
+    color: var(--graphite);
+    font-size: 11px;
+  }
+  .checks .chip {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+  .checks .is-ret .who {
+    color: var(--graphite);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .dots {
+    display: grid;
+    grid-template-columns: repeat(20, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .d {
+    aspect-ratio: 1;
+    max-width: 100%;
+    border-radius: 50%;
+    border: 1.5px solid var(--ghost);
+    --k: clamp(0, calc((var(--p, 0) - 0.3 - var(--i) * 0.008) * 6), 1);
+  }
+  .code .d {
+    background: color-mix(in oklab, var(--graphite) calc(var(--k) * 100%), transparent);
+    border-color: color-mix(in oklab, var(--graphite) calc(var(--k) * 100%), var(--ghost));
+  }
+  .store .d.n {
+    background: color-mix(in oklab, var(--jasper) calc(var(--k) * 100%), transparent);
+    border-color: color-mix(in oklab, var(--jasper) calc(var(--k) * 100%), var(--ghost));
+  }
+  .store .d.r {
+    opacity: calc(1 - var(--k) * 0.4);
+  }
+  .sum {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .sum b {
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    font-family: var(--sans);
+    font-weight: 700;
+  }
+  .verdict {
+    margin-top: clamp(24px, 3vw, 40px);
+    opacity: clamp(0, calc((var(--p, 0) - 0.62) * 6), 1);
+    transform: translateY(calc((1 - clamp(0, calc((var(--p, 0) - 0.62) * 6), 1)) * 20px));
+  }
+  @media (max-width: 900px) {
+    .verify {
+      height: auto;
+    }
+    .pin {
+      position: static;
+      min-height: 0;
+      padding-block: var(--section);
+    }
+    .cols {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .dots {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .verify {
+      --p: 1;
+      height: auto;
+    }
+    .pin {
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  import { onPage, reduceMotion } from '../../scripts/ui';
+
+  onPage(() => {
+    const el = document.querySelector<HTMLElement>('[data-verify]');
+    if (!el) return [];
+    const paidCode = el.querySelector<HTMLElement>('[data-paid-code]')!;
+    const paidStore = el.querySelector<HTMLElement>('[data-paid-store]')!;
+    let raf = 0;
+    const narrow = () => innerWidth <= 900;
+
+    const update = () => {
+      raf = 0;
+      let p = 1;
+      if (!reduceMotion()) {
+        const r = el.getBoundingClientRect();
+        if (narrow()) {
+          p = Math.min(1, Math.max(0, (innerHeight * 0.9 - r.top) / (r.height * 0.85)));
+        } else {
+          p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
+        }
+      }
+      el.style.setProperty('--p', p.toFixed(4));
+      el.style.setProperty('--seal', String(Math.min(1, Math.max(0, (p - 0.18) * 6))));
+      const k = Math.min(1, Math.max(0, (p - 0.3) * 1.8));
+      paidCode.textContent = String(Math.round(40 * k));
+      paidStore.textContent = String(Math.round(12 * k));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    return [
+      () => {
+        removeEventListener('scroll', onScroll);
+        removeEventListener('resize', onScroll);
+        cancelAnimationFrame(raf);
+      },
+    ];
+  });
+</script>

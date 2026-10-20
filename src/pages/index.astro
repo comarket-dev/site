@@ -1,0 +1,330 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Comarket"
+  description="Creators bring the buyers. You pay only for the ones you didn’t already have."
+  plate="fork"
+  og="/og/og-fork.jpg"
+>
+  <main class="fork" data-fork>
+    <header class="bar">
+      <span class="wm">Comarket</span>
+      <span class="label">Every sale has two sides.</span>
+    </header>
+
+    <div class="marks" aria-hidden="true">
+      <i class="m tl"></i><i class="m tr"></i><i class="m bl"></i><i class="m br"></i>
+    </div>
+
+    <div class="cut" aria-hidden="true" data-cut>
+      <span class="label">Cutting the plate</span>
+      <span class="count num" data-count>000</span>
+    </div>
+
+    <h1 class="sr-only">Comarket. Are you a brand or a creator?</h1>
+
+    <a class="side" href="/brands" data-side="brands">
+      <span class="word">Brands</span>
+      <span class="sub label">Pay only for new customers</span>
+    </a>
+    <a class="side" href="/creators" data-side="creators">
+      <span class="word">Creators</span>
+      <span class="sub label">Earn on every customer you bring</span>
+    </a>
+
+    <footer class="hint">
+      <span class="label">Choose a side</span>
+      <span class="label keys"><kbd>B</kbd> or <kbd>C</kbd></span>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  .fork {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    cursor: default;
+  }
+  .bar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: calc(20px + env(safe-area-inset-top, 0px)) var(--gr) 0 var(--gl);
+  }
+  .wm {
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -0.04em;
+  }
+
+  /* registration marks, like a press sheet */
+  .marks .m {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    opacity: 0.55;
+  }
+  .marks .m::before,
+  .marks .m::after {
+    content: '';
+    position: absolute;
+    background: var(--ink);
+  }
+  .marks .m::before {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
+  .marks .m::after {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+  }
+  .marks .tl {
+    left: calc(var(--gl) - 11px);
+    top: 70px;
+  }
+  .marks .tr {
+    right: calc(var(--gr) - 11px);
+    top: 70px;
+  }
+  .marks .bl {
+    left: calc(var(--gl) - 11px);
+    bottom: 64px;
+  }
+  .marks .br {
+    right: calc(var(--gr) - 11px);
+    bottom: 64px;
+  }
+
+  .cut {
+    position: absolute;
+    left: var(--gl);
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    transition: opacity 0.8s var(--ease);
+  }
+  .cut .count {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .cut.done {
+    opacity: 0;
+  }
+
+  .side {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    display: grid;
+    justify-items: center;
+    gap: 0;
+    width: max-content;
+    text-align: center;
+    text-decoration: none;
+    padding: 4vmin 6vmin;
+    border-radius: 24px;
+  }
+  .side .sub {
+    white-space: nowrap;
+  }
+  .side .word {
+    font-weight: 700;
+    font-size: var(--word, clamp(56px, 9.6vw, 176px));
+    line-height: 1.25;
+    letter-spacing: -0.05em;
+    color: transparent;
+  }
+  .side .sub {
+    transform: translateY(-0.2em);
+    opacity: 0;
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.6s var(--ease);
+    text-shadow:
+      0 0 8px var(--paper),
+      0 0 3px var(--paper);
+  }
+  .side.on .sub,
+  .side:focus-visible .sub {
+    opacity: 1;
+    transform: translateY(0.2em);
+  }
+  .side:focus-visible {
+    outline-offset: -6px;
+  }
+  .fork.chosen .side {
+    pointer-events: none;
+  }
+  .fork.chosen .side .sub {
+    opacity: 0;
+  }
+
+  .hint {
+    position: absolute;
+    right: var(--gr);
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    gap: 18px;
+  }
+  kbd {
+    font: inherit;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--ink);
+  }
+
+  /* without WebGL the words are plain type */
+  :global(.no-gl) .side .word {
+    color: var(--ink);
+  }
+  :global(.no-gl) .side .sub {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.no-gl) .cut {
+    display: none;
+  }
+  @media (hover: none) {
+    .keys {
+      display: none;
+    }
+    .side .sub {
+      opacity: 1;
+      transform: translateY(0.1em);
+    }
+  }
+</style>
+
+<script>
+  import { navigate } from 'astro:transitions/client';
+  import { plate, type Side } from '../scripts/plate/engine';
+
+  let cleanup: (() => void) | null = null;
+
+  function setup() {
+    cleanup?.();
+    const root = document.querySelector<HTMLElement>('[data-fork]');
+    if (!root) return;
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.side'));
+    const cut = root.querySelector<HTMLElement>('[data-cut]');
+    const count = root.querySelector<HTMLElement>('[data-count]');
+    let chosen = false;
+    let current: Side | null = null;
+
+    const place = () => {
+      const c = plate.loopCenters();
+      if (!c) {
+        const portrait = innerHeight > innerWidth * 1.08;
+        links[0].style.left = portrait ? '50%' : '30%';
+        links[0].style.top = portrait ? '32%' : '50%';
+        links[1].style.left = portrait ? '50%' : '70%';
+        links[1].style.top = portrait ? '68%' : '50%';
+        return;
+      }
+      links[0].style.left = `${c.brands[0]}px`;
+      links[0].style.top = `${c.brands[1]}px`;
+      links[1].style.left = `${c.creators[0]}px`;
+      links[1].style.top = `${c.creators[1]}px`;
+      root.style.setProperty('--word', `${(c.wordPx / 1.25).toFixed(1)}px`);
+    };
+
+    const setHover = (s: Side | null) => {
+      if (chosen || s === current) return;
+      current = s;
+      plate.hover(s);
+      links.forEach((l) => l.classList.toggle('on', l.dataset.side === s));
+    };
+
+    const sideAt = (x: number, y: number): Side | null => {
+      const portrait = plate.isPortrait() || innerHeight > innerWidth * 1.08;
+      const v = portrait ? 0.5 - y / innerHeight : 0.5 - x / innerWidth;
+      if (v > 0.035) return 'brands';
+      if (v < -0.035) return 'creators';
+      return null;
+    };
+
+    const choose = (s: Side) => {
+      if (chosen) return;
+      chosen = true;
+      root.classList.add('chosen');
+      plate.choose(s);
+      fetch('/api/event', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ type: 'fork_choice', props: { side: s } }),
+        keepalive: true,
+      }).catch(() => {});
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => navigate(`/${s}`), reduce || !plate.ready ? 0 : 520);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') setHover(sideAt(e.clientX, e.clientY));
+    };
+    const onLeave = () => setHover(null);
+    const onClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest<HTMLAnchorElement>('.side');
+      const s = (target?.dataset.side as Side | undefined) ?? sideAt(e.clientX, e.clientY);
+      if (!s) return;
+      e.preventDefault();
+      choose(s);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = e.key.toLowerCase();
+      if (k === 'b') choose('brands');
+      if (k === 'c') choose('creators');
+    };
+    links.forEach((l) => {
+      l.addEventListener('focus', () => setHover(l.dataset.side as Side));
+      l.addEventListener('blur', () => setHover(null));
+    });
+
+    const off = plate.on(({ draw }) => {
+      place();
+      if (count) count.textContent = String(Math.round(draw * 100)).padStart(3, '0');
+      if (cut && draw >= 1) cut.classList.add('done');
+    });
+    setTimeout(() => {
+      if (!plate.ready && cut) cut.classList.add('done');
+    }, 0);
+
+    root.addEventListener('pointermove', onMove);
+    root.addEventListener('pointerleave', onLeave);
+    root.addEventListener('click', onClick);
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('resize', place);
+    place();
+
+    cleanup = () => {
+      off();
+      root.removeEventListener('pointermove', onMove);
+      root.removeEventListener('pointerleave', onLeave);
+      root.removeEventListener('click', onClick);
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', place);
+      plate.hover(null);
+    };
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = null;
+  });
+</script>

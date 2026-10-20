@@ -1,0 +1,258 @@
+---
+/* A coupon extension tries to swap the referral at checkout. It can't, because credit isn't in the browser. */
+---
+
+<section class="section band-ink on-ink credit" id="credit" aria-labelledby="credit-h">
+  <div class="wrap grid">
+    <div class="step-head">
+      <span class="label">02 · Your credit</span>
+      <h2 class="display-l" id="credit-h" data-reveal>No extension can take your credit.</h2>
+      <p class="lede muted" data-reveal style="--d:.1s">We record who sent the buyer on our server, not in a cookie a browser add-on can overwrite.</p>
+    </div>
+
+    <div class="scene" data-credit aria-hidden="true">
+      <div class="checkout">
+        <div class="top">
+          <span class="label">Checkout · Fernwood Growth</span>
+          <span class="num">$49.00/mo</span>
+        </div>
+        <div class="lines">
+          <span></span><span class="s"></span><span></span>
+        </div>
+        <div class="ref">
+          <span class="lockic"></span>
+          <span class="who"><b>Credited to Sarah K.</b><span class="label">recorded on comarket.co</span></span>
+        </div>
+        <span class="pay">Start your trial</span>
+      </div>
+      <div class="ext">
+        <div class="ext-h"><span class="ext-logo"></span><b>Coupon helper</b></div>
+        <span class="ext-msg" data-msg>Trying 12 codes…</span>
+        <span class="bar"><i></i></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+  .step-head {
+    margin-bottom: 0;
+  }
+  .scene {
+    position: relative;
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+  }
+  .checkout {
+    width: min(420px, 100%);
+    background: var(--white);
+    color: #16201b;
+    border-radius: 22px;
+    padding: 24px;
+    display: grid;
+    gap: 18px;
+    box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.6);
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .top .label {
+    color: #5b6660;
+  }
+  .lines {
+    display: grid;
+    gap: 10px;
+  }
+  .lines span {
+    height: 10px;
+    border-radius: 5px;
+    background: #e3e8e4;
+  }
+  .lines .s {
+    width: 60%;
+  }
+  .ref {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1.5px solid var(--benzol);
+    background: color-mix(in oklab, var(--benzol) 7%, white);
+  }
+  .who {
+    display: grid;
+    gap: 2px;
+  }
+  .who .label {
+    color: #5b6660;
+  }
+  .lockic {
+    width: 18px;
+    height: 16px;
+    border: 2px solid var(--benzol);
+    border-radius: 3px;
+    position: relative;
+    margin-top: 6px;
+  }
+  .lockic::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: -9px;
+    height: 9px;
+    border: 2px solid var(--benzol);
+    border-bottom: 0;
+    border-radius: 7px 7px 0 0;
+  }
+  .pay {
+    height: 48px;
+    border-radius: 999px;
+    background: #1e6b47;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+  }
+  .ext {
+    position: absolute;
+    top: 8px;
+    right: max(0px, calc(50% - 260px));
+    width: 230px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff;
+    color: #222;
+    display: grid;
+    gap: 8px;
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.7);
+    transform: translateY(-14px) rotate(2deg);
+    opacity: 0;
+  }
+  .ext-h {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 14px;
+  }
+  .ext-logo {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: repeating-linear-gradient(45deg, #b8b8b8 0 3px, #d8d8d8 3px 6px);
+  }
+  .ext-msg {
+    font-size: 13px;
+    color: #555;
+  }
+  .bar {
+    height: 4px;
+    border-radius: 2px;
+    background: #eee;
+    overflow: hidden;
+  }
+  .bar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: #888;
+  }
+  .scene.play .ext {
+    animation: ext 5.6s var(--ease) infinite;
+  }
+  .scene.play .bar i {
+    animation: bar 5.6s linear infinite;
+  }
+  .scene.play .ref {
+    animation: hold 5.6s var(--ease) infinite;
+  }
+  @keyframes ext {
+    0%,
+    6% {
+      opacity: 0;
+      transform: translateY(-14px) rotate(2deg);
+    }
+    14%,
+    72% {
+      opacity: 1;
+      transform: translateY(0) rotate(2deg);
+    }
+    84%,
+    100% {
+      opacity: 0;
+      transform: translateY(-10px) rotate(2deg);
+    }
+  }
+  @keyframes bar {
+    0%,
+    14% {
+      width: 0;
+    }
+    52%,
+    100% {
+      width: 100%;
+    }
+  }
+  @keyframes hold {
+    0%,
+    52% {
+      box-shadow: 0 0 0 0 rgb(0 151 141 / 0);
+    }
+    58% {
+      box-shadow: 0 0 0 8px rgb(0 151 141 / 0.25);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(0 151 141 / 0);
+    }
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ext {
+      right: 0;
+    }
+  }
+</style>
+
+<script>
+  import { onPage, onceVisible, reduceMotion } from '../../scripts/ui';
+  onPage(() => {
+    const scene = document.querySelector<HTMLElement>('[data-credit]');
+    if (!scene) return [];
+    const msg = scene.querySelector<HTMLElement>('[data-msg]')!;
+    let timers: number[] = [];
+    const cycle = () => {
+      msg.textContent = 'Trying 12 codes…';
+      timers.push(window.setTimeout(() => (msg.textContent = 'Swapping the referral…'), 1700));
+      timers.push(window.setTimeout(() => (msg.textContent = 'Nothing to swap.'), 2950));
+    };
+    let loop = 0;
+    const stop = onceVisible(scene, () => {
+      if (reduceMotion()) return;
+      scene.classList.add('play');
+      cycle();
+      loop = window.setInterval(cycle, 5600);
+    });
+    return [
+      stop,
+      () => {
+        clearInterval(loop);
+        timers.forEach(clearTimeout);
+        timers = [];
+      },
+    ];
+  });
+</script>

@@ -1,0 +1,204 @@
+---
+const stores = [
+  { brand: 'Fernwood', kit: 'Trial-to-paid kit', rate: '20% for 12 months', color: '#1E6B47' },
+  { brand: 'Northpeak', kit: 'Pricing page teardown', rate: '18% for 12 months', color: '#2D4BA8' },
+  { brand: 'Ledgerly', kit: 'Close the books faster', rate: '25% first payment', color: '#8A4B2E' },
+];
+const links = ['My newsletter', 'Latest video', 'Book a call'];
+---
+
+<section class="section hub" id="page" aria-labelledby="hub-h">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="label">01 · Your page</span>
+      <h2 class="display-l" id="hub-h" data-reveal>Your link, with your name on it.</h2>
+    </div>
+    <div class="phones" data-hub>
+      <figure class="phone-wrap" data-reveal>
+        <div class="phone">
+          <span class="addr num">comarket.co/sarah</span>
+          <div class="screen">
+            <span class="ava" aria-hidden="true">S</span>
+            <b class="nm">Sarah K.</b>
+            <span class="bio">Writing about trial-to-paid, weekly.</span>
+            {
+              stores.map((s, i) => (
+                <div class="store" style={`--c:${s.color};--i:${i}`}>
+                  <span class="logo" aria-hidden="true" />
+                  <span class="txt">
+                    <b>{s.kit}</b>
+                    <span>
+                      {s.brand} · {s.rate}
+                    </span>
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <figcaption><b>As your only link.</b> <span class="muted">Every storefront you run, on one page.</span></figcaption>
+      </figure>
+
+      <figure class="phone-wrap" data-reveal style="--d:.12s">
+        <div class="phone">
+          <span class="addr num">your current link page</span>
+          <div class="screen generic">
+            <span class="ava dim" aria-hidden="true">S</span>
+            <b class="nm">@sarah</b>
+            {links.slice(0, 2).map((l) => <span class="lnk">{l}</span>)}
+            <span class="lnk ours">
+              Sarah’s trial-to-paid kit
+              <span class="label">fernwood.comarket.co/creators/sarah</span>
+            </span>
+            {links.slice(2).map((l) => <span class="lnk">{l}</span>)}
+          </div>
+        </div>
+        <figcaption><b>Or one link inside it.</b> <span class="muted">Keep the page you have. Credit still lands with you.</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .phones {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(20px, 4vw, 64px);
+    align-items: start;
+  }
+  .phone-wrap {
+    margin: 0;
+    display: grid;
+    gap: 18px;
+    justify-items: center;
+  }
+  .phone {
+    width: min(340px, 100%);
+    border-radius: 44px;
+    border: 1px solid var(--ink);
+    background: var(--white);
+    padding: 14px;
+    box-shadow: 0 60px 100px -70px rgb(5 18 48 / 0.6);
+  }
+  .addr {
+    display: block;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--graphite);
+    padding: 6px 0 12px;
+  }
+  .screen {
+    border-radius: 30px;
+    background: var(--paper);
+    padding: 26px 18px 22px;
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+    min-height: 470px;
+    align-content: start;
+  }
+  .ava {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 28px;
+    color: #fff;
+    background: conic-gradient(from 210deg, #c9d9cf, var(--benzol), #c9d9cf);
+  }
+  .ava.dim {
+    background: var(--paper-3);
+    color: var(--graphite);
+  }
+  .nm {
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .bio {
+    font-size: 13px;
+    color: var(--graphite);
+    margin-bottom: 8px;
+  }
+  .store {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    transition: transform 0.5s var(--ease);
+  }
+  .store:hover {
+    transform: translateY(-2px);
+  }
+  .logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--c);
+  }
+  .txt {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .txt b {
+    font-size: 14.5px;
+    letter-spacing: -0.01em;
+  }
+  .txt span {
+    font-size: 12px;
+    color: var(--graphite);
+  }
+  .generic {
+    background: #eceef1;
+  }
+  .lnk {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #dde1e6;
+    font-weight: 600;
+    font-size: 14px;
+    color: #31363d;
+  }
+  .lnk.ours {
+    display: grid;
+    gap: 4px;
+    border: 1.5px solid var(--ink);
+    border-radius: 18px;
+    color: var(--ink);
+    animation: nudge 3.2s var(--ease) infinite;
+  }
+  .lnk.ours .label {
+    font-size: 9.5px;
+  }
+  @keyframes nudge {
+    0%,
+    70%,
+    100% {
+      transform: none;
+    }
+    80% {
+      transform: translateY(-3px);
+    }
+  }
+  figcaption {
+    text-align: center;
+    max-width: 30ch;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  @media (max-width: 760px) {
+    .phones {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

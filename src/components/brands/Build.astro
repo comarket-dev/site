@@ -1,0 +1,452 @@
+---
+const creators = [
+  {
+    id: 'sarah',
+    name: 'Sarah K.',
+    first: 'Sarah',
+    platform: 'Substack',
+    audience: '8.2k readers',
+    kit: 'trial-to-paid kit',
+    quote: 'The tool I open first when a trial goes quiet.',
+    perk: '30-day trial for Sarah’s readers',
+  },
+  {
+    id: 'devon',
+    name: 'Devon A.',
+    first: 'Devon',
+    platform: 'YouTube',
+    audience: '12k subscribers',
+    kit: 'onboarding teardown',
+    quote: 'I rebuilt my onboarding with this. You can watch it on my channel.',
+    perk: 'Devon’s onboarding template, free',
+  },
+  {
+    id: 'mika',
+    name: 'Mika R.',
+    first: 'Mika',
+    platform: 'Reddit',
+    audience: '3.1k karma in r/SaaS',
+    kit: 'activation checklist',
+    quote: 'Asked for this in every thread for a year. Finally exists.',
+    perk: 'Two months free on the yearly plan',
+  },
+];
+---
+
+<section class="section build" id="build" aria-labelledby="build-h">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="label">02 · Build</span>
+      <h2 class="display-l" id="build-h" data-reveal>Every creator gets a page, not a code.</h2>
+    </div>
+
+    <div class="grid" data-build>
+      <div class="pick" role="radiogroup" aria-label="Choose a creator">
+        {
+          creators.map((c, i) => (
+            <button
+              type="button"
+              role="radio"
+              aria-checked={i === 0 ? 'true' : 'false'}
+              class="who"
+              data-creator={JSON.stringify(c)}
+            >
+              <span class="ava" aria-hidden="true">
+                {c.first[0]}
+              </span>
+              <span class="meta">
+                <b>{c.name}</b>
+                <span class="label">
+                  {c.platform} · {c.audience}
+                </span>
+              </span>
+            </button>
+          ))
+        }
+        <p class="label foot">Example storefronts for an example brand, Fernwood.</p>
+      </div>
+
+      <div class="browser" data-reveal>
+        <div class="chrome">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="addr num"
+            ><span class="lock" aria-hidden="true"></span><span data-addr>fernwood.comarket.co/creators/sarah</span></span
+          >
+        </div>
+        <article class="store build-on" data-store style="--brand:#1E6B47">
+          <span class="lockup s1" data-lockup>FERNWOOD <span class="x">×</span> SARAH K.</span>
+          <h3 class="s2"><span data-first>Sarah</span>’s <span data-kit>trial-to-paid kit</span></h3>
+          <div class="by s3">
+            <span class="ava big" data-ava aria-hidden="true">S</span>
+            <span>Picked by <b data-name>Sarah K.</b> for her audience</span>
+          </div>
+          <blockquote class="s4" data-quote>“The tool I open first when a trial goes quiet.”</blockquote>
+          <div class="card s5">
+            <div class="prod">
+              <span class="logo" aria-hidden="true"></span>
+              <div>
+                <b>Fernwood Growth</b>
+                <span>Find where trials stall. Fix it in a week.</span>
+              </div>
+              <span class="price num">$49<small>/mo</small></span>
+            </div>
+            <div class="perk" data-perk>30-day trial for Sarah’s readers</div>
+          </div>
+          <span class="cta s6">Start your trial</span>
+          <span class="pow s7 label">Storefront by Comarket</span>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(28px, 5vw, 80px);
+    align-items: center;
+  }
+  .pick {
+    display: grid;
+    gap: 10px;
+    align-content: center;
+  }
+  .who {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    text-align: left;
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease),
+      transform 0.4s var(--ease);
+  }
+  .who:hover {
+    transform: translateX(4px);
+  }
+  .who[aria-checked='true'] {
+    border-color: var(--ink);
+    background: var(--white);
+  }
+  .meta {
+    display: grid;
+    gap: 3px;
+  }
+  .meta b {
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .ava {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+  .foot {
+    margin-top: 8px;
+  }
+
+  .browser {
+    border-radius: 22px;
+    border: 1px solid var(--ink);
+    background: var(--white);
+    overflow: hidden;
+    box-shadow: 0 50px 100px -60px rgb(5 18 48 / 0.45);
+  }
+  .chrome {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e3e8e4;
+    background: #f6f8f5;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d5dbd6;
+  }
+  .addr {
+    justify-self: center;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12.5px;
+    color: #4b5650;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #e3e8e4;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .lock {
+    width: 8px;
+    height: 9px;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+    position: relative;
+  }
+  .store {
+    --brand: #1e6b47;
+    color: #16201b;
+    padding: clamp(24px, 4vw, 48px);
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+    font-family: var(--sans);
+  }
+  .lockup {
+    font: 11px/1 var(--mono);
+    letter-spacing: 0.12em;
+    color: var(--brand);
+  }
+  .lockup .x {
+    opacity: 0.6;
+  }
+  .store h3 {
+    font-size: clamp(32px, 4vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    max-width: 13ch;
+  }
+  .by {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 15px;
+    color: #4b5650;
+  }
+  .ava.big {
+    width: 36px;
+    height: 36px;
+    background: conic-gradient(from 210deg, #c9d9cf, var(--brand), #c9d9cf);
+    color: #fff;
+  }
+  blockquote {
+    margin: 0;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    max-width: 30ch;
+    padding-left: 16px;
+    border-left: 2px solid var(--brand);
+  }
+  .card {
+    width: 100%;
+    border: 1px solid #e3e8e4;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .prod {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    padding: 16px;
+  }
+  .prod div {
+    display: grid;
+    gap: 2px;
+  }
+  .prod span {
+    font-size: 14px;
+    color: #5b6660;
+  }
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--brand);
+    position: relative;
+  }
+  .logo::after {
+    content: '';
+    position: absolute;
+    inset: 11px;
+    border: 2px solid #fff;
+    border-radius: 50% 50% 50% 0;
+  }
+  .price {
+    font-size: 20px;
+    color: #16201b !important;
+  }
+  .price small {
+    font-size: 12px;
+    color: #5b6660;
+  }
+  .perk {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    background: color-mix(in oklab, var(--brand) 10%, white);
+    color: var(--brand);
+  }
+  .cta {
+    display: inline-flex;
+    height: 48px;
+    align-items: center;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 600;
+  }
+  .pow {
+    color: #8a948e;
+  }
+
+  /* assembly: each piece arrives in order */
+  .store > * {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .store.build-on > * {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s var(--ease),
+      transform 0.9s var(--ease);
+  }
+  .store.build-on .s1 {
+    transition-delay: 0.05s;
+  }
+  .store.build-on .s2 {
+    transition-delay: 0.14s;
+  }
+  .store.build-on .s3 {
+    transition-delay: 0.26s;
+  }
+  .store.build-on .s4 {
+    transition-delay: 0.36s;
+  }
+  .store.build-on .s5 {
+    transition-delay: 0.48s;
+  }
+  .store.build-on .s6 {
+    transition-delay: 0.6s;
+  }
+  .store.build-on .s7 {
+    transition-delay: 0.7s;
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .pick {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .who {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: start;
+    }
+    .foot {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 520px) {
+    .pick {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .who {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  import { onPage, onceVisible, reduceMotion } from '../../scripts/ui';
+
+  onPage(() => {
+    const root = document.querySelector<HTMLElement>('[data-build]');
+    if (!root) return [];
+    const store = root.querySelector<HTMLElement>('[data-store]')!;
+    const addr = root.querySelector<HTMLElement>('[data-addr]')!;
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-creator]'));
+    let timer = 0;
+
+    const typeAddr = (text: string) => {
+      clearInterval(timer);
+      if (reduceMotion()) {
+        addr.textContent = text;
+        return;
+      }
+      const base = 'fernwood.comarket.co/creators/';
+      let n = base.length;
+      addr.textContent = base;
+      timer = window.setInterval(() => {
+        n++;
+        addr.textContent = text.slice(0, n);
+        if (n >= text.length) clearInterval(timer);
+      }, 55);
+    };
+
+    const show = (btn: HTMLButtonElement, animate = true) => {
+      const c = JSON.parse(btn.dataset.creator || '{}');
+      buttons.forEach((b) => b.setAttribute('aria-checked', String(b === btn)));
+      const set = () => {
+        root.querySelector('[data-lockup]')!.innerHTML = `FERNWOOD <span class="x">×</span> ${c.name.toUpperCase()}`;
+        root.querySelector('[data-first]')!.textContent = c.first;
+        root.querySelector('[data-kit]')!.textContent = c.kit;
+        root.querySelector('[data-ava]')!.textContent = c.first[0];
+        root.querySelector('[data-name]')!.textContent = c.name;
+        root.querySelector('[data-quote]')!.textContent = `“${c.quote}”`;
+        root.querySelector('[data-perk]')!.textContent = c.perk;
+        typeAddr(`fernwood.comarket.co/creators/${c.id}`);
+      };
+      if (!animate || reduceMotion()) {
+        set();
+        return;
+      }
+      store.classList.remove('build-on');
+      void store.offsetWidth;
+      setTimeout(() => {
+        set();
+        store.classList.add('build-on');
+      }, 180);
+    };
+
+    const onClick = (e: Event) => show(e.currentTarget as HTMLButtonElement);
+    buttons.forEach((b) => b.addEventListener('click', onClick));
+    const onKey = (e: KeyboardEvent) => {
+      const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      if (i < 0 || !['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)) return;
+      e.preventDefault();
+      const next = buttons[(i + (e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : buttons.length - 1)) % buttons.length];
+      next.focus();
+      show(next);
+    };
+    root.addEventListener('keydown', onKey);
+
+    store.classList.remove('build-on');
+    const stop = onceVisible(store, () => show(buttons[0]), 0.3);
+    if (reduceMotion()) store.classList.add('build-on');
+
+    return [
+      stop,
+      () => {
+        clearInterval(timer);
+        buttons.forEach((b) => b.removeEventListener('click', onClick));
+        root.removeEventListener('keydown', onKey);
+      },
+    ];
+  });
+</script>

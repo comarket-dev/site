@@ -1,0 +1,56 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import Plate from '../components/Plate.astro';
+import Consent from '../components/Consent.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  plate: 'fork' | 'hero' | 'none';
+  side?: 'brands' | 'creators';
+  og?: string;
+  noindex?: boolean;
+}
+const { title, description, plate, side, og = '/og/og-fork.jpg', noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogUrl = new URL(og, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#EDF0EC" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/FragmentMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Comarket" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body data-plate={plate} data-side={side}>
+    <Plate />
+    <slot />
+    {Astro.locals.needsConsent && <Consent />}
+    <script>
+      import { bindReveals, onPage } from '../scripts/ui';
+      onPage(() => [bindReveals()]);
+    </script>
+  </body>
+</html>

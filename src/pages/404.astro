@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found · Comarket" description="This page doesn’t exist." plate="none" noindex>
+  <main class="nf">
+    <a class="wm" href="/?fork=1">Comarket</a>
+    <canvas class="engraved" data-engrave="404" aria-hidden="true"></canvas>
+    <h1 class="display-m">This page was never printed.</h1>
+    <div class="row">
+      <a class="btn" href="/brands">For brands</a>
+      <a class="btn ghost" href="/creators">For creators</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 24px;
+    text-align: center;
+    padding: 80px var(--gr) 80px var(--gl);
+  }
+  .wm {
+    position: absolute;
+    top: calc(22px + env(safe-area-inset-top, 0px));
+    left: var(--gl);
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+  }
+  .engraved {
+    width: min(1100px, 92vw);
+    height: clamp(160px, 30vw, 380px);
+  }
+  .row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>
+
+<script>
+  import { engrave } from '../scripts/engrave';
+  import { onPage } from '../scripts/ui';
+  onPage(() => {
+    const c = document.querySelector<HTMLCanvasElement>('.nf [data-engrave]');
+    return c ? [engrave(c, { text: '404', color: '#051230', accent: '#00978D', rows: 40, weight: 900 })] : [];
+  });
+</script>
