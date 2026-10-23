@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
+<style>
+  /* A phone screenshot of Lena's live waitlist page, made in Pagewell. She used it as her green-screen background. */
+  body { width: 360px; height: 780px; background: #09090d; color: #f4f2fb; }
+  .page { position: absolute; inset: 0 0 86px; overflow: hidden; background: radial-gradient(120% 60% at 80% 0%, #2a1660 0%, rgba(42,22,96,0) 60%), #09090d; padding: 58px 22px 0; }
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  .nav b { font: 700 17px/1 ui-monospace, Menlo, monospace; letter-spacing: -0.02em; }
+  .nav b i { font-style: normal; color: #9b7bff; }
+  .nav span { font-size: 13px; font-weight: 600; color: #09090d; background: #f4f2fb; padding: 8px 13px; border-radius: 999px; }
+  .tag { display: inline-flex; align-items: center; gap: 6px; margin-top: 44px; font-size: 12px; color: #c9bdfc; border: 1px solid #3a2d6e; background: rgba(122, 62, 240, 0.12); padding: 5px 10px; border-radius: 999px; }
+  .tag i { width: 6px; height: 6px; border-radius: 50%; background: #9b7bff; box-shadow: 0 0 8px #9b7bff; }
+  h1 { font: 800 40px/1.02 Satoshi; letter-spacing: -0.04em; margin-top: 90px; }
+  h1 em { font-style: normal; background: linear-gradient(90deg, #b9a2ff, #ff9ad5); -webkit-background-clip: text; color: transparent; }
+  p { font-size: 15.5px; line-height: 1.45; color: #a9a4bd; margin-top: 14px; }
+  .form { margin-top: 22px; display: grid; gap: 9px; }
+  .form .in { font-size: 15px; color: #6f6a85; padding: 14px 15px; border-radius: 12px; border: 1px solid #2a2639; background: #121019; }
+  .form .go { font-size: 15px; font-weight: 700; text-align: center; color: #09090d; padding: 14px; border-radius: 12px; background: #f4f2fb; }
+  .proof { display: flex; align-items: center; gap: 9px; margin-top: 16px; font-size: 13px; color: #a9a4bd; }
+  .faces { display: flex; }
+  .faces i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #09090d; margin-left: -7px; }
+  .faces i:nth-child(1) { margin-left: 0; background: #f4b183; } .faces i:nth-child(2) { background: #9fc2e8; } .faces i:nth-child(3) { background: #b8e2c8; }
+  .term { margin-top: 26px; border-radius: 12px; background: #121019; border: 1px solid #221e30; font: 12.5px/1.6 ui-monospace, Menlo, monospace; padding: 12px 14px; color: #d8d3ea; }
+  .term .d { color: #6f6a85; } .term .g { color: #8ff0a4; }
+  .badge { position: absolute; right: 14px; bottom: 100px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: #15121f; background: #fff; padding: 6px 10px 6px 7px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+  .badge svg { width: 14px; height: 14px; color: #7a3ef0; }
+  /* Safari's bottom bar */
+  .safari { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; background: rgba(28, 27, 32, 0.96); border-top: 0.5px solid #333; padding: 8px 12px 0; }
+  .url { display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; border-radius: 12px; background: #3a3a3f; font-size: 15px; color: #fff; }
+  .url svg { width: 11px; height: 11px; color: #aaa; }
+  .tools { display: flex; justify-content: space-around; margin-top: 8px; color: #0a84ff; font-size: 18px; }
+</style></head>
+<body>
+  <div class="sb dark"><span>16:08</span><span class="r"><span class="bars"><i></i><i></i><i></i><i class="off"></i></span><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.4 6.8a6.5 6.5 0 0 1 9.2 0l-1.4 1.4a4.5 4.5 0 0 0-6.4 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z"/></svg><span class="batt"><b style="width:71%"></b></span></span></div>
+  <div class="page">
+    <div class="nav"><b>shiplog<i>_</i></b><span>Join</span></div>
+    <h1>Changelogs that <em>write themselves.</em></h1>
+    <p>A CLI that reads your commits and drafts release notes people actually read.</p>
+    <div class="form"><span class="in">you@work.com</span><span class="go">Join the waitlist</span></div>
+    <div class="proof"><span class="faces"><i></i><i></i><i></i></span>412 developers joined this week</div>
+    <div class="term"><span class="d">$</span> npx shiplog draft<br><span class="g">✓</span> 14 commits → 3 notes</div>
+  </div>
+  <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></svg>Made in Pagewell</span>
+  <div class="safari">
+    <div class="url"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V7a5 5 0 0 1 10 0v3h1v11H6V10zm2 0h6V7a3 3 0 0 0-6 0z"/></svg>shiplog.pagewell.site</div>
+    <div class="tools"><span>‹</span><span style="opacity:.4">›</span><span>⇪</span><span>⌑</span><span>⧉</span></div>
+  </div>
+</body></html>

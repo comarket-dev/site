@@ -21,17 +21,16 @@ export interface Experiment<A extends { id: string } = { id: string }> {
 }
 
 /**
- * Pricing shown to brands. Runs as an even split until PRICING_MODE is set to "bandit".
- * The reward is a waitlist signup for now. Once real revenue exists, switch the reward
- * to first-payment revenue so a cheaper price can't win on signups alone.
+ * Pricing shown to brands: 15% of a sale's first payment, 10% of renewals.
+ * Kept as an experiment so a second price can be tested later by adding an arm. The 10-5 arm was retired on
+ * 2026-10-21; visitors who were assigned it now see 15-10, and brands who joined under it keep their stored price.
+ * With more than one arm it runs as an even split until PRICING_MODE is "bandit". Reward is a waitlist signup for
+ * now; once real revenue exists, switch it to first-payment revenue so a cheaper price can't win on signups alone.
  */
 export const PRICING: Experiment<PriceArm> = {
   id: 'pricing_v1',
   routes: ['/brands'],
-  arms: [
-    { id: '15-10', first: 15, after: 10 },
-    { id: '10-5', first: 10, after: 5 },
-  ],
+  arms: [{ id: '15-10', first: 15, after: 10 }],
   defaultArm: '15-10',
   reward: 'waitlist_brand',
   minShare: 0.1,

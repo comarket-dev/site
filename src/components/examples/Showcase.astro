@@ -1,0 +1,324 @@
+---
+/**
+ * Example posts and the storefronts they open, one pair at a time in a spotlight. Shared by both sides.
+ * Every third slide is a "your turn" card with the side's call to action. Hovering slows it down rather than stopping
+ * it. Fictional brands and creators, tagged as examples.
+ */
+import Post from './Post.astro';
+import StorePhone from './StorePhone.astro';
+
+interface Props {
+  side: 'brand' | 'creator';
+}
+const { side } = Astro.props;
+const isBrand = side === 'brand';
+const order = [0, 3, 2, 4, 1, 5, 6, 7];
+
+type Slide = { kind: 'pair'; i: number } | { kind: 'turn' };
+const slides: Slide[] = [];
+order.forEach((i, k) => {
+  slides.push({ kind: 'pair', i });
+  if (k % 3 === 2) slides.push({ kind: 'turn' });
+});
+const copy = isBrand
+  ? { turn: 'Your product, on storefronts like these.', turnBtn: 'Show me my storefront' }
+  : { turn: 'Your name, on pages like these.', turnBtn: 'Claim my page' };
+---
+
+<div class="spot" data-showcase data-side={side}>
+  <div class="deck" data-deck>
+    {
+      slides.map((s) =>
+        s.kind === 'pair' ? (
+          <div class="slide" data-slide>
+            <div class="from">
+              <Post pair={s.i} />
+            </div>
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+            <div class="to">
+              <StorePhone pair={s.i} tag={false} />
+            </div>
+          </div>
+        ) : (
+          <div class="slide is-turn" data-slide data-hold="5200">
+            <div class="turn">
+              <b>Your turn.</b>
+              <p>{copy.turn}</p>
+              <a class="cta-btn big" href="#top" data-claim-jump>
+                {copy.turnBtn} <span aria-hidden="true">↑</span>
+              </a>
+            </div>
+          </div>
+        ),
+      )
+    }
+  </div>
+
+  <div class="ctrl">
+    <button type="button" class="arrowbtn" data-prev aria-label="Previous example">←</button>
+    <span class="bar" aria-hidden="true"><i data-progress></i></span>
+    <button type="button" class="arrowbtn" data-next aria-label="Next example">→</button>
+  </div>
+</div>
+
+<style>
+  .spot {
+    display: grid;
+    gap: 24px;
+  }
+  .deck {
+    position: relative;
+    height: 540px;
+    overflow: hidden;
+    -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .slide {
+    --off: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    transform: translate(-50%, -50%) translateX(calc(var(--off) * 58vw)) scale(var(--scale, 1));
+    opacity: var(--alpha, 1);
+    transition:
+      transform 0.9s var(--ease),
+      opacity 0.9s var(--ease);
+    /* the post's width, unitless (Post.astro scales its design to it) */
+    --pv: 236;
+    --pwd: 300;
+  }
+  .deck.slow .slide {
+    transition-duration: 2.4s;
+  }
+  .slide[data-far] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .to,
+  .to :global(.phone) {
+    --w: 190px;
+  }
+  .arrow {
+    font-size: 26px;
+    color: var(--blue);
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 58px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 17px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      background-color 0.3s var(--ease),
+      transform 0.45s var(--ease);
+  }
+  .cta-btn:hover {
+    background: var(--blue-ink);
+    transform: translateY(-2px);
+  }
+
+  /* every third slide: the specific ask, for anyone still watching */
+  .turn {
+    width: min(560px, 80vw);
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    padding: 48px 32px;
+    text-align: center;
+    border-radius: 32px;
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  .turn b {
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+  }
+  .turn p {
+    font-size: 18px;
+    color: var(--on-ink-muted);
+  }
+  .turn .cta-btn {
+    background: var(--yellow);
+    color: var(--ink);
+  }
+  .turn .cta-btn:hover {
+    background: var(--white);
+  }
+
+  .ctrl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+  .arrowbtn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .arrowbtn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .bar {
+    width: min(240px, 40vw);
+    height: 3px;
+    border-radius: 3px;
+    background: var(--rule);
+    overflow: hidden;
+  }
+  .bar i {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--ink);
+    transform-origin: left;
+    transform: scaleX(var(--k, 0));
+  }
+
+  @media (max-width: 900px) {
+    .slide {
+      transform: translate(-50%, -50%) translateX(calc(var(--off) * 92vw)) scale(var(--scale, 1));
+    }
+  }
+  @media (max-width: 700px) {
+    .deck {
+      height: 420px;
+      -webkit-mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+      mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    }
+    .slide {
+      --pv: 158;
+      --pwd: 186;
+      gap: 8px;
+    }
+    .to,
+    .to :global(.phone) {
+      --w: 128px;
+    }
+    .arrow {
+      font-size: 20px;
+    }
+    .cta-btn {
+      height: 52px;
+      padding: 0 22px;
+      font-size: 16px;
+    }
+    .turn {
+      padding: 36px 22px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .slide {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { onPage, reduceMotion } from '../../scripts/ui';
+
+  onPage(() => {
+    const cleanups: Array<() => void> = [];
+    const on = <K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, fn: (e: HTMLElementEventMap[K]) => void) => {
+      el.addEventListener(type, fn);
+      cleanups.push(() => el.removeEventListener(type, fn));
+    };
+
+    for (const root of Array.from(document.querySelectorAll<HTMLElement>('[data-showcase]'))) {
+      const side = root.dataset.side;
+      const deck = root.querySelector<HTMLElement>('[data-deck]')!;
+      const slides = Array.from(deck.querySelectorAll<HTMLElement>('[data-slide]'));
+      const bar = root.querySelector<HTMLElement>('[data-progress]')!;
+      const n = slides.length;
+      let at = 0;
+      let elapsed = 0;
+      let last = performance.now();
+      let speed = 1; // hovering slows the spotlight to a crawl instead of stopping it
+      let raf = 0;
+
+      const layout = () => {
+        slides.forEach((s, i) => {
+          let off = i - at;
+          if (off > n / 2) off -= n;
+          if (off < -n / 2) off += n;
+          const d = Math.min(1, Math.abs(off));
+          s.style.setProperty('--off', String(off));
+          s.style.setProperty('--scale', String(1 - d * 0.22));
+          s.style.setProperty('--alpha', String(1 - d * 0.6));
+          s.toggleAttribute('data-far', Math.abs(off) > 1);
+          s.setAttribute('aria-hidden', off === 0 ? 'false' : 'true');
+        });
+      };
+      const go = (d: number) => {
+        at = (at + d + n) % n;
+        elapsed = 0;
+        layout();
+      };
+      const tick = (now: number) => {
+        raf = requestAnimationFrame(tick);
+        const dt = Math.min(100, now - last);
+        last = now;
+        if (reduceMotion()) return;
+        elapsed += dt * speed;
+        const hold = Number(slides[at]?.dataset.hold) || 3800;
+        const k = elapsed / hold;
+        bar.style.setProperty('--k', String(Math.min(1, k)));
+        if (k >= 1) go(1);
+      };
+      layout();
+      raf = requestAnimationFrame(tick);
+      cleanups.push(() => cancelAnimationFrame(raf));
+
+      on(root.querySelector<HTMLElement>('[data-prev]')!, 'click', () => go(-1));
+      on(root.querySelector<HTMLElement>('[data-next]')!, 'click', () => go(1));
+      on(deck, 'pointerenter', () => {
+        speed = 0.25;
+        deck.classList.add('slow');
+      });
+      on(deck, 'pointerleave', () => {
+        speed = 1;
+        deck.classList.remove('slow');
+      });
+      let sx = 0;
+      on(deck, 'pointerdown', (e) => (sx = e.clientX));
+      on(deck, 'pointerup', (e) => {
+        const dx = e.clientX - sx;
+        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+      });
+
+      // the "your turn" button jumps to the hero's claim field
+      root.querySelectorAll<HTMLElement>('[data-claim-jump]').forEach((a) =>
+        on(a, 'click', (e) => {
+          e.preventDefault();
+          const input = document.querySelector<HTMLInputElement>('[data-claim] input');
+          if (!input) return void (location.href = side === 'creator' ? '/creators' : '/brands');
+          scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+          setTimeout(() => input.focus({ preventScroll: true }), 500);
+        }),
+      );
+    }
+    return cleanups;
+  });
+</script>

@@ -56,7 +56,7 @@ export function mountWaitlist(root: HTMLElement): () => void {
       preview = p;
       const slug = slugOf(p.name || p.host.split('.')[0]);
       mini.style.setProperty('--brand', usable(p.color));
-      root.querySelector('[data-mini-url]')!.textContent = `${slug}.comarket.co/creators/sarah`;
+      root.querySelector('[data-mini-url]')!.textContent = `${slug}.comarket.si/creators/sarah`;
       root.querySelector('[data-mini-lock]')!.textContent = `${p.name.toUpperCase()} × SARAH K.`;
       root.querySelector('[data-mini-name]')!.textContent = p.name;
       const logo = root.querySelector<HTMLElement>('[data-mini-logo]')!;
@@ -162,7 +162,7 @@ export function mountWaitlist(root: HTMLElement): () => void {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErr('form', data.error || 'Something went wrong. Try again.');
+        setErr(data.field === 'handle' ? 'handle' : 'form', data.error || 'Something went wrong. Try again.');
         submit.disabled = false;
         submit.innerHTML = label;
         return;
@@ -182,7 +182,7 @@ export function mountWaitlist(root: HTMLElement): () => void {
     issued.hidden = false;
     root.querySelector('[data-issued-h]')!.textContent = d.returning ? `Welcome back. You’re No. ${no}.` : `You’re No. ${no}.`;
     root.querySelector('[data-issued-p]')!.textContent =
-      d.side === 'brand' ? 'Your spot is held. Drag the pass to turn it over.' : 'Your page is held. Drag the pass to turn it over.';
+      d.side === 'brand' ? 'Your spot is held. Drag the pass to turn it over.' : `comarket.si/${d.label.replace(/^@/, '')} is yours. Drag the pass to turn it over.`;
     const canvas = root.querySelector<HTMLCanvasElement>('[data-pass-canvas]')!;
     const still = root.querySelector<HTMLImageElement>('[data-pass-still]')!;
     let snapshot: () => string;
@@ -213,7 +213,7 @@ export function mountWaitlist(root: HTMLElement): () => void {
       track('pass_saved', { side: d.side });
     };
     const share = root.querySelector<HTMLAnchorElement>('[data-share]')!;
-    const text = d.side === 'brand' ? `I’m No. ${no} on the Comarket waitlist. Paid only for customers I didn’t have.` : `I’m No. ${no} on the Comarket waitlist. Paid on every customer I bring.`;
+    const text = d.side === 'brand' ? `I’m No. ${no} on the Comarket waitlist. Creators sell for us, and we pay only when they do.` : `I’m No. ${no} on the Comarket waitlist. Paid on every sale I send.`;
     share.href = `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(`${location.origin}/${d.side === 'brand' ? 'brands' : 'creators'}`)}`;
     share.onclick = () => track('pass_shared', { side: d.side });
     issued.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });

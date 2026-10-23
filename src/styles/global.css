@@ -1,4 +1,4 @@
-/* Comarket. Wada combination 155 on safety paper. Satoshi does the talking, Fragment Mono keeps the books. */
+/* Comarket. Wada combination 295 on cream. Satoshi does the talking, Fragment Mono keeps the books. */
 
 @font-face {
   font-family: 'Satoshi';
@@ -16,21 +16,30 @@
 }
 
 :root {
-  --paper: #edf0ec;
-  --paper-2: #e0e6e1;
-  --paper-3: #d4dcd6;
-  --white: #fbfcfa;
-  --ink: #051230;
-  --ink-2: #0c1b40;
-  --graphite: #525b67;
-  --rule: #c6cdc7;
-  --benzol: #00978d;
-  --benzol-2: #7cc4bc;
-  --jasper: #eb5324;
-  --ghost: #9aa4aa;
-  --on-ink: #edf0ec;
-  --on-ink-muted: #8d97a8;
-  --ink-rule: #1f2b4a;
+  /* Wada No. 295: Cream Yellow, Yellow, Blue, Dull Violet Black. Everything else is a tint of those four. */
+  --cream: #fdbf68;
+  --yellow: #fff200;
+  --blue: #006eb8;
+  --ink: #1e0e3f;
+
+  --paper: #fff7ec;
+  --paper-2: #fdeed6;
+  --paper-3: #fbe0b6;
+  --white: #ffffff;
+  --ink-2: #2a1a52;
+  --graphite: #5f5672;
+  --rule: #eadcc6;
+  --ghost: #a59db3;
+  --blue-2: #8fc1e6;
+  --blue-ink: #00558f;
+  --on-ink: #fff7ec;
+  --on-ink-muted: #b5adc9;
+  --ink-rule: #3a2b62;
+
+  /* old names, kept so older components follow the new palette */
+  --benzol: var(--blue);
+  --benzol-2: var(--blue-2);
+  --jasper: var(--yellow);
 
   --sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono: 'Fragment Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -108,15 +117,15 @@ h3 {
   font-weight: 700;
 }
 ::selection {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--yellow);
+  color: var(--ink);
 }
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--blue);
   outline-offset: 3px;
 }
 .on-ink :focus-visible {
-  outline-color: var(--on-ink);
+  outline-color: var(--yellow);
 }
 [hidden] {
   display: none !important;
@@ -172,25 +181,26 @@ h3 {
 }
 .display-xxl {
   font-size: var(--fs-xxl);
-  line-height: 0.86;
+  line-height: 0.98;
   letter-spacing: -0.055em;
   font-weight: 700;
 }
 .display-xl {
   font-size: var(--fs-xl);
-  line-height: 0.9;
+  line-height: 1;
   letter-spacing: -0.05em;
   font-weight: 700;
 }
+/* Satoshi's ascenders and descenders together span about 1.02em, so tighter leading makes lines collide */
 .display-l {
   font-size: var(--fs-l);
-  line-height: 0.95;
+  line-height: 1.04;
   letter-spacing: -0.04em;
   font-weight: 700;
 }
 .display-m {
   font-size: var(--fs-m);
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: -0.03em;
   font-weight: 700;
 }
@@ -244,9 +254,9 @@ h3 {
   height: var(--h);
   padding: 0 24px;
   border-radius: 999px;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
+  border: 1px solid var(--blue);
+  background: var(--blue);
+  color: var(--white);
   font-weight: 600;
   font-size: 15px;
   letter-spacing: -0.01em;
@@ -260,6 +270,8 @@ h3 {
 }
 .btn:hover {
   transform: translateY(-2px);
+  background: var(--blue-ink);
+  border-color: var(--blue-ink);
 }
 .btn .arr {
   transition: transform 0.45s var(--ease);
@@ -270,15 +282,21 @@ h3 {
 .btn.ghost {
   background: transparent;
   color: var(--ink);
+  border-color: var(--ink);
 }
 .btn.ghost:hover {
   background: var(--ink);
+  border-color: var(--ink);
   color: var(--paper);
 }
 .band-ink .btn {
-  background: var(--paper);
+  background: var(--yellow);
   color: var(--ink);
-  border-color: var(--paper);
+  border-color: var(--yellow);
+}
+.band-ink .btn:hover {
+  background: var(--white);
+  border-color: var(--white);
 }
 .band-ink .btn.ghost {
   background: transparent;
@@ -302,8 +320,9 @@ h3 {
   border-radius: 999px;
 }
 .chip.new {
-  background: var(--jasper);
+  background: var(--yellow);
   color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
 }
 .chip.ret {
   border: 1px solid var(--ghost);
@@ -335,8 +354,8 @@ h3 {
 .field input:focus,
 .field select:focus {
   outline: none;
-  border-color: var(--ink);
-  box-shadow: 0 0 0 4px rgb(5 18 48 / 0.08);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgb(0 110 184 / 0.14);
 }
 .band-ink .field input,
 .band-ink .field select {
@@ -346,10 +365,14 @@ h3 {
 }
 .band-ink .field input:focus {
   border-color: var(--paper);
-  box-shadow: 0 0 0 4px rgb(237 240 236 / 0.08);
+  box-shadow: 0 0 0 4px rgb(255 242 0 / 0.16);
+}
+.band-ink .field .err {
+  color: var(--yellow);
 }
 .field .err {
-  color: var(--jasper);
+  color: var(--ink);
+  font-weight: 600;
   font-size: 14px;
   min-height: 1.2em;
 }
@@ -416,6 +439,73 @@ input[type='range']:active::-webkit-slider-thumb {
   padding-block: 3px;
   opacity: 0.8;
   user-select: none;
+}
+
+/* the highlight: yellow, ringed in ink so it holds on cream; one box per line when it wraps.
+   The yellow sits evenly around the letters, 0.09em past the ascenders (0.76em) and the baseline. Satoshi's text box
+   runs from 1.01em above the baseline to 0.24em below it, so the box starts 0.16em in from the top and stops 0.13em
+   short of the bottom. Marks with descenders (class "desc") reach 0.09em below those instead, and marks with nothing
+   above the x-height (class "low") keep the same height but center on their letters. src/lib/hl.ts picks the class.
+   Headlines track
+   negatively and the browser applies that after the last letter too, so the right side gets it back. */
+mark.hl {
+  --top: calc(0.16em - 2px);
+  --bot: calc(0.13em - 2px);
+  color: inherit;
+  padding: 0 calc(0.08em + 0.042em) 0 0.08em;
+  margin: 0 -0.04em;
+  background:
+    linear-gradient(var(--yellow), var(--yellow)) no-repeat 2px calc(var(--top) + 2px) / calc(100% - 4px) calc(100% - var(--top) - var(--bot) - 4px),
+    linear-gradient(var(--ink), var(--ink)) no-repeat 0 var(--top) / 100% calc(100% - var(--top) - var(--bot));
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 1.1s var(--ease) 0.5s;
+}
+mark.hl.desc {
+  --bot: 0px;
+  padding-bottom: calc(0.06em + 2px);
+}
+mark.hl.low {
+  --top: calc(0.28em - 2px);
+  --bot: 0.01em;
+  padding-bottom: 2px;
+}
+mark.hl.low.desc {
+  --top: calc(0.38em - 2px);
+  --bot: 0px;
+  padding-bottom: calc(0.09em + 2px);
+}
+.js [data-reveal]:not(.in) mark.hl {
+  background-size:
+    0 calc(100% - var(--top) - var(--bot) - 4px),
+    0 calc(100% - var(--top) - var(--bot));
+}
+
+/* the stage canvas is persisted across pages; show it live through view transitions, never as a crossfade */
+#stage {
+  view-transition-name: stage;
+}
+::view-transition-old(stage) {
+  display: none;
+}
+::view-transition-new(stage) {
+  animation: none;
+}
+
+/* the page we fly into from the fork is already composed and holds still until we land on it (Stage.astro) */
+html.landing [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+html.landing mark.hl {
+  background-size:
+    0 calc(100% - var(--top) - var(--bot) - 4px),
+    0 calc(100% - var(--top) - var(--bot)) !important;
+}
+html.landing .poster {
+  opacity: 1 !important;
+  transition: none !important;
 }
 
 /* reveal on scroll: complete at rest, animated when JS is present */

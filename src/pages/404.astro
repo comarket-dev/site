@@ -2,10 +2,10 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="Not found · Comarket" description="This page doesn’t exist." plate="none" noindex>
+<Base title="Not found · Comarket" description="This page doesn’t exist." stage="none" noindex>
   <main class="nf">
     <a class="wm" href="/?fork=1">Comarket</a>
-    <canvas class="engraved" data-engrave="404" aria-hidden="true"></canvas>
+    <canvas class="dots" data-perforate="404" aria-hidden="true"></canvas>
     <h1 class="display-m">This page was never printed.</h1>
     <div class="row">
       <a class="btn" href="/brands">For brands</a>
@@ -36,7 +36,7 @@ import Base from '../layouts/Base.astro';
     letter-spacing: -0.04em;
     text-decoration: none;
   }
-  .engraved {
+  .dots {
     width: min(1100px, 92vw);
     height: clamp(160px, 30vw, 380px);
   }
@@ -49,10 +49,10 @@ import Base from '../layouts/Base.astro';
 </style>
 
 <script>
-  import { engrave } from '../scripts/engrave';
+  import { perforate } from '../scripts/perforate';
   import { onPage } from '../scripts/ui';
   onPage(() => {
-    const c = document.querySelector<HTMLCanvasElement>('.nf [data-engrave]');
-    return c ? [engrave(c, { text: '404', color: '#051230', accent: '#00978D', rows: 40, weight: 900 })] : [];
+    const c = document.querySelector<HTMLCanvasElement>('.nf [data-perforate]');
+    return c ? [perforate(c, { text: '404', color: '#1E0E3F', accent: '#006EB8', rows: 26 })] : [];
   });
 </script>

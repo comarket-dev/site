@@ -223,10 +223,10 @@ if os.environ.get("PASS_ONLY_GLB"):
 
 # ---------------------------------------------------------------- 2. matcaps
 CAPS = {
-    "paper": ("#D9DFDA", 0.32, 0.4),
-    "jasper": ("#EB5324", 0.22, 0.7),
-    "benzol": ("#00978D", 0.22, 0.7),
-    "ink": ("#051230", 0.18, 0.8),
+    "paper": ("#F3E9DA", 0.32, 0.4),
+    "cream": ("#FDBF68", 0.22, 0.7),
+    "blue": ("#006EB8", 0.22, 0.7),
+    "ink": ("#1E0E3F", 0.18, 0.8),
 }
 for name, (color, rough, coat) in CAPS.items():
     reset()
@@ -238,7 +238,7 @@ for name, (color, rough, coat) in CAPS.items():
     sph = bpy.context.active_object
     bpy.ops.object.shade_smooth()
     sph.data.materials.append(principled(f"cap_{name}", color, rough, 0.0, coat))
-    studio("#F4F6F2", "#2A3550", 0.55)
+    studio("#FFF7EC", "#2A1A52", 0.55)
     area("Key", (-3, -4, 4), (0, 0, 0), 3.2, 520)
     area("Rim", (3.5, 2.5, 2.5), (0, 0, 0), 2.2, 260)
     area("Fill", (2.5, -4, -2.5), (0, 0, 0), 4, 90, "#DDE8FF")

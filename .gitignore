@@ -19,3 +19,6 @@ dist/
 # os and editor
 .DS_Store
 *.log
+
+# rendered post media intermediates (scripts/render-posts.py)
+design/posts/build/

@@ -6,18 +6,17 @@
   <section class="section est" id="earnings" aria-labelledby="est-h">
     <div class="wrap">
       <div class="step-head">
-        <span class="label">03 · Earnings</span>
-        <h2 class="display-l" id="est-h" data-reveal>See what one product could pay you.</h2>
+        <h2 class="display-l" id="est-h" data-reveal>See what your link could earn.</h2>
       </div>
       <div class="grid">
         <div class="controls">
           <label class="ctl">
-            <span class="row"><span class="label">Views per post</span><b class="num" data-out="views">6,000</b></span>
-            <input type="range" min="0" max="100" step="1" value="40" data-in="views" aria-label="Typical views per post" />
+            <span class="row"><span class="label">Views per post</span><b class="num" data-out="views">2,500</b></span>
+            <input type="range" min="0" max="100" step="1" value="27" data-in="views" aria-label="Typical views per post" />
           </label>
           <label class="ctl">
-            <span class="row"><span class="label">Posts a month that mention it</span><b class="num" data-out="posts">4</b></span>
-            <input type="range" min="1" max="16" step="1" value="4" data-in="posts" aria-label="Posts per month" />
+            <span class="row"><span class="label">Posts a month that mention it</span><b class="num" data-out="posts">2</b></span>
+            <input type="range" min="1" max="16" step="1" value="2" data-in="posts" aria-label="Posts per month" />
           </label>
           <label class="ctl">
             <span class="row"><span class="label">Product price</span><b class="num" data-out="price">$49/mo</b></span>
@@ -33,13 +32,11 @@
           <b class="big" data-out="range">$90 to $520</b>
           <svg class="chart" viewBox="0 0 600 300" data-chart role="img" aria-label="Estimated monthly earnings over twelve months">
             <g data-grid></g>
-            <path data-band fill="rgb(0 151 141 / 0.16)"></path>
-            <path data-mid fill="none" stroke="#051230" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+            <path data-band fill="rgb(0 110 184 / 0.14)"></path>
+            <path data-mid fill="none" stroke="#1E0E3F" stroke-width="2" vector-effect="non-scaling-stroke"></path>
             <g data-ticks></g>
           </svg>
-          <p class="label assume">
-            Estimates. Click 0.8 to 1.5% · trial 8 to 15% · paid 25 to 40% · 4% cancel monthly. Real rates replace these once creators are live.
-          </p>
+          <p class="assume">An estimate from typical click and purchase rates, not a promise.</p>
         </div>
       </div>
     </div>
@@ -48,7 +45,6 @@
   <section class="section band-2 rate" id="rate" aria-labelledby="rate-h">
     <div class="wrap">
       <div class="step-head">
-        <span class="label">04 · Your rate</span>
         <h2 class="display-l" id="rate-h" data-reveal>Ask for more, match with fewer brands.</h2>
       </div>
       <div class="grid">
@@ -62,14 +58,14 @@
             <div><dt>Expected per month</dt><dd data-out="pay">$310</dd></div>
             <div><dt>Your sweet spot</dt><dd data-out="best">22%</dd></div>
           </dl>
-          <p class="label assume">Illustration from example brand ceilings. Brands set a maximum, you set an ask, and you match where they meet.</p>
+          <p class="assume">Brands set a maximum rate. You set your ask. You match where they meet.</p>
         </div>
         <svg class="chart" viewBox="0 0 600 300" data-rate-chart role="img" aria-label="Expected payout by asking rate">
           <g data-rgrid></g>
-          <path data-rarea fill="rgb(5 18 48 / 0.06)"></path>
-          <path data-rline fill="none" stroke="#051230" stroke-width="2" vector-effect="non-scaling-stroke"></path>
-          <line data-rbest stroke="#00978D" stroke-width="1" stroke-dasharray="4 4" y1="0" y2="270"></line>
-          <circle data-rdot r="7" fill="#EB5324" stroke="#EDF0EC" stroke-width="2"></circle>
+          <path data-rarea fill="rgb(30 14 63 / 0.06)"></path>
+          <path data-rline fill="none" stroke="#1E0E3F" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+          <line data-rbest stroke="#006EB8" stroke-width="1" stroke-dasharray="4 4" y1="0" y2="270"></line>
+          <circle data-rdot r="7" fill="#FFF200" stroke="#1E0E3F" stroke-width="2"></circle>
           <g data-rticks></g>
         </svg>
       </div>
@@ -124,6 +120,8 @@
   }
   .assume {
     max-width: 62ch;
+    font-size: 13.5px;
+    color: var(--graphite);
   }
   .reads {
     margin: 0;
@@ -227,7 +225,7 @@
       grid.replaceChildren();
       ticks.replaceChildren();
       [0, 0.5, 1].forEach((f) => {
-        hline(grid, y(max * f), '#C6CDC7');
+        hline(grid, y(max * f), '#EADCC6');
         text(ticks, 0, y(max * f) - 6, f ? money(max * f) : '$0', 'start');
       });
       [1, 6, 12].forEach((m) => text(ticks, x(m - 1), H + 22, `month ${m}`, m === 1 ? 'start' : m === 12 ? 'end' : 'middle'));
@@ -259,7 +257,7 @@
       rgrid.replaceChildren();
       rticks.replaceChildren();
       [0, 0.5, 1].forEach((f) => {
-        hline(rgrid, ry(rmax * f), '#C6CDC7');
+        hline(rgrid, ry(rmax * f), '#EADCC6');
         text(rticks, 0, ry(rmax * f) - 6, f ? money(rmax * f) : '$0', 'start');
       });
       [5, 15, 25, 40].forEach((a) => text(rticks, rx(a), H + 22, `${a}%`, a === 5 ? 'start' : a === 40 ? 'end' : 'middle'));

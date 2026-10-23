@@ -90,7 +90,7 @@ function capped(body: ReadableStream<Uint8Array>): ReadableStream<Uint8Array> {
 export async function fetchBrandPreview(url: URL): Promise<BrandPreview> {
   const res = await fetch(url.toString(), {
     redirect: 'follow',
-    headers: { 'user-agent': 'ComarketPreview/1.0 (+https://comarket.co)', accept: 'text/html' },
+    headers: { 'user-agent': 'ComarketPreview/1.0 (+https://comarket.si)', accept: 'text/html' },
     signal: AbortSignal.timeout(4500),
   });
   const finalUrl = new URL(res.url || url.toString());

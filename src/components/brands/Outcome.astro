@@ -1,0 +1,434 @@
+---
+/* The core of the offer: the same post, paid two ways. A sponsored post bills before it runs; a storefront bills per
+   sale. Then the price, since it's the same idea in numbers. */
+import type { PriceArm } from '../../lib/pricing';
+interface Props {
+  arm: PriceArm;
+}
+const { arm } = Astro.props;
+const PRICE = 49;
+const RATE = 20;
+const FLAT = 400;
+const VIEWS = 12000;
+const CLICKS = 360;
+/** days of the month the example sales land on */
+const DAYS = [2, 3, 5, 8, 9, 12, 15, 17, 20, 23, 26, 29];
+const SALES = DAYS.length;
+const fee = (PRICE * (RATE + arm.first)) / 100;
+const usd = (v: number) => `$${v.toFixed(2)}`;
+---
+
+<section class="outcome" id="outcome" aria-labelledby="out-h">
+  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-views={VIEWS} data-clicks={CLICKS}>
+    <div class="pin">
+      <div class="wrap">
+        <h2 class="display-l" id="out-h">Pay for sales, not posts.</h2>
+
+        <div class="cols">
+          <article class="card old" aria-label="A sponsored post">
+            <header><b>A sponsored post</b></header>
+            <div class="bill">
+              <b class="amt num">${FLAT}</b>
+              <span class="when">paid before it goes live</span>
+            </div>
+            <ul class="funnel num" aria-hidden="true">
+              <li><span>Views</span><b data-v>{VIEWS.toLocaleString('en-US')}</b></li>
+              <li><span>Clicks</span><b data-c>{CLICKS}</b></li>
+              <li><span>Sales</span><b data-s>{SALES}</b></li>
+            </ul>
+            <div class="when-paid" aria-hidden="true">
+              <div class="line"><i class="pay lump" style="--x:0"><span class="num">${FLAT}</span></i></div>
+              <div class="days num"><span>Day 1</span><span>Day 30</span></div>
+            </div>
+            <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / SALES)}</b></p>
+          </article>
+
+          <article class="card new" aria-label="A Comarket storefront">
+            <header><b>A Comarket storefront</b></header>
+            <div class="bill">
+              <b class="amt num" data-bill>{usd(fee * SALES)}</b>
+              <span class="when" data-when>paid only as each sale lands</span>
+            </div>
+            <ul class="funnel num" aria-hidden="true">
+              <li><span>Views</span><b data-v>{VIEWS.toLocaleString('en-US')}</b></li>
+              <li><span>Clicks</span><b data-c>{CLICKS}</b></li>
+              <li><span>Sales</span><b data-s>{SALES}</b></li>
+            </ul>
+            <div class="when-paid" aria-hidden="true">
+              <div class="line">{DAYS.map((d, i) => <i class="pay" data-tick style={`--x:${(d - 1) / 29};--i:${i}`} />)}</div>
+              <div class="days num"><span>Day 1</span><span>Day 30</span></div>
+            </div>
+            <p class="per"><span>Cost per sale</span><b class="num">{usd(fee)}</b></p>
+          </article>
+        </div>
+
+        <div class="end">
+          <p class="verdict">If the post flops, one costs you ${FLAT}. The other costs <mark class="hl">nothing.</mark></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap terms">
+    <ul class="nums">
+      <li><b class="num">$0</b><span>until a creator makes a sale</span></li>
+      <li><b class="num">{arm.first}%</b><span>of each sale’s first payment</span></li>
+      <li><b class="num">{arm.after}%</b><span>of renewals, for 12 months</span></li>
+    </ul>
+    <div class="under">
+      <p>Plus the creator’s rate, which you set. Buyers who were already your customers are free.</p>
+      <a class="btn big" href="#waitlist">Get early access <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+    <p class="fine">Example: one post, a ${PRICE}/mo product, a {RATE}% creator rate.</p>
+  </div>
+</section>
+
+<style>
+  .outcome {
+    position: relative;
+    z-index: 2;
+    background: var(--paper-2);
+    padding-bottom: var(--section);
+  }
+  .track {
+    height: 210vh;
+  }
+  .pin {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    padding-block: clamp(84px, 11vh, 120px) clamp(28px, 5vh, 56px);
+  }
+  h2 {
+    max-width: 14ch;
+    margin-bottom: clamp(24px, 4vh, 44px);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 28px);
+  }
+  .card {
+    display: grid;
+    gap: 18px;
+    padding: clamp(20px, 2.4vw, 32px);
+    border-radius: 28px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+  }
+  .card.new {
+    border-color: var(--ink);
+    box-shadow: 0 30px 60px -40px rgb(30 14 63 / 0.45);
+  }
+  header b {
+    font-size: clamp(18px, 1.5vw, 22px);
+    letter-spacing: -0.02em;
+  }
+  .bill {
+    display: flex;
+    align-items: baseline;
+    gap: 6px 14px;
+    flex-wrap: wrap;
+  }
+  .amt {
+    font-family: var(--sans);
+    font-size: clamp(52px, 6vw, 96px);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+  }
+  .when {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--graphite);
+  }
+  .old .when {
+    color: var(--ink);
+  }
+  .funnel {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--rule);
+  }
+  .funnel li {
+    display: grid;
+    gap: 4px;
+    padding-top: 14px;
+  }
+  .funnel span {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--graphite);
+  }
+  .funnel b {
+    font-size: clamp(22px, 2vw, 30px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  /* when the money leaves: one lump before anything happens, or a little on each day a sale lands */
+  .when-paid {
+    display: grid;
+    gap: 8px;
+  }
+  .line {
+    position: relative;
+    height: 44px;
+    border-bottom: 1.5px solid var(--rule);
+  }
+  .pay {
+    position: absolute;
+    bottom: 0;
+    left: calc(var(--x) * (100% - 10px));
+    width: 10px;
+    height: 26px;
+    border-radius: 4px 4px 0 0;
+    background: var(--ink);
+    transform-origin: bottom;
+    transform: scaleY(var(--on, 1));
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .new .pay {
+    background: var(--yellow);
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
+  .pay.lump {
+    width: 34%;
+    height: 44px;
+    border-radius: 6px 6px 0 0;
+    background: var(--ink);
+    display: grid;
+    place-items: center;
+  }
+  .lump span {
+    color: var(--on-ink);
+    font-size: 14px;
+  }
+  .days {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--graphite);
+  }
+  .per {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-size: 16px;
+  }
+  .per b {
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .end {
+    margin-top: clamp(22px, 4vh, 40px);
+    opacity: var(--end, 1);
+    transform: translateY(calc((1 - var(--end, 1)) * 16px));
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.8s var(--ease);
+  }
+  .verdict {
+    font-size: clamp(26px, 2.8vw, 44px);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    max-width: 30ch;
+  }
+
+  /* the price, which is the same idea in numbers */
+  .terms {
+    display: grid;
+    gap: 28px;
+    padding-top: clamp(24px, 4vw, 56px);
+  }
+  .nums {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+  .nums li {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    padding: 22px 20px 0 0;
+  }
+  .nums li + li {
+    padding-left: 20px;
+    border-left: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  }
+  .nums b {
+    font-family: var(--sans);
+    font-size: clamp(56px, 7vw, 112px);
+    line-height: 1.04;
+    letter-spacing: -0.055em;
+    font-weight: 700;
+  }
+  .nums span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--graphite);
+  }
+  .under {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px 32px;
+    flex-wrap: wrap;
+  }
+  .under p {
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.45;
+    max-width: 40ch;
+  }
+  .btn.big {
+    --h: 60px;
+    padding: 0 30px;
+    font-size: 17px;
+  }
+  .fine {
+    font-size: 13.5px;
+    color: var(--graphite);
+  }
+
+  /* pinned only where the whole scene fits on screen */
+  @media (max-width: 900px), (max-height: 820px) {
+    .track {
+      height: auto;
+    }
+    .pin {
+      position: static;
+      min-height: 0;
+      padding-block: var(--section) 0;
+    }
+  }
+  @media (max-width: 720px) {
+    .cols,
+    .nums {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .nums li,
+    .nums li + li {
+      padding: 20px 0;
+      border-left: 0;
+      border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      height: auto;
+    }
+    .pin {
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  import { onPage, reduceMotion } from '../../scripts/ui';
+
+  onPage(() => {
+    const el = document.querySelector<HTMLElement>('[data-outcome]');
+    if (!el) return [];
+    const fee = Number(el.dataset.fee);
+    const flat = Number(el.dataset.flat);
+    const SALES = Number(el.dataset.sales);
+    const $$ = (s: string) => Array.from(el.querySelectorAll<HTMLElement>(s));
+    const VIEWS = Number(el.dataset.views);
+    const CLICKS = Number(el.dataset.clicks);
+    const views = $$('[data-v]');
+    const clicks = $$('[data-c]');
+    const sold = $$('[data-s]');
+    const ticks = $$('[data-tick]');
+    const bill = el.querySelector<HTMLElement>('[data-bill]')!;
+    const when = el.querySelector<HTMLElement>('[data-when]')!;
+    const oldPer = el.querySelector<HTMLElement>('[data-old-per]')!;
+    const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+    const ramp = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+
+    /** One frame of the story at progress p: people see the post, click, buy; only one bill follows the buying. */
+    const draw = (p: number) => {
+      const v = ramp(p, 0.02, 0.3);
+      const c = ramp(p, 0.14, 0.42);
+      const n = Math.floor(ramp(p, 0.34, 0.68) * SALES + 0.001);
+      views.forEach((e) => (e.textContent = fmt(VIEWS * v)));
+      clicks.forEach((e) => (e.textContent = fmt(CLICKS * c)));
+      sold.forEach((e) => (e.textContent = String(n)));
+      ticks.forEach((t, k) => t.style.setProperty('--on', k < n ? '1' : '0'));
+      bill.textContent = `$${(fee * n).toFixed(2)}`;
+      when.textContent = n ? 'paid only as each sale lands' : 'nothing before it goes live';
+      oldPer.textContent = n ? `$${(flat / n).toFixed(2)}` : 'no sales yet';
+      el.style.setProperty('--end', String(ramp(p, 0.72, 0.8)));
+    };
+
+    const pinned = () => !matchMedia('(max-width: 900px), (max-height: 820px)').matches;
+    let raf = 0;
+    let started = 0;
+    let io: IntersectionObserver | null = null;
+
+    if (reduceMotion()) {
+      draw(1);
+      return [];
+    }
+
+    const onScroll = () => {
+      if (raf || !pinned()) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const r = el.getBoundingClientRect();
+        const lead = innerHeight * 0.25;
+        // starts as the cards come fully into view, finishes with a third of the pin left to sit on the result
+        draw(Math.min(1, Math.max(0, (lead - r.top) / (r.height - innerHeight + lead))));
+      });
+    };
+
+    // where it isn't pinned, play it once when the cards are in view
+    const play = () => {
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const p = Math.min(1, (now - t0) / 3200);
+        draw(p);
+        if (p < 1) started = requestAnimationFrame(step);
+      };
+      started = requestAnimationFrame(step);
+    };
+    if (pinned()) {
+      draw(0);
+      onScroll();
+    } else {
+      draw(0);
+      io = new IntersectionObserver(
+        (es) => {
+          if (es.some((e) => e.isIntersecting)) {
+            io?.disconnect();
+            play();
+          }
+        },
+        { threshold: 0.45 },
+      );
+      io.observe(el.querySelector('.cols')!);
+    }
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    return [
+      () => {
+        removeEventListener('scroll', onScroll);
+        removeEventListener('resize', onScroll);
+        cancelAnimationFrame(raf);
+        cancelAnimationFrame(started);
+        io?.disconnect();
+      },
+    ];
+  });
+</script>

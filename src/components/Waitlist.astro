@@ -11,10 +11,9 @@ const brand = side === 'brand';
 <section class="section band-ink on-ink waitlist" id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
   <div class="wrap grid">
     <div class="intro">
-      <span class="label">Waitlist</span>
-      <h2 class="display-l" id="wl-h">{brand ? 'See your storefront first.' : 'Claim your page.'}</h2>
+      <h2 class="display-l" id="wl-h">{brand ? 'Get your first creator sales.' : 'Claim your page.'}</h2>
       <p class="lede muted">
-        {brand ? 'Enter your site. We dress a creator storefront in your brand before you join.' : 'Pick your handle. Your page and your pass are ready when you join.'}
+        {brand ? 'Free until a sale. Join now and we’ll build your storefront and line up creators when your spot opens.' : 'Free forever. Pick your handle and it’s yours when your spot opens.'}
       </p>
 
       <div class="preview" data-preview>
@@ -22,7 +21,7 @@ const brand = side === 'brand';
           brand ? (
             <div class="mini" data-mini style="--brand:#1E6B47">
               <span class="url num" data-mini-url>
-                yourapp.comarket.co/creators/sarah
+                yourapp.comarket.si/creators/sarah
               </span>
               <div class="mini-body">
                 <span class="lock num" data-mini-lock>
@@ -33,13 +32,13 @@ const brand = side === 'brand';
                   <span class="mini-logo" data-mini-logo />
                   <b data-mini-name>Your brand</b>
                 </div>
-                <span class="mini-cta">Start your trial</span>
+                <span class="mini-cta">Get started</span>
               </div>
             </div>
           ) : (
             <div class="hub">
               <span class="url num" data-hub-url>
-                comarket.co/<b data-hub-handle>yourname</b>
+                comarket.si/<b data-hub-handle>yourname</b>
               </span>
               <div class="hub-body">
                 <span class="ava" data-hub-ava>
@@ -110,7 +109,7 @@ const brand = side === 'brand';
           <span class="err" data-err="email"></span>
         </div>
         {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
-        <button class="btn submit" type="submit">Join the waitlist <span class="arr" aria-hidden="true">→</span></button>
+        <button class="btn submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <span class="arr" aria-hidden="true">→</span></button>
         <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
         <p class="err form-err" data-err="form" role="alert"></p>
       </form>
@@ -228,7 +227,7 @@ const brand = side === 'brand';
     place-items: center;
     font-weight: 700;
     font-size: 26px;
-    background: conic-gradient(from 210deg, #c9d9cf, #00978d, #c9d9cf);
+    background: conic-gradient(from 210deg, #fbe0b6, #006eb8, #fbe0b6);
     color: #fff;
   }
   .hub-row {
@@ -295,7 +294,7 @@ const brand = side === 'brand';
     aspect-ratio: 1.35;
     max-width: 100%;
     border-radius: 24px;
-    background: radial-gradient(120% 90% at 50% 30%, #12234d 0%, #051230 70%);
+    background: radial-gradient(120% 90% at 50% 30%, #2f1d63 0%, #1e0e3f 70%);
     border: 1px solid var(--ink-rule);
     overflow: hidden;
     touch-action: pan-y;

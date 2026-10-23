@@ -1,0 +1,121 @@
+---
+/* Straight answers to what people worry about before they join. */
+interface Props {
+  items: Array<{ q: string; a: string }>;
+  title?: string;
+}
+const { items, title = 'Questions people ask first.' } = Astro.props;
+---
+
+<section class="section faq" id="faq" aria-labelledby="faq-h">
+  <div class="wrap grid">
+    <div class="side">
+      <h2 class="display-m" id="faq-h" data-reveal>{title}</h2>
+    </div>
+    <div class="list">
+      {
+        items.map((it, i) => (
+          <details open={i < 2}>
+            <summary>
+              <span>{it.q}</span>
+              <i aria-hidden="true" />
+            </summary>
+            <p>{it.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    background: var(--paper-2);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    gap: 32px clamp(32px, 6vw, 120px);
+    align-items: start;
+  }
+  .side {
+    display: grid;
+    gap: 16px;
+    position: sticky;
+    top: 110px;
+  }
+  .side h2 {
+    max-width: 12ch;
+  }
+  details {
+    border-top: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+  }
+  details:last-child {
+    border-bottom: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+  }
+  summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 0;
+    cursor: pointer;
+    font-size: clamp(18px, 1.5vw, 22px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary i {
+    position: relative;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    transition:
+      background-color 0.3s var(--ease),
+      transform 0.45s var(--ease);
+  }
+  summary i::before,
+  summary i::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 11px;
+    height: 1.5px;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+  }
+  summary i::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition: transform 0.45s var(--ease);
+  }
+  details[open] summary i {
+    background: var(--yellow);
+  }
+  details[open] summary i::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  details p {
+    padding: 0 48px 24px 0;
+    color: var(--graphite);
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 60ch;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .side {
+      position: static;
+    }
+    details p {
+      padding-right: 0;
+    }
+  }
+</style>

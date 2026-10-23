@@ -1,0 +1,99 @@
+---
+/* TikTok post by the example creator ama, composed in design/posts (see scripts/render-posts.py for its media).
+   Drawn at 360x724 design pixels; Post.astro scales it to fit. Fictional, labeled as an example where it's shown. */
+---
+
+<div class="root" aria-hidden="true">
+<div class="video"></div><div class="shade-t"></div><div class="shade-b"></div>
+  <div class="sb dark"><span>7:04</span><span class="r"><span class="bars"><i></i><i></i><i></i><i></i></span><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.4 6.8a6.5 6.5 0 0 1 9.2 0l-1.4 1.4a4.5 4.5 0 0 0-6.4 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z"/></svg><span class="batt"><b style="width:92%"></b></span></span></div>
+  <div class="tabs"><span class="live">LIVE</span><span>Explore</span><span>Following</span><b>For You</b><svg class="search" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></div>
+
+  <div class="rail">
+    <span class="av"></span>
+    <div><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3.1 4.5 6.8 4.5c2.1 0 3.6 1.1 5.2 3 1.6-1.9 3.1-3 5.2-3 3.7 0 5.9 3.7 4.4 7.2C19.5 16.4 12 21 12 21z"/></svg>8,930</div>
+    <div><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 4.9 3.6 6.5L5 21.5l4.1-2.1c.9.2 1.9.3 2.9.3 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/></svg>211</div>
+    <div><svg viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></svg>1,204</div>
+    <div><svg viewBox="0 0 24 24" fill="#fff"><path d="M14 4l8 7.5-8 7.5v-4.6c-5.3 0-8.6 1.6-11 5.1.8-5.4 3.6-9.6 11-10.6V4z"/></svg>340</div>
+    <span class="disc"></span>
+  </div>
+
+  <div class="meta">
+    <span class="pp">Paid partnership</span><br>
+    <b>ama.steeps <span>· 5d ago</span></b>
+    <p>the only subscription I haven't cancelled. first box is half off with the link in my bio <em>#teatok #slowmornings</em> <strong>more</strong></p>
+    <div class="snd">♫ original sound - ama.steeps</div>
+  </div>
+  <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Search · <b>loose leaf tea subscription</b><span class="sp"></span>›</div>
+
+  <div class="nav">
+    <div class="on"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v10h5v-6h4v6h5V11h3z"/></svg>Home</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>Friends</div>
+    <div><span class="plus"></span></div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v12H8l-5 4z"/></svg>Inbox</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4.4 3.9-6.5 8-6.5s7.2 2.1 8 6.5"/></svg>Profile</div>
+    <span class="home-ind"></span>
+  </div>
+</div>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root {
+  position: relative;
+  width: 360px;
+  height: 724px;
+ font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+svg { display: block; }
+
+/* iOS status bar, light or dark */
+.sb { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 -apple-system, system-ui; z-index: 50; }
+.sb.dark { color: #fff; }
+.sb.light { color: #000; }
+.sb .r { display: flex; align-items: center; gap: 5px; }
+.sb .bars { display: flex; align-items: flex-end; gap: 1.5px; height: 11px; }
+.sb .bars i { width: 3px; border-radius: 1px; background: currentColor; }
+.sb .bars i:nth-child(1) { height: 4px; } .sb .bars i:nth-child(2) { height: 6px; } .sb .bars i:nth-child(3) { height: 8.5px; } .sb .bars i:nth-child(4) { height: 11px; }
+.sb .bars i.off { opacity: 0.35; }
+.sb .batt { position: relative; width: 25px; height: 12px; border-radius: 4px; border: 1px solid currentColor; opacity: 0.9; padding: 1.5px; }
+.sb .batt::after { content: ''; position: absolute; right: -3.5px; top: 3.5px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; opacity: 0.5; }
+.sb .batt b { display: block; height: 100%; border-radius: 2px; background: currentColor; }
+.sb .batt.low b { background: #ffd60a; }
+/* The For You feed around a video. Platform-styled, no logos. */
+.root { width: 360px; height: 724px; background: #000; color: #fff; }
+.video { position: absolute; left: 0; top: 0; width: 360px; height: 640px; background-size: cover; background-position: center; }
+.shade-t { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,0)); }
+.shade-b { position: absolute; left: 0; right: 0; top: 420px; height: 220px; background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.5)); }
+.tabs { position: absolute; top: 50px; left: 0; right: 0; display: flex; align-items: center; justify-content: center; gap: 16px; font-size: 15.5px; font-weight: 600; color: rgba(255,255,255,.72); text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.tabs b { color: #fff; position: relative; }
+.tabs b::after { content: ''; position: absolute; left: 50%; bottom: -7px; width: 22px; height: 2.5px; border-radius: 2px; background: #fff; transform: translateX(-50%); }
+.tabs .live { position: absolute; left: 14px; font-size: 11px; font-weight: 800; border: 1.5px solid currentColor; border-radius: 5px; padding: 1px 4px; color: #fff; }
+.tabs .search { position: absolute; right: 14px; width: 21px; height: 21px; }
+.rail { position: absolute; right: 8px; bottom: 112px; display: grid; justify-items: center; gap: 15px; font-size: 11.5px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,.45); }
+.rail div { display: grid; justify-items: center; gap: 3px; }
+.rail svg { width: 31px; height: 31px; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.35)); }
+.rail .av { position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #fff; background-size: cover; margin-bottom: 6px; }
+.rail .av::after { content: '+'; position: absolute; left: 50%; bottom: -9px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: #fe2c55; color: #fff; font: 700 15px/18px -apple-system; text-align: center; }
+.rail .disc { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle, #555 0 22%, #222 23% 100%); border: 6px solid #1a1a1a; background-size: cover; }
+.meta { position: absolute; left: 12px; right: 72px; bottom: 112px; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.meta .pp { display: inline-block; font-size: 11px; font-weight: 600; color: #fff; background: rgba(120,120,120,.55); padding: 2px 6px; border-radius: 3px; margin-bottom: 7px; text-shadow: none; }
+.meta b { font-size: 15px; font-weight: 700; }
+.meta b span { font-weight: 400; color: rgba(255,255,255,.75); font-size: 13px; }
+.meta p { font-size: 13.5px; line-height: 1.32; margin-top: 4px; }
+.meta p strong { font-weight: 700; }
+.meta p em { font-style: normal; font-weight: 700; color: rgba(255,255,255,.85); }
+.meta .snd { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; white-space: nowrap; overflow: hidden; }
+.search-bar { position: absolute; left: 0; right: 0; top: 604px; height: 36px; display: flex; align-items: center; gap: 7px; padding: 0 12px; background: rgba(0,0,0,.55); font-size: 13px; color: rgba(255,255,255,.92); }
+.search-bar svg { width: 15px; height: 15px; }
+.search-bar .sp { flex: 1; }
+.nav { position: absolute; left: 0; right: 0; top: 640px; height: 84px; background: #000; display: flex; justify-content: space-around; padding-top: 7px; font-size: 10px; color: rgba(255,255,255,.62); }
+.nav div { display: grid; justify-items: center; gap: 3px; width: 56px; }
+.nav div.on { color: #fff; }
+.nav svg { width: 25px; height: 25px; }
+.nav .plus { width: 44px; height: 29px; border-radius: 8px; background: #fff; position: relative; margin-top: 1px; box-shadow: -3px 0 0 #25f4ee, 3px 0 0 #fe2c55; }
+.nav .plus::before, .nav .plus::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 2.6px; background: #000; transform: translate(-50%,-50%); border-radius: 2px; }
+.nav .plus::after { transform: translate(-50%,-50%) rotate(90deg); }
+.nav .home-ind { position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; border-radius: 3px; background: #fff; transform: translateX(-50%); }
+
+
+  .video { background-image: url(/assets/posts/ama.jpg); }
+  .rail .av, .rail .disc { background-image: url(/assets/posts/avatars/ama.jpg) center / cover; background-position: 46% 26%; background-size: 210% auto; }
+</style>

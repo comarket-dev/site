@@ -4,35 +4,30 @@ interface Props {
 }
 const { side } = Astro.props;
 const year = new Date().getFullYear();
-const micro = 'NETNEWONLY '.repeat(160);
 ---
 
 <footer class="foot band-ink on-ink">
   <div class="wrap top">
-    <p class="line">Every sale has two sides.</p>
+    <p class="line">Creator marketing, paid per sale.</p>
     <nav class="cols" aria-label="Footer">
       <div>
-        <span class="label">Sides</span>
         <a href="/brands" aria-current={side === 'brands' ? 'page' : undefined}>For brands</a>
         <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>For creators</a>
-        <a href="/?fork=1">The fork</a>
+        <a href="/?fork=1">Start page</a>
       </div>
       <div>
-        <span class="label">Company</span>
-        <a href="#waitlist">Join the waitlist</a>
+        <a href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'}</a>
         <a href="/privacy">Privacy</a>
       </div>
     </nav>
   </div>
   <div class="mark">
-    <canvas class="engraved" data-engrave="Comarket" aria-hidden="true"></canvas>
+    <canvas class="dots" data-perforate="Comarket" aria-hidden="true"></canvas>
     <span class="sr-only">Comarket</span>
   </div>
   <div class="wrap bottom">
-    <span class="microprint" aria-hidden="true">{micro}</span>
     <div class="legal label">
       <span>© {year} Comarket</span>
-      <span>Paid only on net-new customers</span>
     </div>
   </div>
 </footer>
@@ -83,7 +78,7 @@ const micro = 'NETNEWONLY '.repeat(160);
     padding-left: max(8px, env(safe-area-inset-left, 0px));
     padding-right: max(8px, env(safe-area-inset-right, 0px));
   }
-  .engraved {
+  .dots {
     width: 100%;
     height: clamp(90px, 21vw, 330px);
   }
@@ -109,13 +104,13 @@ const micro = 'NETNEWONLY '.repeat(160);
 </style>
 
 <script>
-  import { engrave } from '../scripts/engrave';
+  import { perforate } from '../scripts/perforate';
   let stop: (() => void) | null = null;
   function bind() {
     stop?.();
-    const c = document.querySelector<HTMLCanvasElement>('.foot [data-engrave]');
+    const c = document.querySelector<HTMLCanvasElement>('.foot [data-perforate]');
     if (!c) return;
-    stop = engrave(c, { text: c.dataset.engrave || 'Comarket', color: '#EDF0EC', accent: '#00978D', rows: 44 });
+    stop = perforate(c, { text: c.dataset.perforate || 'Comarket', color: '#FFF7EC', accent: '#FFF200', rows: 30 });
   }
   document.addEventListener('astro:page-load', bind);
 </script>

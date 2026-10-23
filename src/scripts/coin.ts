@@ -6,10 +6,10 @@ import * as THREE from 'three';
 
 const MATCAPS = {
   seller: '/assets/matcaps/paper.jpg',
-  creator: '/assets/matcaps/jasper.jpg',
-  comarket: '/assets/matcaps/benzol.jpg',
+  creator: '/assets/matcaps/cream.jpg',
+  comarket: '/assets/matcaps/blue.jpg',
 };
-const FALLBACK = { seller: 0xedf0ec, creator: 0xeb5324, comarket: 0x00978d };
+const FALLBACK = { seller: 0xfff7ec, creator: 0xfdbf68, comarket: 0x006eb8 };
 
 function guillocheBump(): THREE.CanvasTexture {
   const s = 1024;

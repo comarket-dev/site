@@ -9,8 +9,7 @@ const { arm } = Astro.props;
 <section class="section band-ink on-ink split" id="split" aria-labelledby="split-h" data-split data-first={arm.first} data-after={arm.after}>
   <div class="wrap">
     <div class="step-head">
-      <span class="label">04 · Split</span>
-      <h2 class="display-l" id="split-h" data-reveal>You keep most of every new customer.</h2>
+      <h2 class="display-l" id="split-h" data-reveal>You keep most of every sale.</h2>
     </div>
 
     <div class="grid">
@@ -31,7 +30,6 @@ const { arm } = Astro.props;
           <div><dt><i class="k cre"></i>Creator</dt><dd data-o="creator-1">$0</dd><dd data-o="creator-12">$0</dd></div>
           <div><dt><i class="k com"></i>Comarket</dt><dd data-o="comarket-1">$0</dd><dd data-o="comarket-12">$0</dd></div>
         </dl>
-        <p class="label note">12 months assumes 4% of customers cancel each month.</p>
       </div>
 
       <div class="coin" data-coin>
@@ -110,10 +108,10 @@ const { arm } = Astro.props;
     background: var(--paper);
   }
   .k.cre {
-    background: var(--jasper);
+    background: var(--cream);
   }
   .k.com {
-    background: var(--benzol);
+    background: var(--blue);
   }
   .coin {
     position: relative;
@@ -172,7 +170,7 @@ const { arm } = Astro.props;
       root.querySelector('[data-price-out]')!.textContent = `$${p}/mo`;
       root.querySelector('[data-rate-out]')!.textContent = `${r}%`;
       const first = PRICING.split(p, r, arm.first);
-      const year = PRICING.totals(p, r, arm, 12, 0.04);
+      const year = PRICING.totals(p, r, arm, 12, 0);
       const fmt = PRICING.money;
       out('seller-1').textContent = fmt(first.seller);
       out('creator-1').textContent = fmt(first.creator);

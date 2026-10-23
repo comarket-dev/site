@@ -1,0 +1,62 @@
+{
+  "_note": "Fictional creators for the site's labeled examples. One reference portrait each, generated locally with Z-Image Turbo (Apache-2.0) via mflux; every later image and clip of a creator is made from their portrait so they stay the same person.",
+  "style": "Candid iPhone photo, shot on the main camera, natural light, slight grain, true-to-life colors, realistic skin texture with pores and fine lines, no retouching, no studio lighting, no text, no watermark. It looks like an unedited photo a friend took on their phone, not a stock photo: slightly off-center framing, everyday clutter, uneven light, faint noise in the shadows.",
+  "creators": [
+    {
+      "id": "sarah",
+      "name": "Sarah K.",
+      "platform": "Substack",
+      "seed": 7,
+      "prompt": "A 33-year-old woman who writes a newsletter about growing software businesses, sitting at a small home office desk by a window, laptop open, mug of coffee, plants and a bookshelf behind her. Soft morning window light. She is mid-laugh, looking slightly off camera. Freckles, auburn hair loosely tied back, oatmeal knit sweater."
+    },
+    {
+      "id": "devon",
+      "name": "Devon A.",
+      "platform": "YouTube",
+      "seed": 21,
+      "prompt": "A 29-year-old Black man who makes YouTube videos reviewing app onboarding, sitting at his desk with a podcast microphone on a boom arm, a monitor glowing behind him, a small ring light reflection in his glasses, short twists, grey crewneck. Evening room light mixed with monitor glow. Relaxed half smile, looking at the camera."
+    },
+    {
+      "id": "lena",
+      "name": "Lena O.",
+      "platform": "TikTok",
+      "seed": 34,
+      "prompt": "A 24-year-old woman who makes TikToks about developer tools, taking a selfie with her phone's front camera at arm's length, so her outstretched arm is partly visible at the edge of the frame and the phone itself is not in the picture. Behind her: a desk with a mechanical keyboard, a second monitor showing code and a warm desk lamp. Oversized black hoodie, straight dark blonde hair, small silver hoop earrings. Playful expression, slightly wide-angle front-camera perspective."
+    },
+    {
+      "id": "mika",
+      "name": "Mika R.",
+      "platform": "Reddit",
+      "seed": 48,
+      "prompt": "A 31-year-old Japanese-Finnish man who runs a small software business, working on a laptop at a corner table in a busy cafe, latte on the table, beanie and denim overshirt, light stubble. Daylight from the cafe window, people blurred in the background. Thoughtful look, glancing up at the camera."
+    },
+    {
+      "id": "priya",
+      "name": "Priya N.",
+      "platform": "Instagram",
+      "seed": 56,
+      "prompt": "A 28-year-old South Asian woman who posts skincare routines on Instagram, standing at her bathroom vanity holding a small glass dropper bottle, a few skincare products on the counter, dewy skin, hair in a loose claw clip, white cotton tee. Soft bathroom window light. Warm smile at the camera, mirror partly visible."
+    },
+    {
+      "id": "theo",
+      "name": "Theo M.",
+      "platform": "X",
+      "seed": 65,
+      "prompt": "A 31-year-old mixed-race man who writes about freelancing and money, sitting in a coworking space at a laptop, both hands resting on the laptop keyboard, a notebook beside it, rolled sleeves on a navy oxford shirt, curly hair, wristwatch on his left wrist. Bright overhead daylight from big windows. Confident easy smile, looking just past the camera."
+    },
+    {
+      "id": "jonah",
+      "name": "Jonah P.",
+      "platform": "YouTube",
+      "seed": 72,
+      "prompt": "A 38-year-old man with a trimmed beard who makes YouTube videos about desk setups and deep work, sitting at a minimalist oak desk with a warm lamp, a mechanical keyboard and a notebook, plants on a shelf, charcoal henley. Late afternoon golden light. Calm, friendly expression, looking at the camera."
+    },
+    {
+      "id": "ama",
+      "name": "Ama B.",
+      "platform": "TikTok",
+      "seed": 81,
+      "prompt": "A 26-year-old Ghanaian woman who makes TikToks about tea and slow mornings, standing by a kitchen window pouring tea from a ceramic teapot into a cup, linen apron over a cream sweater, short natural hair, gold studs. Soft early morning sunlight with steam visible. Gentle smile, looking down at the cup."
+    }
+  ]
+}

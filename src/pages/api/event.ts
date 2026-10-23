@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { withDb } from '../../lib/db';
 import { json, readJson, sameOrigin } from '../../lib/http';
 
-const TYPES = new Set(['fork_choice', 'preview_built', 'pass_saved', 'pass_shared', 'estimator_used', 'rate_used']);
+const TYPES = new Set(['fork_choice', 'hero_claim', 'preview_built', 'pass_saved', 'pass_shared', 'estimator_used', 'rate_used']);
 
 export const POST: APIRoute = async ({ request, url, locals }) => {
   if (!sameOrigin(request, url)) return json({ error: 'forbidden' }, 403);

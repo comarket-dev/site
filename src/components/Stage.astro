@@ -1,0 +1,123 @@
+---
+/* The persistent 3D stage. It survives page changes so the fork's phone can carry into a hero. */
+---
+
+<div id="stage" class="stage" transition:persist="stage" aria-hidden="true">
+  <canvas></canvas>
+</div>
+
+<style>
+  .stage {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .stage canvas {
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.5s var(--ease);
+  }
+  :global(.stage-off) .stage {
+    display: none;
+  }
+</style>
+
+<script>
+  import type { Side, StageMode } from '../scripts/stage/stage';
+
+  type StageApi = (typeof import('../scripts/stage/stage'))['stage'];
+  let api: StageApi | null = null;
+  let loading: Promise<StageApi | null> | null = null;
+  let from: Side | undefined;
+
+  function load(): Promise<StageApi | null> {
+    if (!loading) {
+      loading = import('../scripts/stage/stage')
+        .then(({ stage }) => {
+          const canvas = document.querySelector<HTMLCanvasElement>('#stage canvas');
+          if (!canvas || !stage.init(canvas)) {
+            document.documentElement.classList.add('stage-off');
+            return null;
+          }
+          api = stage;
+          (window as unknown as { __stage: StageApi }).__stage = stage;
+          return stage;
+        })
+        .catch(() => {
+          document.documentElement.classList.add('stage-off');
+          return null;
+        });
+    }
+    return loading;
+  }
+
+  // the swap copies <html> attributes from the incoming page, so hand it our state first;
+  // otherwise the new page's poster flashes over the live device for a frame or two
+  const keep = ['js', 'stage-live', 'stage-off', 'stage-drawn'];
+  document.addEventListener('astro:before-swap', (e) => {
+    const next = (e as Event & { newDocument: Document }).newDocument.documentElement;
+    keep.forEach((c) => document.documentElement.classList.contains(c) && next.classList.add(c));
+    ['device'].forEach((k) => document.documentElement.dataset[k] && (next.dataset[k] = document.documentElement.dataset[k]));
+    if (!from || !api || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const vt = (e as Event & { viewTransition?: ViewTransition }).viewTransition;
+    if (!vt?.ready) return;
+    // the page we're travelling to is a still, composed, until we land on it (stage:landed)
+    next.classList.add('landing');
+    vt.ready.then(placePage).catch(() => {});
+  });
+
+  /* The next page under the device's screen: a true miniature in its page area, held while we look at it, then
+     growing on the device's own flight curve to exactly full size. The fork stays as it was around the device. */
+  function placePage() {
+    const plan = api?.tripPlan();
+    if (!plan) return;
+    const html = document.documentElement;
+    // Astro names the page's layer after its transition scope rather than "root"
+    const name = getComputedStyle(html).viewTransitionName;
+    const layer = !name || name === 'none' ? 'root' : name;
+    const old = { pseudoElement: `::view-transition-old(${layer})`, fill: 'both' as const };
+    const neu = { pseudoElement: `::view-transition-new(${layer})`, fill: 'both' as const };
+    const total = plan.delay + plan.dur;
+    const grow = html.animate({ transform: [plan.from, 'none'] }, { ...neu, delay: plan.delay, duration: plan.dur, easing: plan.easing });
+    // page colour around it, cut to the screen's page area, in case the area is a hair off the window's shape
+    html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: ['0 0 0 100vmax var(--paper)', '0 0 0 100vmax var(--paper)'] }, { ...neu, duration: total });
+    html.animate({ opacity: [1, 1] }, { ...old, duration: total });
+    api?.syncTrip(grow);
+  }
+
+  async function apply() {
+    const mode = (document.body.dataset.stage || 'none') as StageMode;
+    const anchor = document.querySelector<HTMLElement>('[data-stage-anchor]');
+    if (mode === 'none') {
+      api?.setMode('none', null);
+      return;
+    }
+    const s = await load();
+    if (!s) return;
+    s.setMode(mode, anchor, { from });
+    from = undefined;
+    if (!anchor) return;
+    // the device is a button: press whatever is on screen
+    anchor.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a,button,input')) return;
+      s.press();
+    });
+  }
+
+  addEventListener('stage:hover', (e) => api?.hover((e as CustomEvent<Side | null>).detail));
+  addEventListener('stage:choose', (e) => {
+    const { side, done } = (e as CustomEvent<{ side: Side; done: () => void }>).detail;
+    from = side;
+    if (!api) return done();
+    api.choose(side).then(done);
+  });
+  addEventListener('stage:landed', () => document.documentElement.classList.remove('landing'));
+  addEventListener('stage:brand', (e) => api?.setBrand((e as CustomEvent).detail));
+  addEventListener('stage:creator', (e) => api?.setCreator((e as CustomEvent<string>).detail));
+  // the device follows the window: Base.astro's inline script re-picks it and resizes its slot
+  addEventListener('resize', () => (window as unknown as { cmDevice?: () => void }).cmDevice?.());
+
+  document.documentElement.classList.add('js');
+  document.addEventListener('astro:page-load', apply);
+</script>

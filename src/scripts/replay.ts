@@ -145,7 +145,7 @@ export function mountReplay(root: HTMLElement): () => void {
 
     // edges
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(141,151,168,0.16)';
+    ctx.strokeStyle = 'rgba(181,173,201,0.16)';
     ctx.beginPath();
     for (const [i, j] of edges) {
       const a = nodes[i];
@@ -163,7 +163,7 @@ export function mountReplay(root: HTMLElement): () => void {
     ctx.textAlign = 'center';
     centers.forEach((c, i) => {
       const k = ease((t - T.type) / 1.2);
-      ctx.fillStyle = `rgba(141,151,168,${0.7 * k})`;
+      ctx.fillStyle = `rgba(181,173,201,${0.7 * k})`;
       ctx.fillText(CLUSTERS[i].toUpperCase(), c.x * w, c.y * h - 0.17 * h);
     });
 
@@ -176,13 +176,13 @@ export function mountReplay(root: HTMLElement): () => void {
         if (k <= 0) continue;
         const [x0, y0] = px(agent);
         const [x1, y1] = px(n);
-        ctx.strokeStyle = `rgba(0,151,141,${0.5 * k})`;
+        ctx.strokeStyle = `rgba(143,193,230,${0.5 * k})`;
         ctx.beginPath();
         ctx.moveTo(x0, y0);
         ctx.lineTo(x0 + (x1 - x0) * k, y0 + (y1 - y0) * k);
         ctx.stroke();
         if (k < 1) {
-          ctx.fillStyle = '#EDF0EC';
+          ctx.fillStyle = '#FFF7EC';
           ctx.beginPath();
           ctx.arc(x0 + (x1 - x0) * k, y0 + (y1 - y0) * k, 2.2, 0, Math.PI * 2);
           ctx.fill();
@@ -201,16 +201,16 @@ export function mountReplay(root: HTMLElement): () => void {
       ctx.beginPath();
       ctx.arc(x, y, n.r * (0.6 + 0.4 * k) * (vetted && n.pass ? 1 + 0.25 * vk : 1), 0, Math.PI * 2);
       if (vetted && n.pass) {
-        ctx.fillStyle = '#00978D';
+        ctx.fillStyle = '#8FC1E6';
         ctx.fill();
         if (n.short !== undefined && vk < 1) {
-          ctx.strokeStyle = `rgba(0,151,141,${1 - vk})`;
+          ctx.strokeStyle = `rgba(143,193,230,${1 - vk})`;
           ctx.beginPath();
           ctx.arc(x, y, n.r + 14 * vk, 0, Math.PI * 2);
           ctx.stroke();
         }
       } else {
-        ctx.strokeStyle = vetted ? 'rgba(154,164,170,0.8)' : 'rgba(237,240,236,0.75)';
+        ctx.strokeStyle = vetted ? 'rgba(165,157,179,0.8)' : 'rgba(255,247,236,0.75)';
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -220,11 +220,11 @@ export function mountReplay(root: HTMLElement): () => void {
     // the agent
     const [ax, ay] = px(agent);
     const pulse = (t * 0.8) % 1;
-    ctx.strokeStyle = `rgba(237,240,236,${0.4 * (1 - pulse)})`;
+    ctx.strokeStyle = `rgba(255,247,236,${0.4 * (1 - pulse)})`;
     ctx.beginPath();
     ctx.arc(ax, ay, 10 + pulse * 26, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.fillStyle = '#EDF0EC';
+    ctx.fillStyle = '#FFF7EC';
     ctx.beginPath();
     ctx.arc(ax, ay, 6, 0, Math.PI * 2);
     ctx.fill();

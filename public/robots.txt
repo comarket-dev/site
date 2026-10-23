@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://comarket.co/sitemap.xml
+Sitemap: https://comarket.si/sitemap.xml

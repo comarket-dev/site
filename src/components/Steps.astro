@@ -1,0 +1,136 @@
+---
+/* The step tracker under the phone. The stage tells it which beat is on screen. */
+interface Props {
+  last?: string;
+  class?: string;
+}
+const { last = 'Split', class: cls } = Astro.props;
+const steps = ['Creator posts', 'Buyer clicks', 'Buyer pays', 'Sale confirmed', last];
+---
+
+<ol class:list={['steps', cls]} data-steps aria-label="How a sale goes through Comarket">
+  {
+    steps.map((s, i) => (
+      <li data-i={i} class:list={[{ on: i === 1, done: i === 0 }]}>
+        <span class="n num">{String(i + 1).padStart(2, '0')}</span>
+        <span class="t" data-t={s} data-alt={i === 3 ? 'Not a new customer' : undefined}>
+          {s}
+        </span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px 0 6px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: color-mix(in oklab, var(--white) 70%, transparent);
+    color: var(--graphite);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition:
+      background-color 0.45s var(--ease),
+      color 0.45s var(--ease),
+      border-color 0.45s var(--ease);
+  }
+  .n {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 10px;
+    background: var(--paper-2);
+    color: var(--graphite);
+    transition: inherit;
+  }
+  li.on {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--on-ink);
+  }
+  li.on .n {
+    background: var(--yellow);
+    color: var(--ink);
+  }
+  li.done {
+    color: var(--ink);
+    border-color: color-mix(in oklab, var(--ink) 30%, transparent);
+  }
+  li.done .n {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  li.no.on {
+    background: var(--white);
+    color: var(--ink);
+    border-color: var(--ghost);
+  }
+  li.no.on .n {
+    background: var(--ghost);
+    color: var(--white);
+  }
+  /* compact: numbers only, with the current step spelled out */
+  .compact li:not(.on) .t {
+    display: none;
+  }
+  .compact li:not(.on) {
+    padding: 0 4px;
+  }
+  @media (max-width: 560px) {
+    li {
+      height: 28px;
+      font-size: 12px;
+      padding: 0 10px 0 4px;
+    }
+    li:not(.on) .t {
+      display: none;
+    }
+    li:not(.on) {
+      padding: 0 3px;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '../scripts/ui';
+  onPage(() => {
+    const lists = Array.from(document.querySelectorAll<HTMLElement>('[data-steps]'));
+    if (!lists.length) return;
+    const on = (e: Event) => {
+      const { step, returning } = (e as CustomEvent<{ step: number; returning: boolean }>).detail;
+      for (const list of lists) {
+        list.querySelectorAll<HTMLElement>('li').forEach((li) => {
+          const i = Number(li.dataset.i);
+          li.classList.toggle('on', i === step);
+          li.classList.toggle('done', i < step);
+          const t = li.querySelector<HTMLElement>('.t');
+          if (t?.dataset.alt) {
+            const no = returning && i === 3;
+            li.classList.toggle('no', no);
+            t.textContent = no ? t.dataset.alt : t.dataset.t!;
+          }
+        });
+      }
+    };
+    addEventListener('stage:beat', on);
+    return [() => removeEventListener('stage:beat', on)];
+  });
+</script>

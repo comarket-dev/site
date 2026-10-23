@@ -92,3 +92,14 @@ test('asking more matches fewer brands, and payout peaks in the middle', () => {
   assert.ok(best > 10 && best < 35, `peak at ${best}`);
   assert.ok(payoutAtAsk(40, 10) < payoutAtAsk(best, 10));
 });
+
+test('handles normalize to one lowercase shape', async () => {
+  const { normalizeHandle, isReserved } = await import('../src/lib/handle.ts');
+  assert.equal(normalizeHandle('@Maya.Makes!'), 'maya.makes');
+  assert.equal(normalizeHandle('  __sam_ships.. '), 'sam_ships');
+  assert.equal(normalizeHandle('a'), null);
+  assert.equal(normalizeHandle('x'.repeat(25)), null);
+  assert.equal(normalizeHandle(42), null);
+  assert.equal(isReserved('brands'), true);
+  assert.equal(isReserved('sarah'), false);
+});

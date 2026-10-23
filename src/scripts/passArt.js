@@ -1,17 +1,17 @@
 // Pass artwork, drawn to a 2D canvas. Plain JS so the site and the Blender texture script share it.
-// Front: safety paper (brands) or Deep Indigo (creators), guilloche rosette, microprint border,
-// a big pass number and the holder's name. Back: Deep Indigo plate with the motto.
+// Front: cream (brands) or Dull Violet Black (creators), guilloche rosette, microprint border,
+// a big pass number and the holder's name. Back: the ink plate with the motto. Wada No. 295.
 
 export const PASS_W = 2048;
 export const PASS_H = 1292;
 
 const C = {
-  paper: '#EDF0EC',
-  ink: '#051230',
-  benzol: '#00978D',
-  benzol2: '#7CC4BC',
-  jasper: '#EB5324',
-  graphite: '#525B67',
+  paper: '#FFF7EC',
+  ink: '#1E0E3F',
+  benzol: '#006EB8',
+  benzol2: '#8FC1E6',
+  jasper: '#FFF200',
+  graphite: '#5F5672',
 };
 
 function rosette(x, cx, cy, R, color, alpha, lines, seed) {
@@ -122,8 +122,8 @@ export function drawPassFront(x, o) {
   rosette(x, PASS_W * 0.73, PASS_H * 0.5, PASS_H * 0.42, line, brand ? 0.55 : 0.5, 72, 0.3);
   rosette(x, PASS_W * 0.73, PASS_H * 0.5, PASS_H * 0.22, line, brand ? 0.4 : 0.35, 40, 1.1);
   frame(x, 44, line, 0.6);
-  micro(x, 'COMARKET · NETNEWONLY', 116, brand ? C.graphite : C.benzol2, 13);
-  micro(x, 'EVERY SALE HAS TWO SIDES ·', PASS_H - 116, brand ? C.graphite : C.benzol2, 13);
+  micro(x, 'COMARKET · PAID PER SALE', 116, brand ? C.graphite : C.benzol2, 13);
+  micro(x, 'NO SALE NO FEE ·', PASS_H - 116, brand ? C.graphite : C.benzol2, 13);
 
   x.fillStyle = fg;
   x.textBaseline = 'alphabetic';
@@ -160,27 +160,18 @@ export function drawPassFront(x, o) {
   x.fillText(`WAITLIST · ISSUED ${when}`, 154, 1080);
   x.globalAlpha = 1;
 
-  // the seal: Jasper Red is reserved for net-new, and this is the promise
+  // the promise, set like the denomination line on a note: a thin yellow rule and one line of type
   x.save();
-  x.translate(PASS_W - 300, PASS_H - 300);
-  x.rotate(-0.22);
-  x.fillStyle = C.jasper;
-  x.beginPath();
-  x.arc(0, 0, 112, 0, Math.PI * 2);
-  x.fill();
-  x.strokeStyle = C.ink;
-  x.globalAlpha = 0.35;
-  x.lineWidth = 2;
-  x.beginPath();
-  x.arc(0, 0, 96, 0, Math.PI * 2);
-  x.stroke();
-  x.globalAlpha = 1;
-  x.fillStyle = C.ink;
-  x.textAlign = 'center';
-  if ('letterSpacing' in x) x.letterSpacing = '4px';
+  const label = 'PAID PER SALE';
   x.font = '26px "Fragment Mono", monospace';
-  x.fillText('NET-NEW', 0, -4);
-  x.fillText('ONLY', 0, 32);
+  if ('letterSpacing' in x) x.letterSpacing = '6px';
+  // under the wordmark, in the one quiet corner the rosette leaves
+  const lw = x.measureText(label).width;
+  x.fillStyle = C.jasper;
+  x.fillRect(154, 336, lw, 5);
+  x.fillStyle = fg;
+  x.globalAlpha = 0.75;
+  x.fillText(label, 154, 320);
   x.restore();
 
   noise(x, brand ? 0.05 : 0.08);
@@ -202,7 +193,7 @@ export function drawPassBack(x, o) {
   if ('letterSpacing' in x) x.letterSpacing = '6px';
   x.font = '28px "Fragment Mono", monospace';
   x.globalAlpha = 0.7;
-  x.fillText(`COMARKET.CO · NO. ${String(o.passNo).padStart(4, '0')}`, PASS_W / 2, PASS_H - 150);
+  x.fillText(`COMARKET.SI · NO. ${String(o.passNo).padStart(4, '0')}`, PASS_W / 2, PASS_H - 150);
   x.restore();
   noise(x, 0.08);
 }

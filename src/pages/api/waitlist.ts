@@ -4,6 +4,7 @@ import { PRICING, priceArm } from '../../lib/experiments';
 import { clip, isEmail, json, readJson, sameOrigin } from '../../lib/http';
 import { sendPassEmail, verifyTurnstile } from '../../lib/notify';
 import { normalizeSiteUrl } from '../../lib/preview';
+import { isReserved, normalizeHandle } from '../../lib/handle';
 
 const PLATFORMS = new Set(['youtube', 'tiktok', 'instagram', 'substack', 'reddit', 'x', 'podcast', 'blog', 'other']);
 
@@ -30,8 +31,9 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     siteUrl = site.origin;
     label = clip(body.name, 40) ?? site.hostname.replace(/^www\./, '');
   } else {
-    handle = clip(String(body.handle ?? '').replace(/^@+/, ''), 40);
-    if (!handle) return json({ error: 'Enter the handle your audience knows you by.' }, 400);
+    handle = normalizeHandle(body.handle);
+    if (!handle) return json({ error: 'Use 2 to 24 letters, numbers, dots or underscores.', field: 'handle' }, 400);
+    if (isReserved(handle)) return json({ error: `comarket.si/${handle} isn’t available. Try another.`, field: 'handle' }, 409);
     platform = typeof body.platform === 'string' && PLATFORMS.has(body.platform) ? body.platform : 'other';
     label = `@${handle}`;
   }
@@ -50,6 +52,10 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
       select pass_no, label, created_at, true as existing from waitlist where side = ${side} and email = ${email}`;
     const [found] = await find();
     if (found) return found;
+    if (handle) {
+      const [taken] = await sql`select 1 from waitlist where side = 'creator' and lower(handle) = ${handle} limit 1`;
+      if (taken) return 'taken' as const;
+    }
     // Insert only when new, so duplicate signups don't burn pass numbers.
     const [inserted] = await sql<Row[]>`
       insert into waitlist (side, email, label, site_url, handle, platform, price_arm, price_first, price_after,
@@ -68,9 +74,13 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     }
     return r;
   }).catch((e) => {
+    // two people racing for the same handle: the unique index decides
+    if ((e as { code?: string }).code === '23505' && handle) return 'taken' as const;
     console.error('waitlist insert failed', e);
     return undefined;
   });
+
+  if (row === 'taken') return json({ error: `comarket.si/${handle} is taken. Try another.`, field: 'handle' }, 409);
 
   if (row === null) return json({ error: 'The waitlist isn’t connected yet. Try again soon.' }, 503);
   if (!row) return json({ error: 'Something went wrong on our side. Try again in a minute.' }, 500);

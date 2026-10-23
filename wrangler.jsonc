@@ -28,7 +28,7 @@
     "PRICING_MODE": "even",
     // Cloudflare Turnstile site key. Leave empty to skip the bot check.
     "PUBLIC_TURNSTILE_SITE_KEY": "",
-    // Sender for confirmation email, e.g. "Comarket <hello@comarket.co>". Empty skips email.
+    // Sender for confirmation email, e.g. "Comarket <hello@comarket.si>". Empty skips email.
     "EMAIL_FROM": ""
   }
   // Secrets (wrangler secret put): RESEND_API_KEY, TURNSTILE_SECRET_KEY

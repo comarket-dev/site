@@ -1,0 +1,227 @@
+---
+/* What a brand match looks like when it reaches a creator. Example brand, example rate. */
+const points = [
+  { h: 'Brands pay only on sales, so they say yes.', p: 'No upfront budget means no follower minimum. Creators your size get real offers.' },
+  { h: 'The brand pays Comarket.', p: 'Your rate is your rate. We never take our cut out of it.' },
+  { h: 'Paid to your bank through Stripe.', p: 'Payouts land monthly, for every month the customer keeps paying.' },
+];
+---
+
+<section class="section pitch" id="pitch" aria-labelledby="pitch-h">
+  <div class="wrap grid">
+    <div class="copy">
+      <h2 class="display-l" id="pitch-h" data-reveal>Brands come to you, with the rate up front.</h2>
+      <p class="lede muted" data-reveal style="--d:.08s">
+        We match you with products your audience already asks about. Say yes and your storefront is ready.
+      </p>
+      <ul class="points">
+        {
+          points.map((x, i) => (
+            <li data-reveal style={`--d:${0.1 + i * 0.06}s`}>
+              <b>{x.h}</b>
+              <span>{x.p}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <article class="card" data-reveal style="--d:.1s" aria-label="Example brand offer">
+      <header class="c-top">
+        <span class="c-from">Comarket · new brand match</span>
+        <span class="tag">Example</span>
+      </header>
+      <div class="c-brand">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+            ><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14Zm0 0 7-7"></path></svg
+          >
+        </span>
+        <span><b>Fernwood wants you on their storefront</b><span class="muted">Onboarding analytics · $49/mo</span></span>
+      </div>
+      <dl class="c-terms">
+        <div><dt>Your rate</dt><dd class="num">20%</dd></div>
+        <div><dt>For</dt><dd class="num">12 months</dd></div>
+        <div><dt>Per sale</dt><dd class="num">$9.80/mo</dd></div>
+      </dl>
+      <div class="c-why">
+        <span class="label">Why you</span>
+        <p>You wrote about trial-to-paid in 6 of your last 20 posts. Fernwood’s buyers read the same things.</p>
+      </div>
+      <div class="c-brief">
+        <span class="label">The ask</span>
+        <p>One post in the next 30 days, in your words. Disclose it as a paid link. Keep it up as long as you like.</p>
+      </div>
+      <div class="c-act">
+        <span class="btn">Accept <span class="arr" aria-hidden="true">→</span></span>
+        <span class="btn ghost">Pass</span>
+      </div>
+      <p class="c-foot label">Nothing to pay, ever. Pass and we won’t pitch you this brand again.</p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    gap: 48px clamp(40px, 7vw, 120px);
+    align-items: center;
+  }
+  .copy {
+    display: grid;
+    gap: 20px;
+  }
+  .copy h2 {
+    max-width: 13ch;
+  }
+  .points {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+  .points li {
+    display: grid;
+    gap: 4px;
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .points b {
+    font-size: 19px;
+    letter-spacing: -0.02em;
+  }
+  .points span {
+    color: var(--graphite);
+    max-width: 48ch;
+  }
+
+  .card {
+    display: grid;
+    gap: 18px;
+    padding: 24px;
+    border-radius: 28px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    box-shadow: 0 40px 80px -48px rgb(30 14 63 / 0.45);
+  }
+  .c-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .c-from {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 11px/1 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+  .tag {
+    font: 10px/1 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 8px;
+    border-radius: 999px;
+    background: var(--paper-2);
+    color: var(--graphite);
+  }
+  .c-brand {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .c-brand > span:last-child {
+    display: grid;
+    gap: 2px;
+  }
+  .c-brand b {
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .c-brand .muted {
+    font-size: 14px;
+  }
+  .logo {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #1e6b47;
+    display: grid;
+    place-items: center;
+  }
+  .c-terms {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-radius: 18px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+  }
+  .c-terms div {
+    padding: 14px 16px;
+  }
+  .c-terms div + div {
+    border-left: 1px solid var(--rule);
+  }
+  .c-terms dt {
+    font: 10.5px/1.3 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+  .c-terms dd {
+    margin: 6px 0 0;
+    font-family: var(--sans);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .c-why,
+  .c-brief {
+    display: grid;
+    gap: 6px;
+  }
+  .c-why p,
+  .c-brief p {
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .c-act {
+    display: flex;
+    gap: 10px;
+  }
+  .c-act .btn {
+    cursor: default;
+  }
+  .c-act .btn:hover {
+    transform: none;
+  }
+  .c-foot {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12.5px;
+    font-family: var(--sans);
+  }
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 460px) {
+    .card {
+      padding: 18px;
+    }
+    .c-terms dd {
+      font-size: 19px;
+    }
+    .c-terms div {
+      padding: 12px;
+    }
+  }
+</style>

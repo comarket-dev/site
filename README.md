@@ -2,14 +2,15 @@
 
 The marketing site and waitlist for Comarket: creators bring buyers, sellers pay only for first-time customers.
 
-- **Fork** (`/`): one guilloche ribbon, two loops. Choosing a side unravels the loop into that page's hero.
-- **Brands** (`/brands`): agent replay, storefront builder, net-new check, split calculator, pricing, waitlist with a live storefront preview.
-- **Creators** (`/creators`): hub and embedded link, protected credit, earnings estimator, rate sweet spot, waitlist.
+- **Fork** (`/`): "More sales for brands. More money for creators. One co-branded storefront." A 3D device shaped like the visitor's own (phone, tablet, laptop or monitor) rests on a completed sale. Hover Brands or Creators to turn it to that side's view. Choosing one types that page's address into the device's browser, shows the real page in its screen for a beat, then flies through the screen into it.
+- **Brands** (`/brands`): hero with a live claim field that re-dresses the phone, example posts and storefronts, agent replay, "Pay for sales, not posts" (a sponsored post billed upfront next to a storefront billed per sale on a 30-day payment timeline, scroll-driven, with the price underneath), split calculator, FAQ, waitlist.
+- **Creators** (`/creators`): hero with a live handle check (`/api/handle`), the deal in plain words, example posts and storefronts, a brand offer, hub and embedded link, protected credit, earnings estimator, rate sweet spot, FAQ, waitlist. Handles are unique (migration 0002), so a claimed page is really claimed.
+- **Examples section** (`src/components/examples/Showcase.astro`): shared by both pages. One example post and the storefront it opens sit in a spotlight at a time; hovering slows it to a quarter speed rather than stopping it. Every third slide is a "Your turn" card whose button jumps to the hero's claim field.
 - Joining the waitlist issues a numbered 3D pass, modeled in Blender and printed at runtime.
 
 ## Stack
 
-Astro 7 on Cloudflare Workers, Neon Postgres through Hyperdrive, raw WebGL2 for the plate, three.js for the coin and pass (loaded only when needed), Blender for 3D assets. Satoshi for type, Fragment Mono for labels and numbers.
+Astro 7 on Cloudflare Workers, Neon Postgres through Hyperdrive, three.js for the stage phone, coin and pass (loaded only when needed), Blender for 3D assets. Satoshi for type, Fragment Mono for labels and numbers.
 
 ## Run it locally
 
@@ -32,7 +33,10 @@ Copy `.dev.vars.example` to `.dev.vars` for local secrets.
 | `npm run db:migrate` | Apply `db/migrations/*.sql` to `DATABASE_URL` |
 | `npm run assets:textures` | Render pass artwork to `design/pass/tex` with headless Chrome |
 | `npm run assets:blender` | Blender: pass GLB, matcaps, hero renders |
-| `node scripts/render-og.mjs` | Share images in `public/og` from the Blender renders |
+| `blender -b -P design/stage/build_stage.py` | Blender: stage phone GLB and studio HDR (`STAGE_ONLY=glb` skips the HDR) |
+| `python3 scripts/render-stage-stills.py <dev url> public/assets/stage` | Posters: the stage's first frame, shown until the 3D draws (needs Playwright) |
+| `python3 scripts/render-stage-stills.py <dev url> design/stage og` | Phone stills for the share images |
+| `node scripts/render-og.mjs` | Share images in `public/og` from the phone stills |
 
 ## Deploy to Cloudflare
 
@@ -46,9 +50,8 @@ The adapter also provisions a `SESSION` KV namespace on first deploy. The site d
 
 ## How it works
 
-**The plate** (`src/scripts/plate/`). One fixed WebGL2 canvas, persisted across page transitions with `transition:persist`. Every line is an instanced quad with real width and antialiasing, computed on the GPU from one parametric family: the fork ribbon (a lemniscate with woven lace) and the hero rosette. Choosing a side morphs one into the other, so the fork becomes the next page's hero. The words on the fork are textures that write depth, so the ribbon passes in front of and behind them. Quality drops automatically when frames run long.
 
-**Experiments** (`src/lib/experiments.ts`, `src/lib/bandit.ts`). Pricing shown to brands is an experiment (`15-10` or `10-5`: our cut of the first payment, then of later payments). Assignment happens in middleware before render, so nothing flickers, and it sticks per visitor. It runs as an even split. Set `PRICING_MODE` to `bandit` to switch to Thompson sampling with a 10% floor per arm; it learns from everything logged during the even split. The current reward is a waitlist signup. Once real revenue exists, change the reward to first-payment revenue, or a cheaper price will win on signups alone. Brands keep the price they were shown (stored on their waitlist row).
+**Experiments** (`src/lib/experiments.ts`, `src/lib/bandit.ts`). Pricing shown to brands is an experiment, currently with one live arm, `15-10` (our cut of the first payment, then of renewals); the `10-5` arm was retired on 2026-10-21. Add an arm to test another price. Assignment happens in middleware before render, so nothing flickers, and it sticks per visitor. It runs as an even split. Set `PRICING_MODE` to `bandit` to switch to Thompson sampling with a 10% floor per arm; it learns from everything logged during the even split. The current reward is a waitlist signup. Once real revenue exists, change the reward to first-payment revenue, or a cheaper price will win on signups alone. Brands keep the price they were shown (stored on their waitlist row).
 
 **Consent** (`src/lib/consent.ts`). In the EU, EEA, UK and Switzerland nothing is tracked until a visitor allows it; until then they see the default arm.
 
@@ -56,9 +59,19 @@ The adapter also provisions a `SESSION` KV namespace on first deploy. The site d
 
 **API** (`src/pages/api/`). `waitlist` (idempotent per side and email), `preview` (reads a brand's public homepage for name, color and icon; blocks private hosts; cached a day in KV), `event`, `consent`.
 
+## The stage
+
+One phone lives across page changes (`src/components/Stage.astro`, `src/scripts/stage/`). It plays an example sale on its screen: a creator's post, the storefront, the brand's own checkout, the moment the payment is confirmed (a drawn check, the amount, and a small haptic dip of the phone), and what each side sees afterwards. The split on screen uses the visitor's pricing arm. The screens are drawn to a canvas in `screens.ts` and uploaded only while something on them moves. The phone follows whichever `[data-stage-anchor]` element the page has (`PhoneSlot.astro`), so layout decides where it sits; between pages it springs from where it was. Without WebGL2, or on slow devices, the poster image in the slot stays. The hero claim fields re-dress the phone with the visitor's site (logo via `/api/icon`, which only serves icons of sites we've previewed) or handle.
+
+**The fork's device** (`src/scripts/stage/devices.ts`, `browser.ts`). Base.astro's inline script picks the device and its slot's shape before first paint; `devices.ts` mirrors its rules. The tablet, laptop and monitor are built at load with a screen cut to the visitor's window plus browser chrome, so the next page fits it exactly. On a choice, the view transition's new-page layer is placed under the screen as a true miniature (Stage.astro) and grows on the device's flight curve; the page holds still (`html.landing`) until the device lands.
+
+## Example posts
+
+The posts in the examples spotlight (`src/components/examples/posts/`) are real HTML in each platform's layout, around one piece of media each. The media is composed in `design/posts/media/*.html` from locally generated source shots (`design/content`, made with mflux) and rendered by `python3 scripts/render-posts.py` into `public/assets/posts`. `scripts/cutout.py` lifts a creator out of a shot with macOS Vision, and `scripts/retouch-posts.py` holds hand fixes to generated shots. Everything in them is fictional.
+
 ## The Blender step
 
-`design/pass/build_pass.py` models the pass (ID-1 proportions, beveled edge, separate UVs for front and back), exports `public/assets/pass/pass.glb`, renders the four ceramic matcaps the split coin uses, and renders studio shots of a brand and a creator pass. The printed faces come from `src/scripts/passArt.js`, the same code the browser uses to put each person's name and number on their pass. `design/fork/` holds the first fork concept (an intersecting-word sculpture), kept for reference.
+`design/pass/build_pass.py` models the pass (ID-1 proportions, beveled edge, separate UVs for front and back), exports `public/assets/pass/pass.glb`, renders the four ceramic matcaps the split coin uses, and renders studio shots of a brand and a creator pass. The printed faces come from `src/scripts/passArt.js`, the same code the browser uses to put each person's name and number on their pass. `design/stage/build_stage.py` models the stage phone (our own proportions, guilloche on the back only) and the softbox studio HDR the phone reflects. `design/fork/` holds the first fork concept (an intersecting-word sculpture), kept for reference.
 
 ## Before launch
 

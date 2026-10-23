@@ -11,13 +11,12 @@ const sources = [
 <section class="section band-ink on-ink find" id="find" aria-labelledby="find-h">
   <div class="wrap">
     <div class="step-head">
-      <span class="label">01 · Find</span>
-      <h2 class="display-l" id="find-h" data-reveal>It finds the creators already talking about your problem.</h2>
+      <h2 class="display-l" id="find-h" data-reveal>We find the creators already talking about your problem.</h2>
     </div>
 
     <div class="console" data-replay data-reveal>
       <header class="bar">
-        <span class="label"><i class="live"></i>Agent · example run</span>
+        <span class="label"><i class="live"></i>Example run</span>
         <div class="query num">
           <span class="muted">topic</span>
           <span class="q" data-query aria-label="trial to paid conversion">trial to paid conversion</span>
@@ -328,7 +327,10 @@ const sources = [
     .shortlist {
       border-left: 0;
       border-top: 1px solid var(--ink-rule);
-      max-height: 260px;
+    }
+    /* newest rows arrive on top; show the latest three rather than cutting one in half */
+    .shortlist :global(.row:nth-child(n + 4)) {
+      display: none;
     }
     .graph canvas {
       min-height: 320px;

@@ -1,0 +1,37 @@
+---
+/* Where the stage's phone sits on a page. The poster is the phone's first frame, shown until the 3D draws. */
+interface Props {
+  poster: string;
+  label: string;
+  class?: string;
+}
+const { poster, label, class: cls } = Astro.props;
+---
+
+<div class:list={['slot', cls]} data-stage-anchor role="img" aria-label={label}>
+  <img class="poster" src={poster} alt="" width="640" height="844" decoding="async" />
+</div>
+
+<style>
+  .slot {
+    position: relative;
+    aspect-ratio: 0.72 / 1.52;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* the poster frames the phone plus its shadow, so it overhangs the slot */
+  .poster {
+    position: absolute;
+    top: -20%;
+    left: -62%;
+    width: 224%;
+    max-width: none;
+    height: 140%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease);
+  }
+  :global(.stage-drawn) .poster {
+    opacity: 0;
+  }
+</style>

@@ -1,43 +1,42 @@
 ---
 import Base from '../layouts/Base.astro';
+import PhoneSlot from '../components/PhoneSlot.astro';
 ---
 
 <Base
-  title="Comarket"
-  description="Creators bring the buyers. You pay only for the ones you didn’t already have."
-  plate="fork"
+  title="Comarket · More sales for brands, more money for creators"
+  description="One co-branded storefront: brands get more sales from creators and pay only when one completes, and creators earn more on every sale they send."
+  stage="fork"
   og="/og/og-fork.jpg"
 >
   <main class="fork" data-fork>
     <header class="bar">
-      <span class="wm">Comarket</span>
-      <span class="label">Every sale has two sides.</span>
+      <a class="wm" href="/?fork=1">Comarket</a>
     </header>
 
-    <div class="marks" aria-hidden="true">
-      <i class="m tl"></i><i class="m tr"></i><i class="m bl"></i><i class="m br"></i>
+    <h1 class="display-l head" data-reveal>
+      <span class="l1"><span>More sales for brands.</span> <span>More money for creators.</span></span>
+      <span class="l2"><mark class="hl">One co-branded storefront.</mark></span>
+    </h1>
+
+    <div class="stagewrap" data-reveal style="--d:.12s">
+      <PhoneSlot
+        class="phone"
+        poster="/assets/stage/poster-fork.webp"
+        label="Example: one completed sale of a $49 product, split between the brand, the creator who sold it, and Comarket. Nobody paid anything before it."
+      />
     </div>
 
-    <div class="cut" aria-hidden="true" data-cut>
-      <span class="label">Cutting the plate</span>
-      <span class="count num" data-count>000</span>
-    </div>
-
-    <h1 class="sr-only">Comarket. Are you a brand or a creator?</h1>
-
-    <a class="side" href="/brands" data-side="brands">
-      <span class="word">Brands</span>
-      <span class="sub label">Pay only for new customers</span>
+    <a class="side brands" href="/brands" data-side="brands" data-astro-prefetch="load" data-reveal style="--d:.2s">
+      <span class="who">Brands</span>
+      <span class="what">Creators sell for you. You pay only when they make a sale.</span>
+      <span class="go">Get creator sales <span class="arr" aria-hidden="true">→</span></span>
     </a>
-    <a class="side" href="/creators" data-side="creators">
-      <span class="word">Creators</span>
-      <span class="sub label">Earn on every customer you bring</span>
+    <a class="side creators" href="/creators" data-side="creators" data-astro-prefetch="load" data-reveal style="--d:.26s">
+      <span class="who">Creators</span>
+      <span class="what">Get paid on every sale you send, every month it renews.</span>
+      <span class="go">Start earning <span class="arr" aria-hidden="true">→</span></span>
     </a>
-
-    <footer class="hint">
-      <span class="label">Choose a side</span>
-      <span class="label keys"><kbd>B</kbd> or <kbd>C</kbd></span>
-    </footer>
   </main>
 </Base>
 
@@ -45,232 +44,284 @@ import Base from '../layouts/Base.astro';
   .fork {
     position: relative;
     z-index: 2;
-    height: 100vh;
-    height: 100svh;
-    min-height: 560px;
-    overflow: hidden;
-    cursor: default;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      'bar bar bar'
+      'head head head'
+      'brands phone creators';
+    column-gap: clamp(24px, 4vw, 72px);
+    padding: 0 var(--gr) calc(28px + env(safe-area-inset-bottom, 0px)) var(--gl);
+    /* the poster overhangs the phone sideways; never clip anything vertically */
+    overflow-x: clip;
   }
   .bar {
-    position: absolute;
-    inset: 0 0 auto 0;
+    grid-area: bar;
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: calc(20px + env(safe-area-inset-top, 0px)) var(--gr) 0 var(--gl);
+    align-items: center;
+    padding-top: calc(18px + env(safe-area-inset-top, 0px));
   }
   .wm {
     font-weight: 700;
     font-size: 21px;
     letter-spacing: -0.04em;
+    text-decoration: none;
   }
-
-  /* registration marks, like a press sheet */
-  .marks .m {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    opacity: 0.55;
+  .head {
+    grid-area: head;
+    justify-self: center;
+    text-align: center;
+    margin-top: clamp(16px, 3.5vh, 44px);
+    font-size: clamp(34px, 3.9vw, 62px);
+    line-height: 1.16;
+    max-width: 24ch;
   }
-  .marks .m::before,
-  .marks .m::after {
-    content: '';
-    position: absolute;
-    background: var(--ink);
+  .head > span {
+    display: block;
   }
-  .marks .m::before {
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 1px;
+  /* one sentence per line, so the promise to each side reads as its own line */
+  .l1 span {
+    display: block;
   }
-  .marks .m::after {
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
+  .stagewrap {
+    grid-area: phone;
+    align-self: center;
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    padding-block: clamp(20px, 4vh, 40px);
   }
-  .marks .tl {
-    left: calc(var(--gl) - 11px);
-    top: 70px;
+  .stagewrap :global(.slot) {
+    height: min(60vh, 580px);
+    min-height: 300px;
   }
-  .marks .tr {
-    right: calc(var(--gr) - 11px);
-    top: 70px;
+  /* a tablet, laptop or monitor (devices.ts): its slot takes the device's shape, set before first paint by Base.astro.
+     There's no poster for them; the device fades in once it's drawn */
+  :global(html:not([data-device='phone'])) .stagewrap :global(.slot) {
+    aspect-ratio: var(--device-aspect);
+    height: auto;
+    min-height: 0;
+    width: min(44vw, 780px, calc(min(58vh, 560px) * var(--device-aspect)));
   }
-  .marks .bl {
-    left: calc(var(--gl) - 11px);
-    bottom: 64px;
-  }
-  .marks .br {
-    right: calc(var(--gr) - 11px);
-    bottom: 64px;
-  }
-
-  .cut {
-    position: absolute;
-    left: var(--gl);
-    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
-    display: flex;
-    gap: 14px;
-    align-items: baseline;
-    transition: opacity 0.8s var(--ease);
-  }
-  .cut .count {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-  }
-  .cut.done {
-    opacity: 0;
+  :global(html:not([data-device='phone'])) .stagewrap :global(.poster) {
+    display: none;
   }
 
   .side {
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translate(-50%, -50%);
+    align-self: center;
     display: grid;
-    justify-items: center;
-    gap: 0;
-    width: max-content;
-    text-align: center;
+    gap: 16px;
+    max-width: 360px;
     text-decoration: none;
-    padding: 4vmin 6vmin;
-    border-radius: 24px;
-  }
-  .side .sub {
-    white-space: nowrap;
-  }
-  .side .word {
-    font-weight: 700;
-    font-size: var(--word, clamp(56px, 9.6vw, 176px));
-    line-height: 1.25;
-    letter-spacing: -0.05em;
-    color: transparent;
-  }
-  .side .sub {
-    transform: translateY(-0.2em);
-    opacity: 0;
     transition:
-      opacity 0.5s var(--ease),
-      transform 0.6s var(--ease);
-    text-shadow:
-      0 0 8px var(--paper),
-      0 0 3px var(--paper);
+      opacity 0.6s var(--ease),
+      transform 0.8s var(--ease);
   }
-  .side.on .sub,
-  .side:focus-visible .sub {
-    opacity: 1;
-    transform: translateY(0.2em);
+  .side.brands {
+    grid-area: brands;
+    justify-self: end;
+    text-align: right;
+    justify-items: end;
   }
-  .side:focus-visible {
-    outline-offset: -6px;
+  .side.creators {
+    grid-area: creators;
+    justify-self: start;
   }
-  .fork.chosen .side {
-    pointer-events: none;
+  .who {
+    font-size: clamp(44px, 5vw, 84px);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    font-weight: 700;
   }
-  .fork.chosen .side .sub {
+  .what {
+    font-size: 18px;
+    line-height: 1.45;
+    min-height: 2.9em;
+    color: var(--graphite);
+    max-width: 24ch;
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 24px;
+    width: fit-content;
+    border-radius: 999px;
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 16px;
+    transition:
+      background-color 0.35s var(--ease),
+      transform 0.45s var(--ease);
+  }
+  .go .arr {
+    transition: transform 0.45s var(--ease);
+  }
+  .side.on .go,
+  .side:focus-visible .go {
+    background: var(--blue-ink);
+  }
+  .side.on .go .arr {
+    transform: translateX(4px);
+  }
+  .side.brands.on {
+    transform: translateX(-8px);
+  }
+  .side.creators.on {
+    transform: translateX(8px);
+  }
+  .fork.leaning .side:not(.on) {
+    opacity: 0.3;
+  }
+  /* a choice: the other card goes at once; the rest stays while the device goes to the page.
+     .leaning is in the selector so this outranks the hover rules, which would otherwise keep the other card up */
+  .fork.flying.leaning .side:not(.on) {
     opacity: 0;
-  }
-
-  .hint {
-    position: absolute;
-    right: var(--gr);
-    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
-    display: flex;
-    gap: 18px;
-  }
-  kbd {
-    font: inherit;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 1px 5px;
-    color: var(--ink);
-  }
-
-  /* without WebGL the words are plain type */
-  :global(.no-gl) .side .word {
-    color: var(--ink);
-  }
-  :global(.no-gl) .side .sub {
-    opacity: 1;
     transform: none;
+    transition: opacity 0.18s var(--ease);
   }
-  :global(.no-gl) .cut {
-    display: none;
-  }
-  @media (hover: none) {
-    .keys {
-      display: none;
+
+  @media (hover: hover) {
+    .fork {
+      cursor: pointer;
     }
-    .side .sub {
+  }
+
+  /* phones and narrow tablets: headline, phone, then two plain choices */
+  @media (max-width: 860px), (max-aspect-ratio: 4/5) {
+    .fork {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      grid-template-areas:
+        'bar bar'
+        'head head'
+        'phone phone'
+        'brands creators';
+      column-gap: 10px;
+      row-gap: 12px;
+    }
+    .head {
+      font-size: clamp(26px, 7.3vw, 44px);
+      margin-top: 14px;
+    }
+    .stagewrap :global(.slot) {
+      height: min(44svh, 420px);
+      min-height: 240px;
+    }
+    :global(html:not([data-device='phone'])) .stagewrap :global(.slot) {
+      width: min(80vw, calc(min(46svh, 440px) * var(--device-aspect)));
+    }
+    .stagewrap {
+      padding-block: 8px;
+    }
+    .side,
+    .side.brands,
+    .side.creators {
+      justify-self: stretch;
+      justify-items: start;
+      text-align: left;
+      align-self: end;
+      gap: 6px;
+      max-width: none;
+      padding: 16px 16px 16px;
+      border-radius: 20px;
+      background: var(--white);
+      border: 1px solid var(--rule);
+    }
+    .side.brands {
+      background: var(--ink);
+      color: var(--on-ink);
+      border-color: var(--ink);
+    }
+    .side.brands .what {
+      color: var(--on-ink-muted);
+    }
+    .who {
+      font-size: 26px;
+    }
+    .what {
+      font-size: 13.5px;
+      line-height: 1.35;
+      min-height: 0;
+    }
+    .go {
+      height: auto;
+      padding: 8px 0 0;
+      background: none;
+      color: inherit;
+      font-size: 14.5px;
+    }
+    .side.on .go {
+      background: none;
+    }
+    .side.brands.on,
+    .side.creators.on {
+      transform: none;
+    }
+    .fork.leaning .side:not(.on) {
       opacity: 1;
-      transform: translateY(0.1em);
+    }
+  }
+  @media (max-width: 360px) {
+    .what {
+      display: none;
     }
   }
 </style>
 
 <script>
   import { navigate } from 'astro:transitions/client';
-  import { plate, type Side } from '../scripts/plate/engine';
+  import { track } from '../scripts/ui';
 
+  type Side = 'brands' | 'creators';
   let cleanup: (() => void) | null = null;
 
   function setup() {
-    cleanup?.();
     const root = document.querySelector<HTMLElement>('[data-fork]');
     if (!root) return;
     const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.side'));
-    const cut = root.querySelector<HTMLElement>('[data-cut]');
-    const count = root.querySelector<HTMLElement>('[data-count]');
-    let chosen = false;
+    const phone = root.querySelector<HTMLElement>('[data-stage-anchor]');
     let current: Side | null = null;
-
-    const place = () => {
-      const c = plate.loopCenters();
-      if (!c) {
-        const portrait = innerHeight > innerWidth * 1.08;
-        links[0].style.left = portrait ? '50%' : '30%';
-        links[0].style.top = portrait ? '32%' : '50%';
-        links[1].style.left = portrait ? '50%' : '70%';
-        links[1].style.top = portrait ? '68%' : '50%';
-        return;
-      }
-      links[0].style.left = `${c.brands[0]}px`;
-      links[0].style.top = `${c.brands[1]}px`;
-      links[1].style.left = `${c.creators[0]}px`;
-      links[1].style.top = `${c.creators[1]}px`;
-      root.style.setProperty('--word', `${(c.wordPx / 1.25).toFixed(1)}px`);
-    };
+    let chosen = false;
+    const stacked = () => matchMedia('(max-width: 860px), (max-aspect-ratio: 4/5)').matches;
 
     const setHover = (s: Side | null) => {
-      if (chosen || s === current) return;
+      if (s === current || chosen) return;
       current = s;
-      plate.hover(s);
+      root.classList.toggle('leaning', !!s);
       links.forEach((l) => l.classList.toggle('on', l.dataset.side === s));
+      dispatchEvent(new CustomEvent('stage:hover', { detail: s }));
     };
 
+    /* left of the phone is brands, right is creators, the phone itself is the demo */
     const sideAt = (x: number, y: number): Side | null => {
-      const portrait = plate.isPortrait() || innerHeight > innerWidth * 1.08;
-      const v = portrait ? 0.5 - y / innerHeight : 0.5 - x / innerWidth;
-      if (v > 0.035) return 'brands';
-      if (v < -0.035) return 'creators';
-      return null;
+      if (stacked()) return null;
+      const r = phone?.getBoundingClientRect();
+      if (r && x > r.left && x < r.right && y > r.top && y < r.bottom) return null;
+      return x < innerWidth / 2 ? 'brands' : 'creators';
     };
 
     const choose = (s: Side) => {
       if (chosen) return;
+      setHover(s);
       chosen = true;
-      root.classList.add('chosen');
-      plate.choose(s);
-      fetch('/api/event', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ type: 'fork_choice', props: { side: s } }),
-        keepalive: true,
-      }).catch(() => {});
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      setTimeout(() => navigate(`/${s}`), reduce || !plate.ready ? 0 : 520);
+      // the other card clears; the rest of the fork stays put while the device goes to the page
+      root.classList.add('flying');
+      track('fork_choice', { side: s });
+      let gone = false;
+      const go = () => {
+        if (gone) return;
+        gone = true;
+        navigate(`/${s}`);
+      };
+      dispatchEvent(new CustomEvent('stage:choose', { detail: { side: s, done: go } }));
+      // in case the stage never answers
+      setTimeout(go, 1500);
     };
 
     const onMove = (e: PointerEvent) => {
@@ -278,9 +329,11 @@ import Base from '../layouts/Base.astro';
     };
     const onLeave = () => setHover(null);
     const onClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest<HTMLAnchorElement>('.side');
-      const s = (target?.dataset.side as Side | undefined) ?? sideAt(e.clientX, e.clientY);
+      if ((e.target as HTMLElement).closest('.wm')) return;
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('.side');
+      const s = (link?.dataset.side as Side | undefined) ?? sideAt(e.clientX, e.clientY);
       if (!s) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey) return;
       e.preventDefault();
       choose(s);
     };
@@ -290,35 +343,25 @@ import Base from '../layouts/Base.astro';
       if (k === 'b') choose('brands');
       if (k === 'c') choose('creators');
     };
+    const onFocus = (e: FocusEvent) => setHover(((e.target as HTMLElement).closest<HTMLElement>('.side')?.dataset.side as Side) ?? null);
     links.forEach((l) => {
-      l.addEventListener('focus', () => setHover(l.dataset.side as Side));
-      l.addEventListener('blur', () => setHover(null));
+      l.addEventListener('focus', onFocus);
+      l.addEventListener('blur', onLeave);
     });
-
-    const off = plate.on(({ draw }) => {
-      place();
-      if (count) count.textContent = String(Math.round(draw * 100)).padStart(3, '0');
-      if (cut && draw >= 1) cut.classList.add('done');
-    });
-    setTimeout(() => {
-      if (!plate.ready && cut) cut.classList.add('done');
-    }, 0);
-
     root.addEventListener('pointermove', onMove);
     root.addEventListener('pointerleave', onLeave);
     root.addEventListener('click', onClick);
-    window.addEventListener('keydown', onKey);
-    window.addEventListener('resize', place);
-    place();
+    addEventListener('keydown', onKey);
 
     cleanup = () => {
-      off();
+      links.forEach((l) => {
+        l.removeEventListener('focus', onFocus);
+        l.removeEventListener('blur', onLeave);
+      });
       root.removeEventListener('pointermove', onMove);
       root.removeEventListener('pointerleave', onLeave);
       root.removeEventListener('click', onClick);
-      window.removeEventListener('keydown', onKey);
-      window.removeEventListener('resize', place);
-      plate.hover(null);
+      removeEventListener('keydown', onKey);
     };
   }
 

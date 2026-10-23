@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
+<style>
+  /* Slide 1 of Priya's carousel: her flat lay with Kindred's print on the bottles, and the cover text she set in-app.
+     Positions are the photo's pixels times 360/896. */
+  body { width: 360px; height: 450px; background: #e8e1d6; }
+  .photo { position: absolute; inset: 0; background: url(../../content/posts/priya-flatlay-a.png) center / cover; }
+  .print { position: absolute; color: rgba(255, 246, 238, 0.9); text-align: center; transform-origin: center; filter: blur(0.15px); }
+  .print svg { width: 12px; height: 12px; margin: 0 auto 3px; }
+  .print b { display: block; font: 500 17px/1 ui-serif, 'New York', Georgia, serif; letter-spacing: 0.04em; }
+  .print small { display: block; font: 600 5px/1.4 -apple-system, system-ui; letter-spacing: 0.22em; text-transform: uppercase; margin-top: 4px; opacity: 0.85; }
+  .serum { left: 98px; top: 296px; transform: translate(-50%, -50%) rotate(-18.5deg); }
+  .cream { left: 190px; top: 241px; transform: translate(-50%, -50%); }
+  .cream b { font-size: 15px; }
+  .tube { left: 246px; top: 324px; transform: translate(-50%, -50%) rotate(-68deg); }
+  .tube b { font-size: 19px; }
+  .cover { position: absolute; left: 20px; top: 22px; color: #3a2a20; }
+  .cover b { display: block; font: 600 31px/1.02 ui-serif, 'New York', Georgia, serif; letter-spacing: -0.01em; }
+  .cover b i { font-style: italic; font-weight: 500; }
+  .cover span { display: inline-block; margin-top: 9px; font: 600 11.5px/1 -apple-system, system-ui; color: #3a2a20; background: rgba(255, 250, 244, 0.88); padding: 5px 9px; border-radius: 999px; }
+</style></head>
+<body>
+  <div class="photo"></div>
+  <div class="print serum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/></svg><b>kindred</b><small>barrier serum</small></div>
+  <div class="print cream"><b>kindred</b><small>repair cream</small></div>
+  <div class="print tube"><b>kindred</b><small>gentle cleanser</small></div>
+  <div class="cover"><b>my 3-step<br><i>barrier reset</i></b><span>it actually worked</span></div>
+</body></html>
