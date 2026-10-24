@@ -7,9 +7,13 @@
   "assets": { "directory": "./dist", "binding": "ASSETS" },
   "observability": { "enabled": true },
 
+  // Serves the apex domain. Cloudflare creates the DNS record and certificate.
+  // www is redirected to the apex by a Redirect Rule in the dashboard.
+  "routes": [{ "pattern": "comarket.si", "custom_domain": true }],
+
   // Caches experiment weights between requests. Create with:
   //   npx wrangler kv namespace create EXPERIMENTS
-  "kv_namespaces": [{ "binding": "EXPERIMENTS", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+  "kv_namespaces": [{ "binding": "EXPERIMENTS", "id": "c469982b1e9f49999ad3f585b12d21dc" }],
 
   // Neon Postgres through Hyperdrive. Create with:
   //   npx wrangler hyperdrive create comarket --connection-string="<neon url>"
@@ -18,7 +22,7 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "REPLACE_WITH_HYPERDRIVE_ID",
+      "id": "44aa891f01e64b7d98f709d4a16444d9",
       "localConnectionString": "postgresql://comarket:comarket@localhost:5432/comarket"
     }
   ],
