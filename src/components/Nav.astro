@@ -13,11 +13,11 @@ const cta = side === 'creators' ? 'Claim my page' : 'Get early access';
     <a href="/brands" aria-current={side === 'brands' ? 'page' : undefined}>Brands</a>
     <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>Creators</a>
   </nav>
-  <a class="btn join" href="#waitlist">{cta} <Icon name="arrow-right" class="arr" /></a>
+  <a class="btn convert join" href="#waitlist">{cta} <Icon name="arrow-right" class="arr" /></a>
 </header>
 <!-- phones: the same action, docked at the thumb once the hero's form has scrolled away; gone while the waitlist shows -->
 <div class="dock" data-dock aria-hidden="true">
-  <a class="btn" href="#waitlist" tabindex="-1">{cta} <Icon name="arrow-right" class="arr" /></a>
+  <a class="btn convert" href="#waitlist" tabindex="-1">{cta} <Icon name="arrow-right" class="arr" /></a>
 </div>
 
 <style>

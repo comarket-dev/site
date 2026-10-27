@@ -13,7 +13,7 @@ import { heroPreview } from '../lib/people';
 import Waitlist from '../components/Waitlist.astro';
 import Footer from '../components/Footer.astro';
 
-const hero = heroPreview(Astro.url, 'cook');
+const hero = heroPreview(Astro.url, 'florists');
 const faq = [
   {
     q: 'When do I get paid?',
@@ -74,7 +74,7 @@ const faq = [
     <Credit />
     <Earnings />
     <Faq items={faq} />
-    <Waitlist side="creator" />
+    <Waitlist side="creator" photo="shop-plan" />
   </main>
   <Footer side="creators" />
 </Base>

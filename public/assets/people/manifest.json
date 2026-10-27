@@ -1,22 +1,27 @@
 {
  "shop-plan": {
-  "w": 2400,
-  "h": 1600,
+  "w": 3200,
+  "h": 2133,
   "original": true
  },
  "shop-film": {
-  "w": 2400,
-  "h": 3600,
+  "w": 3200,
+  "h": 4800,
   "original": true
  },
  "florists": {
-  "w": 2400,
-  "h": 1600,
+  "w": 3200,
+  "h": 2133,
   "original": true
  },
  "cook": {
-  "w": 2400,
-  "h": 3600,
+  "w": 3200,
+  "h": 4800,
+  "original": true
+ },
+ "florists-tall": {
+  "w": 3200,
+  "h": 4800,
   "original": true
  },
  "owner-hero": {

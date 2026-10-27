@@ -39,8 +39,11 @@
   /* warmth and texture (design/texture/README.md): --sun is Wada's Cream Yellow used as light, never as a fill; the
      grain is the paper every section is printed on, one 384px tile at 1x (scripts/texture.py) */
   --sun: var(--cream);
-  --grain: url('/assets/texture/grain.webp') 0 0 / 384px 384px;
-  --grain-ink: url('/assets/texture/grain-ink.webp') 0 0 / 384px 384px;
+  --grain: url('/assets/texture/grain.webp') 0 0 / 384px 384px, url('/assets/texture/creases.webp') 0 0 / 1800px 1800px;
+  --grain-ink: url('/assets/texture/grain-ink.webp') 0 0 / 384px 384px,
+    url('/assets/texture/creases-ink.webp') 0 0 / 1800px 1800px;
+  /* the grain alone, for photos: a photo is printed on the paper, but a fold through a face reads as damage */
+  --tooth: url('/assets/texture/grain.webp') 0 0 / 384px 384px;
 
   /* old names, kept so older components follow the new palette */
   --benzol: var(--blue);

@@ -31,18 +31,26 @@ import Person from '../components/Person.astro';
     </div>
 
     <a class="side brands" href="/brands" data-side="brands" data-astro-prefetch="load" data-reveal style="--d:.2s">
-      <span class="face"><Person id="owner-call" face decorative eager sizes="64px" /></span>
       <span class="who">Brands</span>
       <span class="what">Creators sell for you. You pay only when they make a sale.</span>
-      <span class="go">Get creator sales <Icon name="arrow-right" class="arr" /></span>
+      <span class="go convert">Get creator sales <Icon name="arrow-right" class="arr" /></span>
     </a>
     <a class="side creators" href="/creators" data-side="creators" data-astro-prefetch="load" data-reveal style="--d:.26s">
-      <span class="face"><Person id="creator-desk" face decorative eager sizes="64px" /></span>
       <span class="who">Creators</span>
       <span class="what">Get paid on every sale you send, every month it renews.</span>
-      <span class="go">Start earning <Icon name="arrow-right" class="arr" /></span>
+      <span class="go convert">Start earning <Icon name="arrow-right" class="arr" /></span>
     </a>
   </main>
+
+  <!-- a person on each side, looking in at the device. Side by side (.tall): a tall photo from under the wordmark's
+       bar to the foot of the screen, off the outer edge, with the side's card on its lower part. Stacked (.wide):
+       beside the phone. Outside the fork so the stage canvas draws over them; placed by the script. -->
+  <div class="people" data-fork-people aria-hidden="true">
+    <Person id="florists-tall" class="pp brands tall" decorative sizes="36vw" focal={[0, 0]} />
+    <Person id="cook" class="pp creators tall" decorative sizes="30vw" focal={[0.62, 0.42]} />
+    <Person id="florists" class="pp brands wide" decorative sizes="34vw" focal={[0.33, 0.24]} />
+    <Person id="cook" class="pp creators wide" decorative sizes="34vw" focal={[0.46, 0.4]} />
+  </div>
 
   <!-- for anyone who scrolls, and for search: what each side gets, in plain text -->
   <section class="about" aria-labelledby="about-h">
@@ -167,11 +175,20 @@ import Person from '../components/Person.astro';
     --devw: min(54vw, 1320px);
   }
 
+  /* side by side, each card is a sheet of the page's paper laid on the lower part of its photo, under the faces */
   .side {
-    align-self: center;
+    position: relative;
+    align-self: end;
     display: grid;
     gap: 16px;
     max-width: 360px;
+    margin-bottom: clamp(24px, 5vh, 56px);
+    padding: clamp(18px, 1.8vw, 28px) clamp(18px, 1.6vw, 32px);
+    border-radius: 24px;
+    background: var(--grain), var(--paper);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      0 28px 60px -30px rgb(30 14 63 / 0.55);
     text-decoration: none;
     transition:
       opacity 0.6s var(--ease),
@@ -188,27 +205,28 @@ import Person from '../components/Person.astro';
     justify-self: start;
   }
   .who {
-    font-size: clamp(44px, 5vw, 84px);
+    font-size: clamp(40px, 3.6vw, 80px);
     line-height: 1.05;
     letter-spacing: -0.045em;
     font-weight: 700;
   }
-  /* a real person for each side, just above its word on the device's side; on phones, beside the word */
-  .face {
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin-bottom: -4px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 0 3px var(--paper), 0 10px 24px -12px rgb(30 14 63 / 0.45);
-    background: var(--rule);
+  /* the people (placed by the script). They fade with the cards when a side is chosen. Both look inward, toward the
+     device. */
+  .people :global(.pp) {
+    position: absolute;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease);
   }
-  .face :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .people :global(.pp.wide) {
+    display: none;
+  }
+  .people.placed :global(.pp) {
+    opacity: 1;
+  }
+  .fork.flying ~ .people :global(.pp) {
+    opacity: 0;
+    transition: opacity 0.18s var(--ease);
   }
   .what {
     font-size: 18px;
@@ -218,6 +236,7 @@ import Person from '../components/Person.astro';
     max-width: 24ch;
   }
   .go {
+    white-space: nowrap;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -356,6 +375,12 @@ import Person from '../components/Person.astro';
     .stagewrap {
       padding-block: 8px;
     }
+    .people :global(.pp.tall) {
+      display: none;
+    }
+    .people :global(.pp.wide) {
+      display: block;
+    }
     .side,
     .side.brands,
     .side.creators {
@@ -365,24 +390,20 @@ import Person from '../components/Person.astro';
       align-self: end;
       gap: 6px;
       max-width: none;
+      margin-bottom: 0;
       padding: 16px 16px 16px;
       border-radius: 20px;
       background: var(--white);
       border: 1px solid var(--rule);
+      box-shadow: none;
     }
     .side {
       grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
       column-gap: 8px;
     }
-    .side > :not(.face, .who) {
+    .side > :not(.who) {
       grid-column: 1 / -1;
-    }
-    .face {
-      width: 26px;
-      height: 26px;
-      margin: 0;
-      box-shadow: 0 0 0 2px var(--white);
     }
     .who {
       font-size: 26px;
@@ -499,6 +520,59 @@ import Person from '../components/Person.astro';
     root.addEventListener('click', onClick);
     addEventListener('keydown', onKey);
 
+    /* The people take the space the layout leaves: side by side, from just under the wordmark to the foot of the
+       screen, and from the outer edge in to just short of the headline and the device (the card sits on the photo's
+       lower part); stacked, the height of the phone, from each edge to just under the phone's side. */
+    const people = document.querySelector<HTMLElement>('[data-fork-people]');
+    const head = root.querySelector<HTMLElement>('.head');
+    const slot = root.querySelector<HTMLElement>('.stagewrap .slot');
+    const bar = root.querySelector<HTMLElement>('.bar');
+    const place = () => {
+      if (!people || !head || !slot) return;
+      const vw = document.documentElement.clientWidth;
+      const h = head.getBoundingClientRect();
+      const sl = slot.getBoundingClientRect();
+      const fork = root.getBoundingClientRect();
+      /* the florists' tall photo, anchored top left: show at most its left 62% (the first florist whole, only the
+         second's hair), zooming from the top left corner when the column is wider than that. Both faces whole only
+         once the column shows nearly all of it. */
+      const florists = people.querySelector<HTMLImageElement>('.pp.tall.brands img');
+      for (const l of links) {
+        const p = people.querySelector<HTMLElement>(`.pp.${stacked() ? 'wide' : 'tall'}.${l.dataset.side}`);
+        if (!p) continue;
+        const brands = l.dataset.side === 'brands';
+        let top: number, height: number, width: number;
+        if (stacked()) {
+          top = sl.top + scrollY;
+          height = sl.height;
+          width = brands ? sl.left + 24 : vw - sl.right + 24;
+        } else {
+          top = (bar?.getBoundingClientRect().bottom ?? 0) + scrollY + 10;
+          height = fork.bottom + scrollY - top;
+          width = brands ? Math.min(h.left, sl.left) - 24 : vw - Math.max(h.right, sl.right) - 24;
+        }
+        if (brands && !stacked() && florists && florists.naturalWidth) {
+          const v = width / height / (florists.naturalWidth / florists.naturalHeight);
+          const z = v > 0.62 && v < 0.95 ? v / 0.62 : 1;
+          florists.style.transformOrigin = '0 0';
+          florists.style.transform = z > 1 ? `scale(${z.toFixed(3)})` : '';
+        }
+        Object.assign(p.style, {
+          top: `${top}px`,
+          height: `${Math.max(0, height)}px`,
+          width: `${Math.max(0, width)}px`,
+          left: brands ? '0px' : '',
+          right: brands ? '' : '0px',
+        });
+      }
+      people.classList.add('placed');
+    };
+    const ro = new ResizeObserver(place);
+    ro.observe(root);
+    people?.querySelectorAll('img').forEach((i) => i.addEventListener('load', place, { once: true }));
+    document.fonts?.ready.then(place);
+    place();
+
     cleanup = () => {
       links.forEach((l) => {
         l.removeEventListener('focus', onFocus);
@@ -508,6 +582,7 @@ import Person from '../components/Person.astro';
       root.removeEventListener('pointerleave', onLeave);
       root.removeEventListener('click', onClick);
       removeEventListener('keydown', onKey);
+      ro.disconnect();
     };
   }
 

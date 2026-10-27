@@ -13,7 +13,7 @@ import { priceArm } from '../lib/experiments';
 import { heroPreview } from '../lib/people';
 
 const arm = priceArm(Astro.locals.arms ?? {});
-const hero = heroPreview(Astro.url, 'shop-plan');
+const hero = heroPreview(Astro.url, 'florists');
 
 const faq = [
   {
@@ -68,7 +68,7 @@ const faq = [
     <Find />
     <Split arm={arm} />
     <Faq items={faq} />
-    <Waitlist side="brand" photo={hero.photo === 'florists' ? 'shop-plan' : 'florists'} />
+    <Waitlist side="brand" photo="shop-plan" />
   </main>
   <Footer side="brands" />
 </Base>

@@ -1,0 +1,118 @@
+---
+/* A photo edge to edge, scaled and placed so that what its people are looking at (a spot in people.json: the basket,
+   the gap between two faces) is where the object in the slot sits: the phone in a hero, the sign-up card in the
+   waitlist. So they look at our thing. The photo sits under the stage canvas; the object rides on it.
+
+   All the geometry is in the spot, as fractions of the photo, and becomes CSS here: the photo is z container-widths
+   wide, shifted so its x lands at tx across the container, cut to rows y0 to y1. Phones (960px and under) use the
+   spot's `m`. */
+import Person from './Person.astro';
+import { person, type PersonId, type Spot, type SpotName } from '../lib/people';
+
+interface Props {
+  /** no photo: the slot renders as it is, so a caller can make the photo optional without repeating its markup */
+  photo?: PersonId;
+  spot: SpotName;
+  class?: string;
+  eager?: boolean;
+  /** desktop (961px and up): the frame is exactly the spot's rows and the object floats over it, sized so it and
+      the 88px under it (a tracker) end inside the first screen. For a scene at the very top of the page. */
+  fit?: boolean;
+}
+const { photo, spot, class: cls, eager = false, fit = false } = Astro.props;
+const p = photo ? person(photo) : null;
+const s = p ? p.spots[spot] : null;
+if (p && !s) throw new Error(`${photo} has no ${spot} spot`);
+const vars = (k: Spot, pre: string) =>
+  `--${pre}z:${k.z};--${pre}x:${k.x};--${pre}tx:${k.tx};--${pre}y0:${k.y0};--${pre}y1:${k.y1};--${pre}top:${k.top};` +
+  `--${pre}h:${k.h ?? 0};--${pre}w:${k.w ?? 0};`;
+const style = p && s ? `--ar:${p.h / p.w};${vars(s, '')}${vars(s.m, 'm')}` : '';
+// the widest the photo is drawn, as a share of the screen, for the browser to pick a size
+const sizes = s ? `(max-width: 960px) ${Math.round(s.m.z * 100)}vw, ${Math.round(s.z * 100)}vw` : '';
+---
+
+{
+  photo ? (
+    <div class:list={['scene', cls, { fit }]} data-spot={spot} style={style}>
+      <div class="frame">
+        <Person id={photo} class="shot" sizes={sizes} eager={eager} />
+        <div class="at">
+          <slot />
+        </div>
+      </div>
+    </div>
+  ) : (
+    <slot />
+  )
+}
+
+<style>
+  /* clip sideways only: the zoomed photo is wider than the screen, the object may hang below the photo's foot */
+  .scene {
+    position: relative;
+    container-type: inline-size;
+    overflow-x: clip;
+  }
+  /* at least the photo's rows tall; taller when the object hangs past the photo's foot, so nothing after it overlaps */
+  .frame {
+    --W: calc(var(--z) * 100cqw);
+    --IH: calc(var(--W) * var(--ar));
+    position: relative;
+    display: grid;
+    align-items: start;
+    justify-items: start;
+    min-height: calc((var(--y1) - var(--y0)) * var(--IH));
+  }
+  /* the photo, whole, at its zoom, cut to the frame's rows */
+  .frame > :global(.shot) {
+    position: absolute;
+    width: var(--W);
+    height: var(--IH);
+    left: calc(var(--tx) * 100cqw - var(--x) * var(--W));
+    top: calc(-1 * var(--y0) * var(--IH));
+    clip-path: inset(calc(var(--y0) * var(--IH)) 0 calc((1 - var(--y1)) * var(--IH)) 0);
+  }
+  /* the object, centred on the spot, in the flow so the frame makes room for it. --oh is the phone's height, --ow
+     the card's width. */
+  .at {
+    position: relative;
+    z-index: 2;
+    margin-left: calc(var(--tx) * 100cqw);
+    margin-top: calc((var(--top) - var(--y0)) * var(--IH));
+    transform: translateX(-50%);
+    --oh: min(calc(var(--h) * var(--IH)), 84svh, 860px);
+    --ow: calc(var(--w) * var(--W));
+  }
+
+  /* fit: the object leaves the flow and stands on the spot over the frame's lower edge; its height is the spot's,
+     or what's left of the first screen under its top (less --below for what hangs under it), never under 340px */
+  @media (min-width: 961px) {
+    .fit .frame {
+      min-height: 0;
+      height: calc((var(--y1) - var(--y0)) * var(--IH));
+    }
+    .fit .at {
+      position: absolute;
+      left: calc(var(--tx) * 100cqw);
+      top: calc((var(--top) - var(--y0)) * var(--IH));
+      margin: 0;
+      --oh: max(
+        340px,
+        min(calc(var(--h) * var(--IH)), calc(100svh - (var(--top) - var(--y0)) * var(--IH) - var(--below, 88px)), 860px)
+      );
+    }
+  }
+
+  @media (max-width: 960px) {
+    .frame {
+      --z: var(--mz);
+      --x: var(--mx);
+      --tx: var(--mtx);
+      --y0: var(--my0);
+      --y1: var(--my1);
+      --top: var(--mtop);
+      --h: var(--mh);
+      --w: var(--mw);
+    }
+  }
+</style>

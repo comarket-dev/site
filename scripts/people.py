@@ -20,7 +20,7 @@ from PIL import Image, ImageOps
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "design/people"
 OUT = ROOT / "public/assets/people"
-WIDTHS = [480, 960, 1600, 2400]
+WIDTHS = [480, 960, 1600, 2400, 3200]
 FACE = [96, 192, 384]
 
 INK = np.array([30, 14, 63]) / 255  # --ink
@@ -29,8 +29,8 @@ SUN = np.array([253, 191, 104]) / 255  # --cream, Wada's Cream Yellow
 
 
 def warm(im: Image.Image) -> Image.Image:
-    a = np.asarray(im, dtype=np.float64) / 255
-    lum = a @ np.array([0.2126, 0.7152, 0.0722])
+    a = np.asarray(im, dtype=np.float32) / 255
+    lum = a @ np.array([0.2126, 0.7152, 0.0722], dtype=np.float32)
     # colour eases back 12%, so skin and wood stay warm but the loud colours stop shouting over the page
     a = lum[..., None] + (a - lum[..., None]) * 0.88
     # a soft S, then the ends land on the palette: black is the page's ink, white is its paper

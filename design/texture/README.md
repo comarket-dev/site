@@ -6,13 +6,17 @@ Board: `design/texture/board.png` (render with `python3 scripts/render-texture-b
 
 ## 1. Paper (texture)
 
-- Every section surface carries one grain: `public/assets/texture/grain.webp` (ink specks on cream) and
-  `grain-ink.webp` (paper specks on the ink bands), built by `scripts/texture.py`. Fine tooth, a soft mottle and a few
-  fibres. It's alpha over the section's own colour, so the palette doesn't shift.
-- One scale everywhere: a 384px tile at 1x. On a 2x screen a speck is two device pixels, which is how paper tooth
-  reads. It scrolls with the page and never animates.
-- Photos get the same tile on top (`Person.astro`), at the same scale. That shared tooth is what ties a photo to
-  the paper it sits on.
+- Every section surface carries one grain: `public/assets/texture/grain.webp` (warm specks on cream) and
+  `grain-ink.webp` (Cream Yellow specks on the ink bands), built by `scripts/texture.py`. Fine tooth, a soft mottle and
+  a few fibres, at low alpha over the section's own colour, so the palette doesn't shift. Dialed down on 2026-10-27
+  (cream 0.2 to 0.13, ink 0.1 to 0.07).
+- Creases: the sheet was folded a few times and smoothed flat again (`creases.webp`, `creases-ink.webp`, 1800px tiles).
+  A few long folds and some short crinkles, lit from the page's light: one facet a touch darker, the other a touch
+  lighter, a fine ridge at the fold. They sit under the grain in `--grain` and `--grain-ink`, so every surface has them.
+- One scale everywhere: the grain is a 384px tile at 1x (on a 2x screen a speck is two device pixels, which is how paper
+  tooth reads), the creases an 1800px tile. Both scroll with the page and never animate.
+- Photos get the grain on top (`--tooth` in `Person.astro`), at the same scale, but not the creases: a fold through a
+  face reads as damage, not paper.
 - Never on product UI: the phone, storefronts, posts, forms and cards stay clean, like screens laid on the paper.
 
 ## 2. Light (warmth)
@@ -34,5 +38,5 @@ Board: `design/texture/board.png` (render with `python3 scripts/render-texture-b
 
 ## Not this
 
-Torn paper edges, tape, stickers, stamps, halftone dots, film borders, vignettes, light leaks, moving grain. Nothing
+Torn paper edges, deep or dark creases, tape, stickers, stamps, halftone dots, film borders, vignettes, light leaks, moving grain. Nothing
 that reads as a filter or a costume. The texture should only be noticed when it's taken away.

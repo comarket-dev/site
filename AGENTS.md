@@ -58,11 +58,13 @@ examples, "Pay for sales, not posts", the agent replay, then the rest; no fit li
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
 tap-to-skip, feels right.
 
-**People and warmth (2026-10-27, in review):** the rejected photo tiles are gone. The owner picked four Pexels photos
-(`design/people/people.json`). A texture and warmth direction, "warm stock" (`design/texture/README.md`, board in
-`design/texture/board.png`), puts one paper grain on every section and one warm grade on every photo. The hero has two
-looks to choose from (`?hero=split|band`, `?photo=<id>`); the /brands waitlist opens with a photo band. Awaiting the
-owner's pick before sourcing more photos. Details in A-GRADE.md, "People and warmth, round 3".
+**People and warmth (2026-10-27, in review):** both heroes open with the florists as a banner across the top, the
+phone standing on their basket (Scene.astro places a photo so its people look at an object). Both waitlists use B: the
+form floats between their faces, the heading and preview sit left of her head. The fork's sides are full-height photos
+(florists, the cook) with each side's card on the photo. Every surface has a light grain and soft creases ("warm
+stock", `design/texture/README.md`). Conversion buttons are knitted yarn in the palette's blue and paper, on trial:
+`const YARN = false` in Base.astro rolls it back. Details in A-GRADE.md, rounds 3 to 5. Next: the example posts and
+storefronts sections.
 
 **Pages:** `/` (the fork), `/brands`, `/creators`, `/privacy`, 404. Built, tested, not deployed. `npm run build` and
 `npm test` (10 tests) pass.

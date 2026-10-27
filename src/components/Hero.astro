@@ -3,8 +3,9 @@ import Icon from './Icon.astro';
 import PhoneSlot from './PhoneSlot.astro';
 import Steps from './Steps.astro';
 import Person from './Person.astro';
+import Scene from './Scene.astro';
 import { hlClasses } from '../lib/hl';
-import type { PersonId } from '../lib/people';
+import { person, type PersonId } from '../lib/people';
 
 interface Props {
   side: 'brands' | 'creators';
@@ -20,23 +21,32 @@ interface Props {
   join?: { button: string; fine?: string };
   /** the people in this side's world, large, to an edge, with the phone standing across the photo's edge */
   photo: PersonId;
-  /** split: the photo bleeds off the top, right and bottom, the phone on its left edge.
-      band: a wide photo across the hero's foot, the phone stepping down into it. */
+  /** band: the photo is a banner across the top of the hero, its foot fading into the paper under the copy, and the
+      phone stands where its people are looking (the photo's `phone` spot, Scene.astro), whole in the first screen.
+      Stacked, the copy comes first and the photo under it. split: the photo bleeds off the top, right and bottom, the
+      phone on its left edge. */
   look?: 'split' | 'band';
 }
-const { side, title, mark, sub, placeholder, prefix, button, last, label, join, photo, look = 'split' } = Astro.props;
+const { side, title, mark, sub, placeholder, prefix, button, last, label, join, photo, look = 'band' } = Astro.props;
 const at = title.lastIndexOf(mark);
 const [before, after] = at >= 0 ? [title.slice(0, at), title.slice(at + mark.length)] : [title, ''];
 const brand = side === 'brands';
+// where the phone stands across the screen, so the copy can stop short of it
+const px = person(photo).spots.phone?.tx ?? 0.6;
 ---
 
-<section class:list={['hero', look]} data-hero data-side={side}>
-  <Person
-    id={photo}
-    class="backdrop"
-    eager
-    sizes={look === 'band' ? '100vw' : '(max-width: 960px) 100vw, 46vw'}
-  />
+<section class:list={['hero', look]} data-hero data-side={side} style={`--px:${px}`}>
+  {look === 'split' && <Person id={photo} class="backdrop" eager sizes="(max-width: 960px) 100vw, 46vw" />}
+  {
+    look === 'band' && (
+      <Scene photo={photo} spot="phone" class="bandscene" eager fit>
+        <div class="show" data-reveal style="--d:.1s">
+          <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
+          <Steps last={last} class="steps compact" />
+        </div>
+      </Scene>
+    )
+  }
   <div class="wrap inner">
     <div class="copy">
       <h1 class="title" data-reveal style="--d:.06s">
@@ -59,7 +69,7 @@ const brand = side === 'brands';
             maxlength={brand ? 120 : 24}
             required
           />
-          <button class="btn" type="submit" data-claim-btn>
+          <button class="btn convert" type="submit" data-claim-btn>
             <span>{button}</span><Icon name="arrow-right" class="arr" />
           </button>
         </div>
@@ -78,7 +88,7 @@ const brand = side === 'brands';
             placeholder={brand ? 'you@company.com' : 'you@email.com'}
             required
           />
-          <button class="btn" type="submit" data-join-btn>
+          <button class="btn convert" type="submit" data-join-btn>
             <span>{join?.button ?? (brand ? 'Hold my spot' : 'Claim my page')}</span><Icon name="arrow-right" class="arr" />
           </button>
         </div>
@@ -87,10 +97,14 @@ const brand = side === 'brands';
 
     </div>
 
-    <div class="show" data-reveal style="--d:.1s">
-      <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
-      <Steps last={last} class="steps compact" />
-    </div>
+    {
+      look === 'split' && (
+        <div class="show" data-reveal style="--d:.1s">
+          <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
+          <Steps last={last} class="steps compact" />
+        </div>
+      )
+    }
   </div>
 </section>
 
@@ -288,29 +302,53 @@ const brand = side === 'brands';
     background: radial-gradient(34% 62% at calc(100% - var(--bw)) 34%, rgb(253 191 104 / 0.22), transparent 72%);
   }
 
-  /* band: the photo runs edge to edge across the hero's foot (--bh tall). The phone steps down into it by --lap;
-     the copy ends 40px above it. The tracker row under the phone is --tr tall. */
+  /* band: the photo is a banner across the top (under the transparent nav), cut just above both heads, its foot
+     fading into the paper from 44% to 56% of the photo's height. The copy starts in that fade, left of the phone;
+     the phone stands on the basket (the photo's phone spot), sized to end, with its tracker, inside the first
+     screen (Scene.astro, fit). */
   .band {
-    --bh: clamp(340px, 48vh, 540px);
-    --lap: calc(var(--ph) * 0.36);
-    --tr: 46px;
-    min-height: 0;
-  }
-  .band > :global(.backdrop) {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: var(--bh);
+    display: flex;
+    flex-direction: column;
+    /* full width: the scene sizes everything from its own width (container query units) */
+    align-items: stretch;
+    --f0: 0.44;
+    --f1: 0.56;
   }
   .band .inner {
-    align-items: end;
-    padding-bottom: calc(var(--bh) - var(--lap) - var(--tr));
+    order: 1;
+    display: block;
+    position: relative;
+    z-index: 2;
+    margin-top: -28px;
+    padding-top: 0;
+    padding-bottom: clamp(32px, 5vh, 56px);
   }
+  .band > :global(.bandscene) {
+    order: 0;
+  }
+  .band > :global(.bandscene .frame > .shot) {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--f0) * var(--IH)), transparent calc(var(--f1) * var(--IH)));
+    mask-image: linear-gradient(to bottom, #000 calc(var(--f0) * var(--IH)), transparent calc(var(--f1) * var(--IH)));
+  }
+  /* the copy stops short of the phone: the phone's centre is at --px across the screen and its half width stays
+     under 130px; the copy starts at the centred wrap's left edge */
   .band .copy {
-    margin-bottom: calc(var(--lap) + var(--tr) + 40px);
+    max-width: min(720px, calc(var(--px) * 100vw - 130px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
   }
-  .band::before {
-    background: radial-gradient(60% 34% at 50% calc(100% - var(--bh)), rgb(253 191 104 / 0.24), transparent 72%);
+  .band .title {
+    font-size: clamp(34px, 3.9vw, 60px);
+  }
+  /* the field sits level with the tracker, which is wider than the phone (up to 400px): it stops short of that */
+  .band .claim {
+    max-width: min(560px, calc(var(--px) * 100vw - 214px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .band .show :global(.slot) {
+    height: var(--oh);
+  }
+  /* as wide as the tracker needs, not just the phone, so its five steps stay on one row */
+  .band .show {
+    width: min(400px, calc(100vw - var(--gl) - var(--gr)));
   }
 
   @media (max-width: 960px) {
@@ -325,17 +363,18 @@ const brand = side === 'brands';
     .hero {
       --ph: max(340px, min(62svh, 560px));
     }
-    /* stacked: the copy, then the photo to both edges, then the phone hanging off the photo's foot, so it covers
-       hands and counter and never a face. The wrap steps aside (display: contents) so the three can be ordered. */
-    .hero {
+    /* split, stacked: the copy, then the photo to both edges, then the phone hanging off the photo's foot, so it
+       covers hands and counter and never a face. The wrap steps aside (display: contents) so the three can be
+       ordered. */
+    .split {
       grid-template-columns: minmax(0, 1fr);
       align-items: start;
       min-height: 0;
     }
-    .inner {
+    .split .inner {
       display: contents;
     }
-    .copy {
+    .split .copy {
       order: 0;
       padding: 92px var(--gr) 0 var(--gl);
     }
@@ -347,17 +386,51 @@ const brand = side === 'brands';
       height: clamp(260px, 74vw, 460px);
       margin-top: 40px;
     }
-    .split .show,
-    .show {
+    .split .show {
       order: 2;
       margin: calc(var(--ph) * -0.3) 0 0;
       padding: 0 var(--gr) clamp(40px, 7vh, 88px) var(--gl);
     }
-    .band .copy {
-      margin-bottom: 0;
-    }
-    .hero::before {
+    .split::before {
       display: none;
+    }
+    /* band, stacked: the copy first, then the photo to both edges with the phone at the basket; no fade, and the
+       photo's warm light spills up onto the paper above it */
+    .band .inner {
+      order: 0;
+      margin-top: 0;
+      padding-top: 92px;
+      padding-bottom: 0;
+    }
+    .band > :global(.bandscene) {
+      order: 1;
+      margin-top: 40px;
+    }
+    .band > :global(.bandscene .frame > .shot) {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .band .copy {
+      max-width: 720px;
+    }
+    .band .claim {
+      max-width: 560px;
+    }
+    .band .title {
+      font-size: clamp(34px, 9vw, 60px);
+    }
+    .band .show {
+      padding-bottom: clamp(40px, 7vh, 88px);
+    }
+    .band > :global(.bandscene)::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -200px;
+      height: 200px;
+      pointer-events: none;
+      background: radial-gradient(70% 100% at 55% 100%, rgb(253 191 104 / 0.22), transparent 72%);
     }
   }
   @media (max-width: 520px) {

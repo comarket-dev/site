@@ -1,23 +1,31 @@
 ---
 import Icon from './Icon.astro';
-import Person from './Person.astro';
+import Scene from './Scene.astro';
 import { person, type PersonId } from '../lib/people';
 import { env } from 'cloudflare:workers';
 interface Props {
   side: 'brand' | 'creator';
-  /** the people this is for, edge to edge across the top of the band; the form card rises over its foot */
+  /** the people this is for, edge to edge. The form floats on it as a card where they're looking (the photo's `form`
+      spot); the heading and the preview sit in a column left of whatever the spot's `clear` keeps clear (her head). */
   photo?: PersonId;
 }
 const { side, photo } = Astro.props;
-/* a band this wide keeps only a slice of the photo's height: crop nearer the top, so heads stay whole */
-const focal = photo ? ([person(photo).focal[0], person(photo).focal[1] * 0.5] as [number, number]) : undefined;
+const clear = photo ? ((person(photo).spots.form as { clear?: number } | undefined)?.clear ?? 0) : 0;
 const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY || '';
 const brand = side === 'brand';
 ---
 
-<section class:list={['section band-ink on-ink waitlist', { 'has-photo': photo }]} id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
-  {photo && <Person id={photo} class="lead" sizes="100vw" focal={focal} />}
-  <div class="wrap grid">
+<section
+  class:list={['section band-ink on-ink waitlist', { 'has-photo': photo }]}
+  id="waitlist"
+  aria-labelledby="wl-h"
+  data-waitlist
+  data-side={side}
+  style={photo ? `--clear:${clear}` : undefined}
+>
+  <Scene photo={photo} spot="form" class="wlscene">
+  <div class:list={[{ wrap: !photo }, 'grid']}>
+    <div class="lead">
     <div class="intro">
       <h2 class="display-l" id="wl-h">{brand ? 'Get your first creator sales.' : 'Claim your page.'}</h2>
       <p class="lede muted">
@@ -67,6 +75,7 @@ const brand = side === 'brand';
       </div>
 
     </div>
+    </div>
 
     <div class="formcol">
       <form class="form" data-form novalidate>
@@ -107,7 +116,7 @@ const brand = side === 'brand';
           <span class="err" data-err="email"></span>
         </div>
         {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
-        <button class="btn submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <Icon name="arrow-right" class="arr" /></button>
+        <button class="btn convert submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <Icon name="arrow-right" class="arr" /></button>
         <p class="risk">{brand ? 'No card needed. You pay nothing until a new customer pays.' : 'Free, always. Brands pay Comarket, never you.'}</p>
         <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
         <!-- PLACEHOLDER: hello@comarket.si is not a live inbox yet; confirm the address before deploy -->
@@ -180,29 +189,156 @@ const brand = side === 'brand';
       </div>
     </div>
   </div>
+  </Scene>
   {siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
 </section>
 
 <style>
-  /* with people: the photo runs edge to edge across the top of the band, graded so its shadows are this ink, and
-     the form card rises over its foot, so the last thing on the page is people and the one thing to do */
+  /* without a photo the lead column steps aside, so its intro and preview take their own grid areas */
+  .lead {
+    display: contents;
+  }
+
+  /* With people (the photo, Scene.astro, under everything): the form is a card floating where they're looking, between
+     their faces at eye level (the photo's form spot), and the heading and preview stand in a column from the left
+     gutter to just short of her head (the spot's `clear`, as a share of the photo's width), on a soft ink scrim that
+     fades out before her hair. So nothing covers a face. Under 1200px there's no room for the column beside the
+     card: the layout stacks (see below). */
   .has-photo {
     padding-top: 0;
   }
-  .waitlist > :global(.lead) {
-    height: clamp(300px, 36vw, 560px);
-    margin-bottom: clamp(40px, 5vw, 72px);
-  }
-  .has-photo .formcol {
-    position: relative;
-    margin-top: calc(-1 * clamp(140px, 14vw, 240px));
-  }
-  @media (max-width: 900px) {
-    .waitlist > :global(.lead) {
-      height: clamp(240px, 64vw, 420px);
+  @media (min-width: 1200px) {
+    .has-photo .grid {
+      display: block;
+      position: relative;
+      width: var(--ow);
+    }
+    /* .grid is the card's own box, centred on the spot: walk back to the gutter on the left, and stop 24px short of
+       the clear line on the right. --W is the photo's drawn width; --x, --w, --tx the spot's (all from Scene). */
+    .has-photo .lead {
+      position: absolute;
+      top: 0;
+      left: calc(var(--gl) - var(--tx) * 100cqw + var(--ow) / 2);
+      right: calc(100% + (var(--x) - var(--w) / 2 - var(--clear)) * var(--W) + 24px);
+      display: grid;
+      gap: 32px;
+      align-content: start;
+      isolation: isolate;
+    }
+    .has-photo .lead::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      top: -64px;
+      bottom: -64px;
+      left: calc(-1 * var(--gl));
+      right: -24px;
+      background: linear-gradient(90deg, rgb(30 14 63 / 0.88), rgb(30 14 63 / 0.8) 62%, rgb(30 14 63 / 0));
+      -webkit-mask-image: linear-gradient(180deg, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+      mask-image: linear-gradient(180deg, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+      pointer-events: none;
+    }
+    .has-photo .intro,
+    .has-photo .more {
+      grid-area: auto;
+    }
+    .has-photo .intro {
+      gap: 14px;
+    }
+    .has-photo .intro h2 {
+      font-size: var(--fs-m);
+      line-height: 1.05;
+    }
+    .has-photo .intro .lede {
+      font-size: 17px;
+      max-width: 34ch;
+    }
+    .has-photo .preview {
+      margin-top: 0;
     }
     .has-photo .formcol {
-      margin-top: 0;
+      background: var(--grain-ink), var(--ink);
+      border: 1px solid var(--ink-rule);
+      border-radius: 28px;
+      padding: clamp(22px, 2vw, 30px);
+      box-shadow: 0 50px 90px -50px rgb(0 0 0 / 0.7);
+    }
+    .has-photo .formcol :global(.form) {
+      background: none;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+  }
+  /* a narrow card: the site field and its Preview button stack */
+  .has-photo .formcol {
+    container-type: inline-size;
+  }
+  @container (max-width: 260px) {
+    .formcol .inline {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Stacked (under 1200px): the photo with their faces at the top, then the heading and the form as one card from
+     their chins down, then the preview. 961 to 1199px borrows the photo's phone placement (Scene's --m* values). */
+  @media (min-width: 961px) and (max-width: 1199px) {
+    .has-photo :global(.wlscene .frame) {
+      --z: var(--mz);
+      --x: var(--mx);
+      --tx: var(--mtx);
+      --y0: var(--my0);
+      --y1: var(--my1);
+      --top: var(--mtop);
+      --h: var(--mh);
+      --w: var(--mw);
+    }
+  }
+  @media (max-width: 1199px) {
+    .has-photo .grid {
+      width: min(var(--ow), calc(100vw - var(--gl) - var(--gr)), 640px);
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'intro'
+        'form'
+        'more';
+      grid-template-rows: auto auto auto;
+      row-gap: 0;
+    }
+    .has-photo .intro,
+    .has-photo .formcol {
+      background: var(--grain-ink), var(--ink);
+      border-inline: 1px solid var(--ink-rule);
+      padding-inline: clamp(22px, 2.4vw, 32px);
+    }
+    .has-photo .intro {
+      gap: 12px;
+      padding-top: clamp(24px, 2.6vw, 34px);
+      border-top: 1px solid var(--ink-rule);
+      border-radius: 28px 28px 0 0;
+    }
+    .has-photo .intro h2 {
+      font-size: var(--fs-m);
+      line-height: 1.05;
+    }
+    .has-photo .intro .lede {
+      font-size: 16px;
+    }
+    .has-photo .formcol {
+      padding-bottom: clamp(22px, 2.4vw, 32px);
+      border-bottom: 1px solid var(--ink-rule);
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 50px 90px -50px rgb(0 0 0 / 0.7);
+    }
+    .has-photo .formcol :global(.form) {
+      background: none;
+      border: 0;
+      padding: 18px 0 0;
+      box-shadow: none;
+    }
+    .has-photo .more {
+      margin-top: 28px;
+      justify-items: center;
     }
   }
 

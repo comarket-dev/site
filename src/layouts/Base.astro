@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import '../styles/brand-fonts.css';
+import '../styles/yarn.css';
 import Stage from '../components/Stage.astro';
 import Consent from '../components/Consent.astro';
 import { priceArm } from '../lib/experiments';
@@ -18,10 +19,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 // the phone's sale split shows the same cut this visitor's pricing shows
 const cut = priceArm(Astro.locals.arms ?? {}).first;
 const ogUrl = new URL(og, Astro.site);
+/* Knitted conversion buttons (src/styles/yarn.css). On trial: false turns them back into plain buttons everywhere. */
+const YARN = true;
 ---
 
 <!doctype html>
-<html lang="en" transition:animate="none">
+<html lang="en" transition:animate="none" data-yarn={YARN ? "" : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
