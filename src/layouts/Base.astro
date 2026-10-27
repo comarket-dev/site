@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import '../styles/brand-fonts.css';
 import '../styles/yarn.css';
+import '../styles/switch.css';
 import Stage from '../components/Stage.astro';
 import Consent from '../components/Consent.astro';
 import { priceArm } from '../lib/experiments';
@@ -76,6 +77,8 @@ const YARN = true;
     <script>
       import { bindReveals, onPage } from '../scripts/ui';
       onPage(() => [bindReveals()]);
+      import '../scripts/paper';
+      import '../scripts/switch';
     </script>
   </body>
 </html>

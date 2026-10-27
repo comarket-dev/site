@@ -37,7 +37,10 @@
   --ink-rule: #3a2b62;
 
   /* warmth and texture (design/texture/README.md): --sun is Wada's Cream Yellow used as light, never as a fill; the
-     grain is the paper every section is printed on, one 384px tile at 1x (scripts/texture.py) */
+     grain and creases are the paper every section is printed on (scripts/texture.py). A surface that carries them also
+     sets `background-position: var(--paper-x, 0px) var(--paper-y, 0px)` (written out on the surface itself: a var()
+     inside a :root property would resolve at :root). src/scripts/paper.ts gives each its offset on the page, so the tiles
+     line up across section boundaries like one sheet. */
   --sun: var(--cream);
   --grain: url('/assets/texture/grain.webp') 0 0 / 384px 384px, url('/assets/texture/creases.webp') 0 0 / 1800px 1800px;
   --grain-ink: url('/assets/texture/grain-ink.webp') 0 0 / 384px 384px,
@@ -166,13 +169,16 @@ h3 {
 }
 .band-ink {
   background: var(--grain-ink), var(--ink);
+  background-position: var(--paper-x, 0px) var(--paper-y, 0px);
   color: var(--on-ink);
 }
 .band-paper {
   background: var(--grain), var(--paper);
+  background-position: var(--paper-x, 0px) var(--paper-y, 0px);
 }
 .band-2 {
   background: var(--grain), var(--paper-2);
+  background-position: var(--paper-x, 0px) var(--paper-y, 0px);
 }
 
 /* ---------- type ---------- */

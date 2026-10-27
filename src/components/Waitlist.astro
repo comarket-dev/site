@@ -10,7 +10,12 @@ interface Props {
   photo?: PersonId;
 }
 const { side, photo } = Astro.props;
-const clear = photo ? ((person(photo).spots.form as { clear?: number } | undefined)?.clear ?? 0) : 0;
+/* the spot's extras: `clear` is her hair's left edge, `fl` and `fr` the inner edges of the two faces (her glasses,
+   his nose), all as shares of the photo's width. The card is centred in the gap between fl and fr. */
+const form = photo ? (person(photo).spots.form as { clear?: number; fl?: number; fr?: number } | undefined) : undefined;
+const clear = form?.clear ?? 0;
+const fl = form?.fl ?? 0;
+const fr = form?.fr ?? 0;
 const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY || '';
 const brand = side === 'brand';
 ---
@@ -21,7 +26,7 @@ const brand = side === 'brand';
   aria-labelledby="wl-h"
   data-waitlist
   data-side={side}
-  style={photo ? `--clear:${clear}` : undefined}
+  style={photo ? `--clear:${clear};--fl:${fl};--fr:${fr}` : undefined}
 >
   <Scene photo={photo} spot="form" class="wlscene">
   <div class:list={[{ wrap: !photo }, 'grid']}>
@@ -202,24 +207,39 @@ const brand = side === 'brand';
   /* With people (the photo, Scene.astro, under everything): the form is a card floating where they're looking, between
      their faces at eye level (the photo's form spot), and the heading and preview stand in a column from the left
      gutter to just short of her head (the spot's `clear`, as a share of the photo's width), on a soft ink scrim that
-     fades out before her hair. So nothing covers a face. Under 1200px there's no room for the column beside the
-     card: the layout stacks (see below). */
+     fades out before her hair. So nothing covers a face. Every edge comes from the photo's drawn width (--W, which
+     follows the screen's width), so the three hold their places at any desktop size. Under 1280px there's no room
+     for the column beside the card: the layout stacks (see below).
+     The photo is only a slice, from above their heads to their chests; its foot fades into the ink, and the card may
+     hang past it. */
   .has-photo {
     padding-top: 0;
   }
-  @media (min-width: 1200px) {
+  .has-photo :global(.wlscene .shot) {
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(var(--y1) * 100% - 120px), transparent calc(var(--y1) * 100%));
+    mask-image: linear-gradient(180deg, #000 calc(var(--y1) * 100% - 120px), transparent calc(var(--y1) * 100%));
+  }
+  @media (min-width: 1280px) {
+    /* .grid is the card's own box. The spot centres it in the gap between the faces; it's as wide as that gap less a
+       margin each side, the wider margin on her side (glasses and a raised hand) than by his nose, so it sits right of
+       centre by --d and never reaches either face. */
     .has-photo .grid {
+      --ml: max(32px, 3.2cqw);
+      --mr: max(20px, 1.6cqw);
+      --cw: clamp(260px, calc((var(--fr) - var(--fl)) * var(--W) - var(--ml) - var(--mr)), 440px);
+      --d: calc((var(--ml) - var(--mr)) / 2);
       display: block;
       position: relative;
-      width: var(--ow);
+      left: var(--d);
+      width: var(--cw);
     }
-    /* .grid is the card's own box, centred on the spot: walk back to the gutter on the left, and stop 24px short of
-       the clear line on the right. --W is the photo's drawn width; --x, --w, --tx the spot's (all from Scene). */
+    /* the column: from the left gutter to 24px short of the clear line (her hair). Measured from the card's box:
+       its left edge is at tx * 100cqw - cw / 2 + d on screen. */
     .has-photo .lead {
       position: absolute;
       top: 0;
-      left: calc(var(--gl) - var(--tx) * 100cqw + var(--ow) / 2);
-      right: calc(100% + (var(--x) - var(--w) / 2 - var(--clear)) * var(--W) + 24px);
+      left: calc(var(--gl) - var(--tx) * 100cqw + var(--cw) / 2 - var(--d));
+      right: calc(var(--cw) / 2 + var(--d) + (var(--x) - var(--clear)) * var(--W) + 24px);
       display: grid;
       gap: 32px;
       align-content: start;
@@ -280,9 +300,9 @@ const brand = side === 'brand';
     }
   }
 
-  /* Stacked (under 1200px): the photo with their faces at the top, then the heading and the form as one card from
-     their chins down, then the preview. 961 to 1199px borrows the photo's phone placement (Scene's --m* values). */
-  @media (min-width: 961px) and (max-width: 1199px) {
+  /* Stacked (under 1280px): the photo with their faces at the top, then the heading and the form as one card from
+     their chins down, then the preview. 961 to 1279px borrows the phone placement (Scene's --m* values). */
+  @media (min-width: 961px) and (max-width: 1279px) {
     .has-photo :global(.wlscene .frame) {
       --z: var(--mz);
       --x: var(--mx);
@@ -294,7 +314,7 @@ const brand = side === 'brand';
       --w: var(--mw);
     }
   }
-  @media (max-width: 1199px) {
+  @media (max-width: 1279px) {
     .has-photo .grid {
       width: min(var(--ow), calc(100vw - var(--gl) - var(--gr)), 640px);
       grid-template-columns: minmax(0, 1fr);

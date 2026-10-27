@@ -10,9 +10,18 @@ Board: `design/texture/board.png` (render with `python3 scripts/render-texture-b
   `grain-ink.webp` (Cream Yellow specks on the ink bands), built by `scripts/texture.py`. Fine tooth, a soft mottle and
   a few fibres, at low alpha over the section's own colour, so the palette doesn't shift. Dialed down on 2026-10-27
   (cream 0.2 to 0.13, ink 0.1 to 0.07).
-- Creases: the sheet was folded a few times and smoothed flat again (`creases.webp`, `creases-ink.webp`, 1800px tiles).
-  A few long folds and some short crinkles, lit from the page's light: one facet a touch darker, the other a touch
-  lighter, a fine ridge at the fold. They sit under the grain in `--grain` and `--grain-ink`, so every surface has them.
+- Creases: a sheet that was handled and smoothed flat again (`creases.webp`, `creases-ink.webp`, 1800px tiles, about
+  220 KB each). Mostly small crinkles, kinked and sometimes branching, clustered where it was gripped, plus one faint
+  long fold; lit from the page's light (a fine ridge and a narrow facet either side). Subtle: noticed on a second look.
+  Both tiles come from one field, so a crease lines up between cream and ink. They sit under the grain in `--grain`
+  and `--grain-ink`. Made subtler and smaller on 2026-10-27 (round 6).
+- One sheet: every surface that carries the paper (html, body, `.band-paper`, `.band-2`, `.band-ink`, the FAQ, the
+  Outcome band, anything with `data-paper`) sets `background-position: var(--paper-x, 0px) var(--paper-y, 0px)`, and
+  `src/scripts/paper.ts` sets those to minus its offset on the page (on load, resize, font load and layout changes). So
+  grain and creases run on across section boundaries instead of restarting at each section's top. Not
+  `background-attachment: fixed`: iOS ignores it, and the paper must scroll with the page. A new paper surface needs
+  the same `background-position` line (written on the surface itself; a `var()` inside a `:root` property would resolve
+  at `:root`) and a class the script's list covers, or `data-paper`.
 - One scale everywhere: the grain is a 384px tile at 1x (on a 2x screen a speck is two device pixels, which is how paper
   tooth reads), the creases an 1800px tile. Both scroll with the page and never animate.
 - Photos get the grain on top (`--tooth` in `Person.astro`), at the same scale, but not the creases: a fold through a

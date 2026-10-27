@@ -163,6 +163,8 @@ const returnEase = bezier(...RETURN_CURVE);
 const easeOut = (k: number) => 1 - (1 - Math.min(1, Math.max(0, k))) ** 3;
 const clamp01 = (k: number) => Math.min(1, Math.max(0, k));
 const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+/** The fork's device used to turn toward the side under the pointer and show that side's view. */
+const FORK_HOVER_PREVIEW = false as boolean;
 const coarse = () => matchMedia('(pointer: coarse)').matches || innerWidth < 820;
 const transitions = () => typeof document !== 'undefined' && 'startViewTransition' in document;
 
@@ -614,8 +616,10 @@ class Stage {
     this.pitch.set(0);
   }
 
-  /** Fork: preview one side's view of the sale. */
+  /** Fork: preview one side's view of the sale. Off since 2026-10-27: the device shows the one shared sale to both
+   *  sides until a side is chosen (owner), and the side's photo zooming says which one is pointed at (index.astro). */
   hover(side: Side | null) {
+    if (FORK_HOVER_PREVIEW === false) return;
     if (this.mode !== 'fork' || this.trip) return;
     if (side) this.holdOn(HOME[side], Infinity, 0, null, side === 'brands' ? -1 : 1);
     else if (this.hold) {
@@ -1049,7 +1053,8 @@ class Stage {
     if (beat?.yaw !== undefined) yawT = beat.yaw;
     if (this.hold === 'brand' && this.mode === 'fork') yawT = -0.3;
     if (this.hold === 'creator' && this.mode === 'fork') yawT = 0.3;
-    const fine = !coarse() && !this.frozen;
+    // the fork's device faces us square: no pointer tilt there, so the shared view reads the same from both sides
+    const fine = !coarse() && !this.frozen && this.mode !== 'fork';
     if (this.settle < 1) this.settle = Math.min(1, this.settle + dt / 1.2);
     const live = this.trip ? 0 : this.settle * this.settle * (3 - 2 * this.settle);
     const breathe = still || this.frozen || this.trip ? 0 : Math.sin(this.time * 0.6) * 0.012 * live;

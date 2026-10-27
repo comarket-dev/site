@@ -21,9 +21,9 @@ interface Props {
   join?: { button: string; fine?: string };
   /** the people in this side's world, large, to an edge, with the phone standing across the photo's edge */
   photo: PersonId;
-  /** band: the photo is a banner across the top of the hero, its foot fading into the paper under the copy, and the
-      phone stands where its people are looking (the photo's `phone` spot, Scene.astro), whole in the first screen.
-      Stacked, the copy comes first and the photo under it. split: the photo bleeds off the top, right and bottom, the
+  /** band: the photo is a banner across the top of the hero (heads to shoulders), its foot fading into the paper
+      under the copy; the phone stands right of the people (clear of the spot's `clear` line), whole in the first
+      screen. Stacked, the copy comes first, then the photo with the phone where its people are looking. split: the photo bleeds off the top, right and bottom, the
       phone on its left edge. */
   look?: 'split' | 'band';
 }
@@ -31,11 +31,12 @@ const { side, title, mark, sub, placeholder, prefix, button, last, label, join, 
 const at = title.lastIndexOf(mark);
 const [before, after] = at >= 0 ? [title.slice(0, at), title.slice(at + mark.length)] : [title, ''];
 const brand = side === 'brands';
-// where the phone stands across the screen, so the copy can stop short of it
-const px = person(photo).spots.phone?.tx ?? 0.6;
+// desktop band: the line across the photo (a share of its width) right of the people; the phone stands right of it
+// and the copy stops short of it
+const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.clear ?? 0.6;
 ---
 
-<section class:list={['hero', look]} data-hero data-side={side} style={`--px:${px}`}>
+<section class:list={['hero', look]} data-hero data-side={side} style={`--clear:${clear}`}>
   {look === 'split' && <Person id={photo} class="backdrop" eager sizes="(max-width: 960px) 100vw, 46vw" />}
   {
     look === 'band' && (
@@ -302,24 +303,26 @@ const px = person(photo).spots.phone?.tx ?? 0.6;
     background: radial-gradient(34% 62% at calc(100% - var(--bw)) 34%, rgb(253 191 104 / 0.22), transparent 72%);
   }
 
-  /* band: the photo is a banner across the top (under the transparent nav), cut just above both heads, its foot
-     fading into the paper from 44% to 56% of the photo's height. The copy starts in that fade, left of the phone;
-     the phone stands on the basket (the photo's phone spot), sized to end, with its tracker, inside the first
-     screen (Scene.astro, fit). */
+  /* band: the photo is a banner across the top (under the transparent nav), heads to shoulders, its foot fading into
+     the paper from --f0 to --f1 of the photo's height. The copy starts where the fade is about three quarters done,
+     on the left; the phone stands right of the people (right of --clear, a share of the photo's width), from just
+     under the nav, as tall as the first screen allows with its tracker under it (Scene.astro, fit, overridden here).
+     Everything scales with the screen's width and height, so it holds from 961px to 2560px wide. */
   .band {
     display: flex;
     flex-direction: column;
     /* full width: the scene sizes everything from its own width (container query units) */
     align-items: stretch;
-    --f0: 0.44;
-    --f1: 0.56;
+    --f0: 0.385;
+    --f1: 0.46;
   }
   .band .inner {
     order: 1;
     display: block;
     position: relative;
     z-index: 2;
-    margin-top: -28px;
+    /* up into the fade: 0.019 of the photo's height (the photo is the screen wide, 2:3) */
+    margin-top: calc(-0.019 * 66.7vw);
     padding-top: 0;
     padding-bottom: clamp(32px, 5vh, 56px);
   }
@@ -330,17 +333,16 @@ const px = person(photo).spots.phone?.tx ?? 0.6;
     -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--f0) * var(--IH)), transparent calc(var(--f1) * var(--IH)));
     mask-image: linear-gradient(to bottom, #000 calc(var(--f0) * var(--IH)), transparent calc(var(--f1) * var(--IH)));
   }
-  /* the copy stops short of the phone: the phone's centre is at --px across the screen and its half width stays
-     under 130px; the copy starts at the centred wrap's left edge */
+  /* the copy stops 12px short of the clear line (the phone starts 28px past it); it starts at the centred wrap's
+     left edge */
   .band .copy {
-    max-width: min(720px, calc(var(--px) * 100vw - 130px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    max-width: min(720px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
   }
   .band .title {
     font-size: clamp(34px, 3.9vw, 60px);
   }
-  /* the field sits level with the tracker, which is wider than the phone (up to 400px): it stops short of that */
   .band .claim {
-    max-width: min(560px, calc(var(--px) * 100vw - 214px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    max-width: min(560px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
     grid-template-columns: minmax(0, 1fr);
   }
   .band .show :global(.slot) {
@@ -349,6 +351,24 @@ const px = person(photo).spots.phone?.tx ?? 0.6;
   /* as wide as the tracker needs, not just the phone, so its five steps stay on one row */
   .band .show {
     width: min(400px, calc(100vw - var(--gl) - var(--gr)));
+  }
+  /* desktop: the phone right of the people. --t its top (under the nav, or level with her hair, whichever is lower),
+     --oh its height (what the first screen leaves under --t for it and its tracker, at most 74% of the screen's
+     height, and narrow enough to fit between the clear line and the right gutter), --cx its centre. The tracker
+     narrows if it would run past the right gutter. */
+  @media (min-width: 961px) {
+    .hero.band > :global(.bandscene.fit .frame > .at) {
+      --t: max(88px, calc((var(--top) - var(--y0)) * var(--IH)));
+      --room: calc((1 - var(--clear)) * 100cqw - 28px - var(--gr));
+      --oh: max(300px, min(calc(100svh - var(--t) - 104px), 74svh, 820px, calc(var(--room) / 0.4737)));
+      --pw: calc(var(--oh) * 0.4737);
+      --cx: calc(var(--clear) * 100cqw + 28px + var(--pw) / 2);
+      top: var(--t);
+      left: var(--cx);
+    }
+    .hero.band .show {
+      width: min(400px, calc(2 * (100cqw - var(--gr) - var(--cx))));
+    }
   }
 
   @media (max-width: 960px) {

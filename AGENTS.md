@@ -58,13 +58,14 @@ examples, "Pay for sales, not posts", the agent replay, then the rest; no fit li
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
 tap-to-skip, feels right.
 
-**People and warmth (2026-10-27, in review):** both heroes open with the florists as a banner across the top, the
-phone standing on their basket (Scene.astro places a photo so its people look at an object). Both waitlists use B: the
-form floats between their faces, the heading and preview sit left of her head. The fork's sides are full-height photos
-(florists, the cook) with each side's card on the photo. Every surface has a light grain and soft creases ("warm
-stock", `design/texture/README.md`). Conversion buttons are knitted yarn in the palette's blue and paper, on trial:
-`const YARN = false` in Base.astro rolls it back. Details in A-GRADE.md, rounds 3 to 5. Next: the example posts and
-storefronts sections.
+**People and warmth (2026-10-27, in review):** both heroes open with a short florists banner, the copy high in the
+first screen and the phone standing right of the second florist's head. Both waitlists use B: the form sits between
+their faces at every size, the heading and preview left of her head. The fork's sides are full-height photos (a candle
+maker for Brands, the cook for Creators) with the text on them; hovering zooms a side and the device stays on the shared
+sale. Switching Brands and Creators animates the hero text. Every surface has a light grain and small creases that run
+across sections ("warm stock", `design/texture/README.md`). Conversion buttons are knitted yarn, on trial: `const YARN
+= false` in Base.astro rolls it back. Details in A-GRADE.md, rounds 3 to 6. Next: the example posts and storefronts
+sections.
 
 **Pages:** `/` (the fork), `/brands`, `/creators`, `/privacy`, 404. Built, tested, not deployed. `npm run build` and
 `npm test` (10 tests) pass.

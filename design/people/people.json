@@ -33,22 +33,24 @@
      }
     },
     "form": {
-     "z": 1.2,
-     "x": 0.585,
-     "tx": 0.696,
-     "y0": 0.14,
-     "y1": 1,
-     "top": 0.36,
-     "w": 0.19,
+     "z": 1.24,
+     "x": 0.5825,
+     "tx": 0.69,
+     "y0": 0.17,
+     "y1": 0.74,
+     "top": 0.38,
+     "w": 0.17,
      "clear": 0.24,
+     "fl": 0.475,
+     "fr": 0.69,
      "m": {
-      "z": 1.15,
-      "x": 0.56,
+      "z": 1.5,
+      "x": 0.6,
       "tx": 0.5,
-      "y0": 0.12,
-      "y1": 0.8,
+      "y0": 0.18,
+      "y1": 0.74,
       "top": 0.66,
-      "w": 0.8
+      "w": 0.6
      }
     }
    }
@@ -81,10 +83,11 @@
      "z": 1,
      "x": 0.595,
      "tx": 0.595,
-     "y0": 0.06,
-     "y1": 0.56,
-     "top": 0.385,
+     "y0": 0.075,
+     "y1": 0.46,
+     "top": 0.17,
      "h": 0.76,
+     "clear": 0.69,
      "m": {
       "z": 1.6,
       "x": 0.595,
@@ -92,7 +95,7 @@
       "y0": 0,
       "y1": 1,
       "top": 0.42,
-      "h": 0.85
+      "h": 1.1
      }
     },
     "form": {
@@ -128,16 +131,16 @@
    "where": "the fork"
   },
   {
-   "id": "florists-tall",
-   "source": "https://www.pexels.com/photo/5414014/",
-   "credit": "Amina Filkins on Pexels (by series)",
+   "id": "candle-maker",
+   "source": "https://www.pexels.com/photo/5761119/",
+   "credit": "Anna Shvets on Pexels",
    "grade": "warm",
    "focal": [
-    0.3,
-    0.3
+    0.4,
+    0.34
    ],
-   "alt": "A florist smiling down at the tulip she is trimming at the counter",
-   "where": "the fork, Brands column (desktop); contact sheet E"
+   "alt": "A candle maker smiling as she pours wax at the table in her studio",
+   "where": "the fork, Brands column (desktop)"
   },
   {
    "id": "owner-hero",

@@ -1,0 +1,47 @@
+/* Brands <-> Creators (src/scripts/switch.ts). While html.switching is on, the hero's words get their own view
+   transition layers. The old words lift and fade (about 180ms); the new layers show the live page, where the script
+   brings the words in. The layers don't move or resize (the group's own animation is off), so the old words fade
+   exactly where the new ones arrive. */
+
+html.switching [data-hero] .title {
+  view-transition-name: hero-title;
+}
+html.switching [data-hero] .sub {
+  view-transition-name: hero-sub;
+}
+html.switching [data-hero] [data-claim] {
+  view-transition-name: hero-claim;
+}
+
+::view-transition-group(hero-title),
+::view-transition-group(hero-sub),
+::view-transition-group(hero-claim) {
+  animation: none;
+}
+::view-transition-new(hero-title),
+::view-transition-new(hero-sub),
+::view-transition-new(hero-claim) {
+  animation: none;
+}
+::view-transition-old(hero-title),
+::view-transition-old(hero-sub),
+::view-transition-old(hero-claim) {
+  animation: switch-out 0.18s cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-old(hero-sub) {
+  animation-delay: 0.03s;
+}
+::view-transition-old(hero-claim) {
+  animation-delay: 0.05s;
+}
+@keyframes switch-out {
+  to {
+    opacity: 0;
+    transform: translateY(-0.18em);
+  }
+}
+
+/* words ride inline (so the lines break as they will at rest) and rise by relative offset; the script unwraps them */
+.title .sw {
+  position: relative;
+}

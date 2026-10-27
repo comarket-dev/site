@@ -94,6 +94,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     position: relative;
     z-index: 2;
     background: var(--grain), var(--paper-2);
+    background-position: var(--paper-x, 0px) var(--paper-y, 0px);
     padding-bottom: clamp(64px, 8vw, 128px);
   }
   /* No pin: the finished month is on the page from the start, so a fast scroller reads the result. The run is a

@@ -63,6 +63,27 @@ html[data-yarn] .turn .convert .arr {
   filter: none;
 }
 
+/* the nav over an ink band turns its button paper (Nav.astro's .on-dark .join, which outranks the rules above and
+   would paint a flat paper fill), so it gets the paper yarn here, with the same specificity plus one */
+html[data-yarn] .nav.on-dark .convert:not(.ghost) {
+  --knit: url('/assets/yarn/knit-paper.webp');
+  --knit-hover: url('/assets/yarn/knit-paper-hover.webp');
+  --edge: 196 184 196;
+  --edge-hover: 204 193 204;
+  --sheen: 255 255 255;
+  --fuzz: 255 250 242;
+  --label: var(--ink);
+  --label-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+  background: var(--knit) 0 0 / 120px 64px;
+  border-color: transparent;
+}
+html[data-yarn] .nav.on-dark .convert:not(.ghost):hover {
+  background: var(--knit-hover) 0 0 / 120px 64px;
+}
+html[data-yarn] .nav.on-dark .convert:not(.ghost) .arr {
+  filter: none;
+}
+
 /* the fork's choices are plain text links once its cards stack (index.astro): no yarn there */
 @media (max-width: 860px), (max-aspect-ratio: 4/5) {
   html[data-yarn] .side .convert {

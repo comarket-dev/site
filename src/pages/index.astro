@@ -43,10 +43,11 @@ import Person from '../components/Person.astro';
   </main>
 
   <!-- a person on each side, looking in at the device. Side by side (.tall): a tall photo from under the wordmark's
-       bar to the foot of the screen, off the outer edge, with the side's card on its lower part. Stacked (.wide):
-       beside the phone. Outside the fork so the stage canvas draws over them; placed by the script. -->
+       bar to the foot of the screen, off the outer edge, with the side's word, line and button on its lower part.
+       Stacked (.wide): beside the phone. Outside the fork so the stage canvas draws over them; placed by the
+       script. -->
   <div class="people" data-fork-people aria-hidden="true">
-    <Person id="florists-tall" class="pp brands tall" decorative sizes="36vw" focal={[0, 0]} />
+    <Person id="candle-maker" class="pp brands tall" decorative sizes="36vw" focal={[0.42, 0.34]} />
     <Person id="cook" class="pp creators tall" decorative sizes="30vw" focal={[0.62, 0.42]} />
     <Person id="florists" class="pp brands wide" decorative sizes="34vw" focal={[0.33, 0.24]} />
     <Person id="cook" class="pp creators wide" decorative sizes="34vw" focal={[0.46, 0.4]} />
@@ -175,40 +176,47 @@ import Person from '../components/Person.astro';
     --devw: min(54vw, 1320px);
   }
 
-  /* side by side, each card is a sheet of the page's paper laid on the lower part of its photo, under the faces */
+  /* side by side, each side's word, line and button sit straight on the lower part of its photo, in paper over an
+     ink fade rising from the photo's foot (under the faces), hugging the photo's inner edge. --pw is the photo's
+     width (set by the script); --tw the text's. */
   .side {
     position: relative;
+    z-index: 1;
     align-self: end;
     display: grid;
-    gap: 16px;
-    max-width: 360px;
-    margin-bottom: clamp(24px, 5vh, 56px);
-    padding: clamp(18px, 1.8vw, 28px) clamp(18px, 1.6vw, 32px);
-    border-radius: 24px;
-    background: var(--grain), var(--paper);
-    box-shadow:
-      0 1px 0 rgb(255 255 255 / 0.6) inset,
-      0 28px 60px -30px rgb(30 14 63 / 0.55);
+    gap: 14px;
+    --tw: min(380px, calc(var(--pw, 400px) - var(--gl) - 32px));
+    width: var(--tw);
+    max-width: none;
+    margin-bottom: clamp(28px, 6vh, 64px);
+    color: var(--ink);
     text-decoration: none;
-    transition:
-      opacity 0.6s var(--ease),
-      transform 0.8s var(--ease);
+    transition: opacity 0.6s var(--ease);
+  }
+  /* paper on the photo's ink fade, once the photos are placed (before that, or without JS, it's ink on paper) */
+  .fork.on-photos .side {
+    color: var(--paper);
   }
   .side.brands {
     grid-area: brands;
-    justify-self: end;
+    justify-self: start;
+    margin-left: max(0px, calc(var(--pw, 400px) - var(--gl) - 32px - var(--tw)));
     text-align: right;
     justify-items: end;
   }
   .side.creators {
     grid-area: creators;
-    justify-self: start;
+    justify-self: end;
+    margin-right: max(0px, calc(var(--pw, 400px) - var(--gr) - 32px - var(--tw)));
   }
   .who {
     font-size: clamp(40px, 3.6vw, 80px);
     line-height: 1.05;
     letter-spacing: -0.045em;
     font-weight: 700;
+  }
+  .fork.on-photos .who {
+    text-shadow: 0 2px 18px rgb(20 9 44 / 0.45);
   }
   /* the people (placed by the script). They fade with the cards when a side is chosen. Both look inward, toward the
      device. */
@@ -224,6 +232,32 @@ import Person from '../components/Person.astro';
   .people.placed :global(.pp) {
     opacity: 1;
   }
+  /* the ink fade the side's text sits on: from the photo's foot to just under the faces */
+  .people :global(.pp.tall)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 58%;
+    pointer-events: none;
+    background: linear-gradient(to top, rgb(20 9 44 / 0.9) 0%, rgb(20 9 44 / 0.78) 34%, rgb(20 9 44 / 0.32) 70%, rgb(20 9 44 / 0));
+  }
+  /* pointing at a side: its photo leans in (a slow zoom inside the same box); the device keeps the shared view */
+  .people :global(.pp.tall img) {
+    transform-origin: 50% 36%;
+    transition: transform 1.1s var(--ease);
+  }
+  .fork.on-brands ~ .people :global(.pp.tall.brands img),
+  .fork.on-creators ~ .people :global(.pp.tall.creators img) {
+    transform: scale(1.07);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .people :global(.pp.tall img) {
+      transition: none;
+    }
+  }
   .fork.flying ~ .people :global(.pp) {
     opacity: 0;
     transition: opacity 0.18s var(--ease);
@@ -234,6 +268,10 @@ import Person from '../components/Person.astro';
     min-height: 2.9em;
     color: var(--graphite);
     max-width: 24ch;
+  }
+  .fork.on-photos .what {
+    color: rgb(255 247 236 / 0.92);
+    text-shadow: 0 1px 10px rgb(20 9 44 / 0.5);
   }
   .go {
     white-space: nowrap;
@@ -262,14 +300,8 @@ import Person from '../components/Person.astro';
   .side.on .go .arr {
     transform: translateX(4px);
   }
-  .side.brands.on {
-    transform: translateX(-8px);
-  }
-  .side.creators.on {
-    transform: translateX(8px);
-  }
   .fork.leaning .side:not(.on) {
-    opacity: 0.3;
+    opacity: 0.72;
   }
   /* a choice: the other card goes at once; the rest stays while the device goes to the page.
      .leaning is in the selector so this outranks the hover rules, which would otherwise keep the other card up */
@@ -389,13 +421,17 @@ import Person from '../components/Person.astro';
       text-align: left;
       align-self: end;
       gap: 6px;
+      width: auto;
       max-width: none;
-      margin-bottom: 0;
+      margin: 0;
       padding: 16px 16px 16px;
       border-radius: 20px;
       background: var(--white);
       border: 1px solid var(--rule);
       box-shadow: none;
+    }
+    .fork.on-photos .side {
+      color: var(--ink);
     }
     .side {
       grid-template-columns: auto minmax(0, 1fr);
@@ -407,11 +443,14 @@ import Person from '../components/Person.astro';
     }
     .who {
       font-size: 26px;
+      text-shadow: none;
     }
     .what {
       font-size: 13.5px;
       line-height: 1.35;
       min-height: 0;
+      color: var(--graphite);
+      text-shadow: none;
     }
     .go {
       height: auto;
@@ -457,6 +496,9 @@ import Person from '../components/Person.astro';
       if (s === current || chosen) return;
       current = s;
       root.classList.toggle('leaning', !!s);
+      root.classList.toggle('on-brands', s === 'brands');
+      root.classList.toggle('on-creators', s === 'creators');
+      root.style.cursor = s && !stacked() ? 'pointer' : '';
       links.forEach((l) => l.classList.toggle('on', l.dataset.side === s));
       dispatchEvent(new CustomEvent('stage:hover', { detail: s }));
     };
@@ -469,6 +511,9 @@ import Person from '../components/Person.astro';
       for (const l of links) {
         const r = l.getBoundingClientRect();
         if (x > r.left - REACH && x < r.right + REACH && y > r.top - REACH && y < r.bottom + REACH) return l.dataset.side as Side;
+        // the side's photo is its target too
+        const ph = document.querySelector<HTMLElement>(`[data-fork-people] .pp.tall.${l.dataset.side}`)?.getBoundingClientRect();
+        if (ph && ph.width && x > ph.left && x < ph.right && y > ph.top && y < ph.bottom) return l.dataset.side as Side;
       }
       return null;
     };
@@ -533,10 +578,6 @@ import Person from '../components/Person.astro';
       const h = head.getBoundingClientRect();
       const sl = slot.getBoundingClientRect();
       const fork = root.getBoundingClientRect();
-      /* the florists' tall photo, anchored top left: show at most its left 62% (the first florist whole, only the
-         second's hair), zooming from the top left corner when the column is wider than that. Both faces whole only
-         once the column shows nearly all of it. */
-      const florists = people.querySelector<HTMLImageElement>('.pp.tall.brands img');
       for (const l of links) {
         const p = people.querySelector<HTMLElement>(`.pp.${stacked() ? 'wide' : 'tall'}.${l.dataset.side}`);
         if (!p) continue;
@@ -551,12 +592,8 @@ import Person from '../components/Person.astro';
           height = fork.bottom + scrollY - top;
           width = brands ? Math.min(h.left, sl.left) - 24 : vw - Math.max(h.right, sl.right) - 24;
         }
-        if (brands && !stacked() && florists && florists.naturalWidth) {
-          const v = width / height / (florists.naturalWidth / florists.naturalHeight);
-          const z = v > 0.62 && v < 0.95 ? v / 0.62 : 1;
-          florists.style.transformOrigin = '0 0';
-          florists.style.transform = z > 1 ? `scale(${z.toFixed(3)})` : '';
-        }
+        // the side's text hugs the photo's inner edge
+        l.style.setProperty('--pw', `${Math.max(0, width)}px`);
         Object.assign(p.style, {
           top: `${top}px`,
           height: `${Math.max(0, height)}px`,
@@ -566,6 +603,7 @@ import Person from '../components/Person.astro';
         });
       }
       people.classList.add('placed');
+      root.classList.toggle('on-photos', !stacked());
     };
     const ro = new ResizeObserver(place);
     ro.observe(root);

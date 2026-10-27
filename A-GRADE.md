@@ -239,6 +239,15 @@ answer, not a card.
 - Checked: all pages at 1440x900 and 390x844 (no page errors, no sideways overflow), workers checked 1280, 1920 and phones; build passes, 10 tests pass, no em dashes.
 
 
+### People and warmth, round 6 (2026-10-27, owner feedback on round 5; five workers in parallel)
+- paper (texture.py, paper.ts, global.css surfaces, Faq, Outcome): creases are now about 260 small kinked crinkles and one faint long fold, much subtler (cream 0.09/0.34, ink 0.24/0.04). Cream and ink tiles share one field, and src/scripts/paper.ts anchors every surface's pattern to the page (--paper-x/--paper-y), so creases run straight across section boundaries.
+- hero (Hero.astro, florists spots.phone): the banner is heads to shoulders and fades into the paper; the copy starts in the fade, higher on screen. The phone stands right of the second florist's head (spot `clear` 0.69), as tall as the first screen allows with its tracker (636px at 1512x860, 711 at 1440x960, 799 at 1920x1080). iPhone phone 458px, up from about 370.
+- waitlist (Waitlist.astro, shop-plan spots.form): the card drifted because its width and its centre scaled differently with the photo; now it's sized and placed from the two inner face edges (spot `fl` 0.475, `fr` 0.69), so it sits between the faces at every size. Shorter photo (heads to chests, foot fading into the ink). Side by side from 1280px, stacked below.
+- fork (index.astro, stage.ts, candle-maker): the cards are gone; each side's word, line and button sit on its photo over an ink gradient. Hovering or focusing a side zooms its photo to 1.07 inside the same box. The device no longer previews or tilts on hover (stage.ts FORK_HOVER_PREVIEW = false); one shared sale until a click. New Brands photo: Pexels 5761119 (Anna Shvets), a candle maker pouring wax; florists-tall removed.
+- switch (switch.ts, switch.css, two imports in Base.astro): going between /brands and /creators keeps the photo, nav and phone still; the old title lifts and fades (180ms), the new one rises word by word, the yellow draws in on its mark, sub and field follow; about 700ms. Instant with reduced motion; the fork trip is untouched.
+- yarn (yarn.css, lead): the nav's "Get early access" over ink bands was painted flat by Nav.astro's .on-dark rule; it now gets the paper yarn.
+- Checked: all pages at 1512x860, 1440x960, 1920x1080 and 390x844 (no page errors, no sideways overflow); the switch both ways and browser back; build passes; 10 tests pass; no em dashes.
+
 ## HANDOFF (paused 2026-10-27): start here
 
 **State.** Builds, 10 tests pass, no page errors, no em dashes. All law-audit work and the owner's round of reverts are done
