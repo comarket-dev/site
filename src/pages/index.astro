@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import PhoneSlot from '../components/PhoneSlot.astro';
 ---
@@ -30,12 +31,12 @@ import PhoneSlot from '../components/PhoneSlot.astro';
     <a class="side brands" href="/brands" data-side="brands" data-astro-prefetch="load" data-reveal style="--d:.2s">
       <span class="who">Brands</span>
       <span class="what">Creators sell for you. You pay only when they make a sale.</span>
-      <span class="go">Get creator sales <span class="arr" aria-hidden="true">→</span></span>
+      <span class="go">Get creator sales <Icon name="arrow-right" class="arr" /></span>
     </a>
     <a class="side creators" href="/creators" data-side="creators" data-astro-prefetch="load" data-reveal style="--d:.26s">
       <span class="who">Creators</span>
       <span class="what">Get paid on every sale you send, every month it renews.</span>
-      <span class="go">Start earning <span class="arr" aria-hidden="true">→</span></span>
+      <span class="go">Start earning <Icon name="arrow-right" class="arr" /></span>
     </a>
   </main>
 </Base>
@@ -98,16 +99,34 @@ import PhoneSlot from '../components/PhoneSlot.astro';
     height: min(60vh, 580px);
     min-height: 300px;
   }
-  /* a tablet, laptop or monitor (devices.ts): its slot takes the device's shape, set before first paint by Base.astro.
-     There's no poster for them; the device fades in once it's drawn */
+  /* A tablet, laptop or monitor (devices.ts) takes the device's shape, set before first paint by Base.astro, and
+     fills its cell: the middle column is as wide as that device can have (--devw, per device below), the row is
+     whatever height the headline leaves. There's no poster for them; the device fades up once it's drawn. */
+  :global(html:not([data-device='phone'])) .fork {
+    grid-template-columns: minmax(0, 1fr) var(--devw) minmax(0, 1fr);
+  }
+  :global(html:not([data-device='phone'])) .stagewrap {
+    align-self: stretch;
+    justify-self: stretch;
+    container-type: size;
+  }
   :global(html:not([data-device='phone'])) .stagewrap :global(.slot) {
     aspect-ratio: var(--device-aspect);
     height: auto;
     min-height: 0;
-    width: min(44vw, 780px, calc(min(58vh, 560px) * var(--device-aspect)));
+    width: min(100cqw, calc(100cqh * var(--device-aspect)));
   }
   :global(html:not([data-device='phone'])) .stagewrap :global(.poster) {
     display: none;
+  }
+  :global(html[data-device='tablet']) .fork {
+    --devw: min(46vw, 640px);
+  }
+  :global(html[data-device='laptop']) .fork {
+    --devw: min(50vw, 860px);
+  }
+  :global(html[data-device='monitor']) .fork {
+    --devw: min(54vw, 1320px);
   }
 
   .side {
@@ -213,8 +232,14 @@ import PhoneSlot from '../components/PhoneSlot.astro';
       height: min(44svh, 420px);
       min-height: 240px;
     }
+    :global(html:not([data-device='phone'])) .fork {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    :global(html:not([data-device='phone'])) .stagewrap {
+      padding-block: clamp(16px, 2.6vh, 36px) clamp(10px, 1.6vh, 24px);
+    }
     :global(html:not([data-device='phone'])) .stagewrap :global(.slot) {
-      width: min(80vw, calc(min(46svh, 440px) * var(--device-aspect)));
+      width: min(88cqw, calc(100cqh * var(--device-aspect)));
     }
     .stagewrap {
       padding-block: 8px;
@@ -285,7 +310,6 @@ import PhoneSlot from '../components/PhoneSlot.astro';
     const root = document.querySelector<HTMLElement>('[data-fork]');
     if (!root) return;
     const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.side'));
-    const phone = root.querySelector<HTMLElement>('[data-stage-anchor]');
     let current: Side | null = null;
     let chosen = false;
     const stacked = () => matchMedia('(max-width: 860px), (max-aspect-ratio: 4/5)').matches;
@@ -298,12 +322,16 @@ import PhoneSlot from '../components/PhoneSlot.astro';
       dispatchEvent(new CustomEvent('stage:hover', { detail: s }));
     };
 
-    /* left of the phone is brands, right is creators, the phone itself is the demo */
+    /* the shared view is what most people see, so a side only previews when the pointer is at its card: over it, or
+       within a short reach of it. Everywhere else, the device itself included, shows the shared sale */
+    const REACH = 40;
     const sideAt = (x: number, y: number): Side | null => {
       if (stacked()) return null;
-      const r = phone?.getBoundingClientRect();
-      if (r && x > r.left && x < r.right && y > r.top && y < r.bottom) return null;
-      return x < innerWidth / 2 ? 'brands' : 'creators';
+      for (const l of links) {
+        const r = l.getBoundingClientRect();
+        if (x > r.left - REACH && x < r.right + REACH && y > r.top - REACH && y < r.bottom + REACH) return l.dataset.side as Side;
+      }
+      return null;
     };
 
     const choose = (s: Side) => {

@@ -503,9 +503,14 @@ html.landing mark.hl {
     0 calc(100% - var(--top) - var(--bot) - 4px),
     0 calc(100% - var(--top) - var(--bot)) !important;
 }
-html.landing .poster {
+html.landing .poster,
+html.leaving .poster {
   opacity: 1 !important;
   transition: none !important;
+}
+/* going back to the fork, the page we leave rides on top of the fork, inside the device's screen */
+html.returning::view-transition-old(*) {
+  z-index: 2;
 }
 
 /* reveal on scroll: complete at rest, animated when JS is present */
@@ -535,4 +540,13 @@ html.landing .poster {
     opacity: 1;
     transform: none;
   }
+}
+
+/* icons (src/lib/icons.ts): 1em, centred on the line they sit in */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.14em;
 }

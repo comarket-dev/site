@@ -1,0 +1,83 @@
+/* The example brands' own typefaces (design/brands/README.md), used only inside their screens: storefronts, posts
+   and the stage phone. All SIL Open Font License, subset by scripts/subset-brand-fonts.sh. A browser only downloads
+   one when something on the page uses it. */
+
+@font-face {
+  font-family: 'Fernwood Serif';
+  src: url('/fonts/brands/fernwood-serif.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fernwood Serif';
+  font-style: italic;
+  src: url('/fonts/brands/fernwood-serif-italic.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fernwood Sans';
+  font-weight: 400 600;
+  src: url('/fonts/brands/fernwood-sans.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tallyhawk';
+  font-weight: 400 900;
+  font-stretch: 62% 100%;
+  src: url('/fonts/brands/tallyhawk.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pagewell';
+  font-weight: 400 800;
+  src: url('/fonts/brands/pagewell.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Orbitly';
+  font-weight: 400 900;
+  src: url('/fonts/brands/orbitly.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Kindred';
+  font-weight: 400 600;
+  src: url('/fonts/brands/kindred.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Kindred';
+  font-style: italic;
+  src: url('/fonts/brands/kindred-italic.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Hollow';
+  font-weight: 500 700;
+  src: url('/fonts/brands/hollow.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Hollow';
+  font-style: italic;
+  font-weight: 500;
+  src: url('/fonts/brands/hollow-italic.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pingfield';
+  font-weight: 100 900;
+  src: url('/fonts/brands/pingfield-sans.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pingfield Mono';
+  font-weight: 100 900;
+  src: url('/fonts/brands/pingfield-mono.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Quietly';
+  font-weight: 200 800;
+  src: url('/fonts/brands/quietly.woff2') format('woff2');
+  font-display: swap;
+}

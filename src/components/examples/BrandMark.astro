@@ -1,0 +1,28 @@
+---
+/* An example brand's logo mark (src/lib/marks.ts), 1em square unless sized. tint replaces its colors. */
+import { tinted, type BrandId } from '../../lib/marks';
+
+interface Props {
+  id: BrandId;
+  tint?: string;
+  size?: string;
+  class?: string;
+}
+const { id, tint, size = '1em', class: cls } = Astro.props;
+---
+
+<svg class={cls} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
+  {
+    tinted(id, tint).map((p) => (
+      <path
+        d={p.d}
+        fill={p.fill ?? 'none'}
+        fill-rule={p.evenodd ? 'evenodd' : undefined}
+        stroke={p.stroke}
+        stroke-width={p.width}
+        stroke-linecap={p.stroke ? 'round' : undefined}
+        stroke-linejoin={p.stroke ? 'round' : undefined}
+      />
+    ))
+  }
+</svg>

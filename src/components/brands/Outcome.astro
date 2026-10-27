@@ -1,4 +1,5 @@
 ---
+import Icon from '../Icon.astro';
 /* The core of the offer: the same post, paid two ways. A sponsored post bills before it runs; a storefront bills per
    sale. Then the price, since it's the same idea in numbers. */
 import type { PriceArm } from '../../lib/pricing';
@@ -77,7 +78,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     </ul>
     <div class="under">
       <p>Plus the creator’s rate, which you set. Buyers who were already your customers are free.</p>
-      <a class="btn big" href="#waitlist">Get early access <span class="arr" aria-hidden="true">→</span></a>
+      <a class="btn big" href="#waitlist">Get early access <Icon name="arrow-right" class="arr" /></a>
     </div>
     <p class="fine">Example: one post, a ${PRICE}/mo product, a {RATE}% creator rate.</p>
   </div>

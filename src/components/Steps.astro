@@ -5,7 +5,7 @@ interface Props {
   class?: string;
 }
 const { last = 'Split', class: cls } = Astro.props;
-const steps = ['Creator posts', 'Buyer clicks', 'Buyer pays', 'Sale confirmed', last];
+const steps = ['Creator posts', 'Buyer clicks', 'Buyer checks out', 'Sale confirmed', last];
 ---
 
 <ol class:list={['steps', cls]} data-steps aria-label="How a sale goes through Comarket">

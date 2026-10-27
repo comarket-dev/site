@@ -1,11 +1,13 @@
 # Comarket site
 
-The marketing site and waitlist for Comarket: creators bring buyers, sellers pay only for first-time customers.
+The marketing site and waitlist for Comarket: brands pay only when a creator's storefront makes a sale; creators earn on every sale they send.
+
+New here (person or agent)? Start with [AGENTS.md](AGENTS.md): the owner's rules, where things stand, how to check your work, and what's next.
 
 - **Fork** (`/`): "More sales for brands. More money for creators. One co-branded storefront." A 3D device shaped like the visitor's own (phone, tablet, laptop or monitor) rests on a completed sale. Hover Brands or Creators to turn it to that side's view. Choosing one types that page's address into the device's browser, shows the real page in its screen for a beat, then flies through the screen into it.
 - **Brands** (`/brands`): hero with a live claim field that re-dresses the phone, example posts and storefronts, agent replay, "Pay for sales, not posts" (a sponsored post billed upfront next to a storefront billed per sale on a 30-day payment timeline, scroll-driven, with the price underneath), split calculator, FAQ, waitlist.
-- **Creators** (`/creators`): hero with a live handle check (`/api/handle`), the deal in plain words, example posts and storefronts, a brand offer, hub and embedded link, protected credit, earnings estimator, rate sweet spot, FAQ, waitlist. Handles are unique (migration 0002), so a claimed page is really claimed.
-- **Examples section** (`src/components/examples/Showcase.astro`): shared by both pages. One example post and the storefront it opens sit in a spotlight at a time; hovering slows it to a quarter speed rather than stopping it. Every third slide is a "Your turn" card whose button jumps to the hero's claim field.
+- **Creators** (`/creators`): hero with a live handle check (`/api/handle`), the deal in plain words, example posts and storefronts, a brand offer, hub and embedded link, protected credit, earnings estimator, FAQ, waitlist. Handles are unique (migration 0002), so a claimed page is really claimed.
+- **Examples section** (`src/components/examples/Showcase.astro`): shared by both pages. One example post and the storefront it opens sit in a spotlight at a time. Each storefront is that brand's own mobile page (`examples/stores/`), built from the brand style guide in `design/brands/README.md`. Hovering slows the spotlight to a quarter speed rather than stopping it. Shadows spill past the slides: the edge-fade mask's box reaches past them top and bottom. Every third slide is a "Your turn" card whose button jumps to the hero's claim field.
 - Joining the waitlist issues a numbered 3D pass, modeled in Blender and printed at runtime.
 
 ## Stack
@@ -37,6 +39,11 @@ Copy `.dev.vars.example` to `.dev.vars` for local secrets.
 | `python3 scripts/render-stage-stills.py <dev url> public/assets/stage` | Posters: the stage's first frame, shown until the 3D draws (needs Playwright) |
 | `python3 scripts/render-stage-stills.py <dev url> design/stage og` | Phone stills for the share images |
 | `node scripts/render-og.mjs` | Share images in `public/og` from the phone stills |
+| `python3 scripts/render-posts.py [names \| avatars]` | Media, avatars and portraits for the example posts, into `public/assets/posts` (all, some media, or only the faces) |
+| `~/.venvs/mflux/bin/python scripts/print-labels.py` | Prints brand labels onto products in Priya's and Ama's shots, in each brand's typeface |
+| `sh scripts/subset-brand-fonts.sh` | Web fonts for the example brands, from `design/brands/fonts` into `public/fonts/brands` |
+| `python3 scripts/render-brand-board.py` | The example brands' board, `design/brands/board.png` |
+| `python3 scripts/qa/*.py` | Browser checks: transitions, viewports, clipped shadows, highlights, spotlight (see AGENTS.md) |
 
 ## Deploy to Cloudflare
 
@@ -63,11 +70,13 @@ The adapter also provisions a `SESSION` KV namespace on first deploy. The site d
 
 One phone lives across page changes (`src/components/Stage.astro`, `src/scripts/stage/`). It plays an example sale on its screen: a creator's post, the storefront, the brand's own checkout, the moment the payment is confirmed (a drawn check, the amount, and a small haptic dip of the phone), and what each side sees afterwards. The split on screen uses the visitor's pricing arm. The screens are drawn to a canvas in `screens.ts` and uploaded only while something on them moves. The phone follows whichever `[data-stage-anchor]` element the page has (`PhoneSlot.astro`), so layout decides where it sits; between pages it springs from where it was. Without WebGL2, or on slow devices, the poster image in the slot stays. The hero claim fields re-dress the phone with the visitor's site (logo via `/api/icon`, which only serves icons of sites we've previewed) or handle.
 
-**The fork's device** (`src/scripts/stage/devices.ts`, `browser.ts`). Base.astro's inline script picks the device and its slot's shape before first paint; `devices.ts` mirrors its rules. The tablet, laptop and monitor are built at load with a screen cut to the visitor's window plus browser chrome, so the next page fits it exactly. On a choice, the view transition's new-page layer is placed under the screen as a true miniature (Stage.astro) and grows on the device's flight curve; the page holds still (`html.landing`) until the device lands.
+**The fork's device** (`src/scripts/stage/devices.ts`, `browser.ts`). Base.astro's inline script picks the device and its slot's shape before first paint (phones by width under 600px, tablets by touch or a squarish window, monitors from 1800px wide); `devices.ts` mirrors its rules, and Stage.astro carries the pick across client-side page changes. The tablet, laptop and monitor are built at load with a screen cut to the visitor's window plus browser chrome, so a page fits it exactly; each gets its own column width on the fork. A device without a poster fades up with the page's reveal.
+
+**The trip** (`stage.ts`, Stage.astro). Picking a side: the device squares up and eases in at a constant slow speed while its browser loads the page (address, load bar, near-cut paint), then accelerates into the flight with no stall. The page in the screen is the view transition's own new-page layer at true proportions, and the device is placed from that layer's transform every frame (`miniFor`, `fromLayer`), so they can't drift. The page holds still (`html.landing`) until the device lands; then the hero's phone takes over from its poster. Going back to the fork (`astro:before-preparation`) runs the same move in reverse with the old page's layer. Without view transitions it falls back to a plain page change.
 
 ## Example posts
 
-The posts in the examples spotlight (`src/components/examples/posts/`) are real HTML in each platform's layout, around one piece of media each. The media is composed in `design/posts/media/*.html` from locally generated source shots (`design/content`, made with mflux) and rendered by `python3 scripts/render-posts.py` into `public/assets/posts`. `scripts/cutout.py` lifts a creator out of a shot with macOS Vision, and `scripts/retouch-posts.py` holds hand fixes to generated shots. Everything in them is fictional.
+The posts in the examples spotlight (`src/components/examples/posts/`) are real HTML in each platform's layout, around one piece of media each. The media is composed in `design/posts/media/*.html` from locally generated source shots (`design/content`, made with mflux) and rendered by `python3 scripts/render-posts.py` into `public/assets/posts`. `scripts/cutout.py` lifts a creator out of a shot with macOS Vision, `scripts/retouch-posts.py` holds hand fixes to generated shots, and `scripts/print-labels.py` prints brand labels onto products in a shot, wrapped to each product's curve and lit by the photo. Everything in them is fictional.
 
 ## The Blender step
 
@@ -76,6 +85,7 @@ The posts in the examples spotlight (`src/components/examples/posts/`) are real 
 ## Before launch
 
 - Have the privacy page reviewed, and add a real contact address.
+- Run migration 0002 on Neon (`npm run db:migrate`).
 - Real domain in `astro.config.mjs` (`site`) and `public/robots.txt`.
 - Turnstile and Resend keys.
 - Earnings estimates use placeholder funnel rates (`src/lib/estimate.ts`); replace them with real creator data when it exists.

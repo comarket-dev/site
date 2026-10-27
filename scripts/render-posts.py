@@ -5,7 +5,9 @@ thumbnail, a photo or a screenshot. That media is composed in design/posts/media
 shots, then degraded the way its platform degrades it (a re-encoded video is soft and blocky, a thumbnail is a
 compressed JPEG). Avatars are square crops of the creators' portraits.
 
-    python3 scripts/render-posts.py
+    python3 scripts/render-posts.py           everything
+    python3 scripts/render-posts.py avatars   only the face crops
+    python3 scripts/render-posts.py sarah-chart priya-slide   only those media
 
 Needs Playwright for Python and Google Chrome. Cutouts in design/posts/keys come from scripts/cutout.py.
 """
@@ -36,13 +38,14 @@ MEDIA = {
 
 # avatar crops from each 896x1120 portrait: centre x, centre y, side, all in pixels
 AVATARS = {
-    "sarah": (402, 330, 420),
-    "devon": (540, 300, 400),
-    "lena": (448, 330, 440),
-    "priya": (448, 300, 420),
-    "theo": (560, 250, 400),
-    "jonah": (470, 300, 420),
-    "ama": (420, 330, 420),
+    "sarah": (450, 330, 440),
+    "devon": (530, 420, 440),
+    "lena": (490, 390, 460),
+    "mika": (426, 370, 440),
+    "priya": (480, 340, 440),
+    "theo": (516, 340, 420),
+    "jonah": (544, 320, 420),
+    "ama": (576, 410, 440),
 }
 
 
@@ -64,13 +67,15 @@ def degrade(src: Path, kind: str) -> Image.Image:
 QUALITY = {"video": 66, "thumb": 80, "photo": 78, "shot": 86}
 
 
-def main():
+def main(only=()):
     BUILD.mkdir(parents=True, exist_ok=True)
     (OUT / "avatars").mkdir(parents=True, exist_ok=True)
     with sync_playwright() as pw:
         b = pw.chromium.launch(channel="chrome", args=["--allow-file-access-from-files"])
         pages = {dpr: b.new_page(device_scale_factor=dpr) for dpr in (2, 3)}
         for name, (w, h, dpr, kind, export) in MEDIA.items():
+            if only and name not in only:
+                continue
             pg = pages[dpr]
             pg.set_viewport_size({"width": w, "height": h})
             pg.goto((SRC / f"{name}.html").as_uri())
@@ -84,12 +89,25 @@ def main():
                 web.save(OUT / f"{name.split('-')[0]}.jpg", quality=QUALITY[kind], subsampling=2, optimize=True, progressive=True)
             print("rendered", name, flush=True)
         b.close()
-    for cid, (cx, cy, side) in AVATARS.items():
-        im = Image.open(CREATORS / f"{cid}.png").convert("RGB")
-        box = (cx - side // 2, cy - side // 2, cx + side // 2, cy + side // 2)
-        im.crop(box).resize((128, 128), Image.LANCZOS).save(OUT / "avatars" / f"{cid}.jpg", quality=84, optimize=True)
-    print("avatars", ", ".join(AVATARS))
+    if not only:
+        avatars()
+
+
+def avatars():
+    """Square crops of each portrait: 128px avatars for posts and storefronts, 320px for the stage phone and anywhere
+    a face is shown large."""
+    for size, folder in ((128, "avatars"), (320, "portraits")):
+        (OUT / folder).mkdir(parents=True, exist_ok=True)
+        for cid, (cx, cy, side) in AVATARS.items():
+            im = Image.open(CREATORS / f"{cid}.png").convert("RGB")
+            box = (cx - side // 2, cy - side // 2, cx + side // 2, cy + side // 2)
+            im.crop(box).resize((size, size), Image.LANCZOS).save(OUT / folder / f"{cid}.jpg", quality=84, optimize=True)
+    print("avatars and portraits", ", ".join(AVATARS))
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    # python3 scripts/render-posts.py avatars: only the face crops; with media names, only those media
+    args = sys.argv[1:]
+    avatars() if args == ["avatars"] else main(tuple(args))

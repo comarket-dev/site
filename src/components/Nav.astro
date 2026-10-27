@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 interface Props {
   side: 'brands' | 'creators';
 }
@@ -11,7 +12,7 @@ const { side } = Astro.props;
     <a href="/brands" aria-current={side === 'brands' ? 'page' : undefined}>Brands</a>
     <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>Creators</a>
   </nav>
-  <a class="btn join" href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'} <span class="arr" aria-hidden="true">→</span></a>
+  <a class="btn join" href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'} <Icon name="arrow-right" class="arr" /></a>
 </header>
 
 <style>

@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import PhoneSlot from './PhoneSlot.astro';
 import Steps from './Steps.astro';
 import { hlClasses } from '../lib/hl';
@@ -44,7 +45,7 @@ const brand = side === 'brands';
             required
           />
           <button class="btn" type="submit" data-claim-btn>
-            <span>{button}</span><span class="arr" aria-hidden="true">→</span>
+            <span>{button}</span><Icon name="arrow-right" class="arr" />
           </button>
         </div>
         <p class="result" data-result aria-live="polite"></p>
@@ -67,8 +68,8 @@ const brand = side === 'brands';
     min-height: 100svh;
     display: grid;
     align-items: center;
-    overflow: hidden;
-    overflow: clip;
+    /* clip sideways only (the poster overhangs); shadows may spill into the next section */
+    overflow-x: clip;
   }
   .inner {
     display: grid;
@@ -224,6 +225,7 @@ const brand = side === 'brands';
 
 <script>
   import { onPage, track } from '../scripts/ui';
+  import { iconHtml } from '../lib/icons';
 
   interface Preview {
     host: string;
@@ -284,8 +286,8 @@ const brand = side === 'brands';
         prefill('handle', h);
         say(
           free
-            ? `<b>comarket.si/${esc(h)}</b> is free. <a href="#waitlist">Claim it before someone else does →</a>`
-            : `That’s <b>comarket.si/${esc(h)}</b> on the phone. <a href="#waitlist">Claim it →</a>`,
+            ? `<b>comarket.si/${esc(h)}</b> is free. <a href="#waitlist">Claim it before someone else does ${iconHtml('arrow-right')}</a>`
+            : `That’s <b>comarket.si/${esc(h)}</b> on the phone. <a href="#waitlist">Claim it ${iconHtml('arrow-right')}</a>`,
         );
         return;
       }
@@ -309,7 +311,7 @@ const brand = side === 'brands';
           }),
         );
         prefill('site', q);
-        say(`That’s <b>${esc(data.name)}</b> on a creator’s storefront. <a href="#waitlist">Get early access to make it real →</a>`);
+        say(`That’s <b>${esc(data.name)}</b> on a creator’s storefront. <a href="#waitlist">Get early access to make it real ${iconHtml('arrow-right')}</a>`);
         track('hero_claim', { side: 'brand', host: data.host });
         reveal();
       } catch {

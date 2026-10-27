@@ -1,0 +1,261 @@
+---
+/* Tallyhawk x Theo M., per design/brands/README.md: a poster. Bone page, a giant condensed headline built from Theo's
+   numbers, the invoice as a physical object with its reminder rail ending in Paid, Theo's line in his own lowercase,
+   one Signal button. Drawn at 390 x 846 design pixels (StorePhone.astro scales it). Fictional, labeled as an example. */
+import BrandMark from '../BrandMark.astro';
+import StoreFoot from '../StoreFoot.astro';
+---
+
+<div class="root">
+  <header class="lock">
+    <span class="brand"><BrandMark id="tallyhawk" size="26" />TALLYHAWK</span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>THEO M.</span>
+  </header>
+
+  <h1>Get paid in<br /><span>4 days,</span> not&nbsp;41.</h1>
+  <p class="sub">Invoicing for freelancers. Theo’s followers get 2&nbsp;months free.</p>
+
+  <!-- the invoice, sent and chased for you -->
+  <div class="inv">
+    <div class="inv-top">
+      <span><b>Invoice 0042</b><i>Brightline Studio</i></span>
+      <span class="paid">Paid</span>
+    </div>
+    <div class="inv-row"><span>Website redesign, phase 2</span><b>$3,200.00</b></div>
+    <ol class="rail">
+      <li><b>Sent</b><i>Oct 1</i></li>
+      <li><b>Day 3</b><i>Reminder</i></li>
+      <li class="end"><b>Paid</b><i>Oct 5</i></li>
+    </ol>
+  </div>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <blockquote>“the fastest way to get paid is embarrassingly boring. automatic reminders. that’s it.”</blockquote>
+    <figcaption>Theo M., @theo.ships</figcaption>
+  </figure>
+
+  <div class="buy">
+    <span class="cta">Start my 2 free months</span>
+    <StoreFoot first="Theo" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --signal: #e4572e;
+    --ink: #141210;
+    --bone: #f2eee7;
+    --paid: #1f9d63;
+    --foot: #6d665e;
+    position: relative;
+    height: 100%;
+    padding: 50px 22px 0;
+    background: var(--bone);
+    color: var(--ink);
+    font-family: 'Tallyhawk', system-ui, sans-serif;
+    font-stretch: 100%;
+    overflow: hidden;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    font-size: 22px;
+    font-weight: 900;
+    font-stretch: 62%;
+    letter-spacing: 0.01em;
+  }
+  .brand,
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .x {
+    font-size: 15px;
+    font-weight: 500;
+    font-stretch: 100%;
+    color: #8c857c;
+  }
+  .av {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/theo.jpg) center / cover;
+    flex: none;
+  }
+  h1 {
+    margin: 10px 0 0;
+    font-size: 64px;
+    line-height: 0.86;
+    font-weight: 900;
+    font-stretch: 62%;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+  }
+  h1 span {
+    color: var(--signal);
+  }
+  .sub {
+    margin: 14px 0 0;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #3d3832;
+  }
+
+  /* the invoice: paper, slightly turned, the way it lands on a desk */
+  .inv {
+    margin: 18px 6px 0;
+    padding: 16px 16px 14px;
+    border-radius: 6px;
+    background: #fff;
+    transform: rotate(-2deg);
+    box-shadow:
+      0 1px 0 rgb(20 18 16 / 0.06),
+      0 22px 34px -20px rgb(20 18 16 / 0.45);
+  }
+  .inv-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+  }
+  .inv-top span:first-child {
+    display: grid;
+    gap: 2px;
+  }
+  .inv-top b {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .inv-top i {
+    font-style: normal;
+    font-size: 12px;
+    color: #6d665e;
+  }
+  .paid {
+    padding: 4px 9px;
+    border-radius: 5px;
+    background: var(--paid);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .inv-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding: 10px 0;
+    border-top: 1px solid #ebe6de;
+    border-bottom: 1px solid #ebe6de;
+    font-size: 13px;
+  }
+  .inv-row b {
+    font-variant-numeric: tabular-nums;
+  }
+  /* the reminder rail: day 0, 3, then paid. Day 7 and 14 never had to go out */
+  .rail {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  .rail::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    top: 5px;
+    height: 2px;
+    background: var(--ink);
+  }
+  .rail li {
+    position: relative;
+    display: grid;
+    gap: 1px;
+    padding-top: 18px;
+    font-size: 11.5px;
+  }
+  .rail li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--signal);
+  }
+  .rail li.end {
+    text-align: right;
+  }
+  .rail li.end::before {
+    left: auto;
+    right: 0;
+    background: var(--paid);
+  }
+  .rail li:nth-child(2) {
+    text-align: center;
+  }
+  .rail li:nth-child(2)::before {
+    left: 50%;
+    margin-left: -6px;
+  }
+  .rail b {
+    font-weight: 700;
+  }
+  .rail i {
+    font-style: normal;
+    color: #6d665e;
+  }
+
+  .note {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    column-gap: 12px;
+    margin: 20px 0 0;
+  }
+  .av.big {
+    width: 46px;
+    height: 46px;
+    grid-row: span 2;
+  }
+  blockquote {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.32;
+    font-weight: 500;
+    text-wrap: pretty;
+  }
+  figcaption {
+    margin-top: 5px;
+    font-size: 12.5px;
+    color: #6d665e;
+  }
+
+  .buy {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 94px;
+    display: grid;
+    gap: 12px;
+  }
+  .cta {
+    display: grid;
+    place-items: center;
+    height: 58px;
+    border-radius: 6px;
+    background: var(--signal);
+    color: #fff;
+    font-size: 26px;
+    font-weight: 900;
+    font-stretch: 62%;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+</style>

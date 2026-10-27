@@ -57,8 +57,7 @@ export function mountWaitlist(root: HTMLElement): () => void {
       const slug = slugOf(p.name || p.host.split('.')[0]);
       mini.style.setProperty('--brand', usable(p.color));
       root.querySelector('[data-mini-url]')!.textContent = `${slug}.comarket.si/creators/sarah`;
-      root.querySelector('[data-mini-lock]')!.textContent = `${p.name.toUpperCase()} × SARAH K.`;
-      root.querySelector('[data-mini-name]')!.textContent = p.name;
+      root.querySelectorAll('[data-mini-name]').forEach((n) => (n.textContent = p.name));
       const logo = root.querySelector<HTMLElement>('[data-mini-logo]')!;
       logo.style.backgroundImage = p.icon ? `url("${p.icon.replace(/"/g, '')}")` : '';
       mini.classList.remove('bump');

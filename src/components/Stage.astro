@@ -52,38 +52,82 @@
     return loading;
   }
 
+  const motion = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const onHero = () => document.body.dataset.stage === 'brands' || document.body.dataset.stage === 'creators';
+  let returning = false;
+
+  // going back to the fork from a hero: the hero is snapshotted as we leave, so its phone has to be in the page
+  // itself (the poster) rather than only in the live canvas, or the page would shrink back into the screen without it
+  document.addEventListener('astro:before-preparation', (e) => {
+    const to = (e as Event & { to: URL }).to;
+    returning = !!api && motion() && onHero() && to.pathname === '/' && 'startViewTransition' in document;
+    if (returning) document.documentElement.classList.add('leaving');
+  });
+
   // the swap copies <html> attributes from the incoming page, so hand it our state first;
   // otherwise the new page's poster flashes over the live device for a frame or two
   const keep = ['js', 'stage-live', 'stage-off', 'stage-drawn'];
   document.addEventListener('astro:before-swap', (e) => {
     const next = (e as Event & { newDocument: Document }).newDocument.documentElement;
     keep.forEach((c) => document.documentElement.classList.contains(c) && next.classList.add(c));
-    ['device'].forEach((k) => document.documentElement.dataset[k] && (next.dataset[k] = document.documentElement.dataset[k]));
-    if (!from || !api || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // the device pick from Base.astro's inline script, which doesn't run again on a client-side page change
+    const html = document.documentElement;
+    if (html.dataset.device) next.dataset.device = html.dataset.device;
+    const aspect = html.style.getPropertyValue('--device-aspect');
+    if (aspect) next.style.setProperty('--device-aspect', aspect);
     const vt = (e as Event & { viewTransition?: ViewTransition }).viewTransition;
-    if (!vt?.ready) return;
+    if (!api || !motion() || !vt?.ready) return;
+    if (returning) {
+      returning = false;
+      // the fork holds still around the device until it's home; the hero rides on top of it, inside the screen
+      next.classList.add('landing', 'returning');
+      vt.ready.then(placeReturn).catch(() => {});
+      return;
+    }
+    if (!from) return;
     // the page we're travelling to is a still, composed, until we land on it (stage:landed)
     next.classList.add('landing');
     vt.ready.then(placePage).catch(() => {});
   });
 
-  /* The next page under the device's screen: a true miniature in its page area, held while we look at it, then
-     growing on the device's own flight curve to exactly full size. The fork stays as it was around the device. */
+  /** The view transition's layers, which Astro names after the page's transition scope rather than "root". */
+  function layers() {
+    const name = getComputedStyle(document.documentElement).viewTransitionName;
+    const layer = !name || name === 'none' ? 'root' : name;
+    return {
+      old: { pseudoElement: `::view-transition-old(${layer})`, fill: 'both' as const },
+      neu: { pseudoElement: `::view-transition-new(${layer})`, fill: 'both' as const },
+    };
+  }
+  const paper = ['0 0 0 100vmax var(--paper)', '0 0 0 100vmax var(--paper)'];
+
+  /* In: the next page under the device's screen, a true miniature that creeps in with it, then grows to full size.
+     The fork stays as it was around the device. */
   function placePage() {
     const plan = api?.tripPlan();
     if (!plan) return;
     const html = document.documentElement;
-    // Astro names the page's layer after its transition scope rather than "root"
-    const name = getComputedStyle(html).viewTransitionName;
-    const layer = !name || name === 'none' ? 'root' : name;
-    const old = { pseudoElement: `::view-transition-old(${layer})`, fill: 'both' as const };
-    const neu = { pseudoElement: `::view-transition-new(${layer})`, fill: 'both' as const };
-    const total = plan.delay + plan.dur;
-    const grow = html.animate({ transform: [plan.from, 'none'] }, { ...neu, delay: plan.delay, duration: plan.dur, easing: plan.easing });
-    // page colour around it, cut to the screen's page area, in case the area is a hair off the window's shape
-    html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: ['0 0 0 100vmax var(--paper)', '0 0 0 100vmax var(--paper)'] }, { ...neu, duration: total });
-    html.animate({ opacity: [1, 1] }, { ...old, duration: total });
+    const { old, neu } = layers();
+    const grow = html.animate(plan.keyframes, { ...neu, duration: plan.ms });
+    // page colour in the hair between the page and the screen's page area, cut to that area
+    html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: paper }, { ...neu, duration: plan.ms });
+    html.animate({ opacity: [1, 1] }, { ...old, duration: plan.ms });
     api?.syncTrip(grow);
+  }
+
+  /* Out: the page we're leaving shrinks back into the device's screen over the fork, then gives way to the demo. */
+  function placeReturn() {
+    const plan = api?.returnPlan();
+    const html = document.documentElement;
+    if (!plan) {
+      html.classList.remove('landing', 'returning');
+      return;
+    }
+    const { old, neu } = layers();
+    const shrink = html.animate(plan.keyframes, { ...old, duration: plan.ms });
+    html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: paper }, { ...old, duration: plan.ms });
+    html.animate({ opacity: [1, 1] }, { ...neu, duration: plan.ms });
+    api?.syncTrip(shrink);
   }
 
   async function apply() {
@@ -112,7 +156,7 @@
     if (!api) return done();
     api.choose(side).then(done);
   });
-  addEventListener('stage:landed', () => document.documentElement.classList.remove('landing'));
+  addEventListener('stage:landed', () => document.documentElement.classList.remove('landing', 'returning', 'leaving'));
   addEventListener('stage:brand', (e) => api?.setBrand((e as CustomEvent).detail));
   addEventListener('stage:creator', (e) => api?.setCreator((e as CustomEvent<string>).detail));
   // the device follows the window: Base.astro's inline script re-picks it and resizes its slot

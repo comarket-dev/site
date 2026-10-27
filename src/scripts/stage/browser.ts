@@ -4,7 +4,7 @@
  * address bar types the new address, a load bar runs, and the page area clears to show the real next page beneath it
  * (see stage.ts). Everything is drawn in the visitor's CSS pixels.
  */
-import { ava, check, chip, clamp01, COLORS, ease, logo, money, rr, split, text, textFit, usd, type BrandSkin, type Ctx, type CreatorSkin, type Shot } from './screens';
+import { check, chip, face, clamp01, COLORS, ease, logo, money, rr, split, text, textFit, usd, type BrandSkin, type Ctx, type CreatorSkin, type Shot } from './screens';
 import type { DeviceKind } from './devices';
 
 const { INK, TEXT, MUTED, FILL, YELLOW, BLUE, CREAM } = COLORS;
@@ -74,9 +74,21 @@ function desktopChrome(x: Ctx, w: number, top: number, url: string, title: strin
   rr(x, 88, 7, tabW, 31, [9, 9, 0, 0]);
   x.fillStyle = '#F7F6F9';
   x.fill();
-  rr(x, 100, 16, 14, 14, 4);
-  x.fillStyle = BLUE;
-  x.fill();
+  // the tab's icon is a spinner while the page loads, as in a real browser
+  const loading = nav && nav.progress !== null && nav.progress < 1;
+  if (loading) {
+    x.strokeStyle = BLUE;
+    x.lineWidth = 2;
+    x.lineCap = 'round';
+    const a0 = (performance.now() / 1000) * Math.PI * 2.4;
+    x.beginPath();
+    x.arc(107, 23, 5.5, a0, a0 + Math.PI * 1.4);
+    x.stroke();
+  } else {
+    rr(x, 100, 16, 14, 14, 4);
+    x.fillStyle = BLUE;
+    x.fill();
+  }
   textFit(x, nav && nav.typing >= 1 ? nav.title : title, 122, 27.5, tabW - 44, 12.5, TEXT, 500);
   text(x, '+', 88 + tabW + 16, 28, 17, MUTED, 400);
   // toolbar
@@ -293,7 +305,7 @@ function brandScene(x: Ctx, bx: Box, t: number, b: BrandSkin) {
 }
 
 function creatorScene(x: Ctx, bx: Box, t: number, b: BrandSkin, c: CreatorSkin) {
-  header(x, bx, `${c.name} · Payouts`, (X, Y) => ava(x, X + 18, Y + 18, 18, c.tone, c.first[0]));
+  header(x, bx, `${c.name} · Payouts`, (X, Y) => face(x, c, X + 18, Y + 18, 18));
   const sp = split(b);
   const k = ease(t / 0.5);
   const L = 48;
@@ -411,14 +423,6 @@ export function paintScreen(
       x.fillRect(0, top, w, h - top - bottom);
       x.drawImage(a, 0, crop, a.width, a.height - crop, 0, top, w, w * ((a.height - crop) / a.width));
       x.restore();
-      // once a side is picked, the margins either side of a narrowed page area are page colour
-      if (side > 0 && (nav?.reveal ?? 0) > 0) {
-        x.globalAlpha = nav!.reveal;
-        x.fillStyle = '#FFF7EC';
-        x.fillRect(0, top, side, area.h);
-        x.fillRect(w - side, top, side, area.h);
-        x.globalAlpha = 1 - reveal;
-      }
     } else {
       const k = opts.slide ?? 1;
       if (opts.prev && k < 1) {

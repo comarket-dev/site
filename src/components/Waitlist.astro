@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { env } from 'cloudflare:workers';
 interface Props {
   side: 'brand' | 'creator';
@@ -19,19 +20,22 @@ const brand = side === 'brand';
       <div class="preview" data-preview>
         {
           brand ? (
-            <div class="mini" data-mini style="--brand:#1E6B47">
+            <div class="mini" data-mini style="--brand:#1E0E3F">
               <span class="url num" data-mini-url>
                 yourapp.comarket.si/creators/sarah
               </span>
               <div class="mini-body">
-                <span class="lock num" data-mini-lock>
-                  YOUR BRAND × SARAH K.
-                </span>
-                <span class="mini-h">Sarah’s pick</span>
-                <div class="mini-prod">
+                <span class="lock">
                   <span class="mini-logo" data-mini-logo />
                   <b data-mini-name>Your brand</b>
-                </div>
+                  <span class="x">×</span>
+                  <span class="face" />
+                  <b>Sarah K.</b>
+                </span>
+                <span class="mini-h">
+                  <span data-mini-name>Your brand</span>, picked by Sarah.
+                </span>
+                <span class="mini-sub">Sarah’s readers get your offer here.</span>
                 <span class="mini-cta">Get started</span>
               </div>
             </div>
@@ -109,7 +113,7 @@ const brand = side === 'brand';
           <span class="err" data-err="email"></span>
         </div>
         {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
-        <button class="btn submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <span class="arr" aria-hidden="true">→</span></button>
+        <button class="btn submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <Icon name="arrow-right" class="arr" /></button>
         <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
         <p class="err form-err" data-err="form" role="alert"></p>
       </form>
@@ -185,9 +189,25 @@ const brand = side === 'brand';
     justify-items: start;
   }
   .lock {
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    color: var(--brand);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .lock .x {
+    color: #8a948e;
+    font-size: 12px;
+  }
+  .face {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/sarah.jpg) center / cover;
+  }
+  .mini-sub {
+    margin-top: -4px;
+    font-size: 14px;
+    color: #4b5650;
   }
   .mini-h {
     font-size: 30px;
@@ -195,15 +215,10 @@ const brand = side === 'brand';
     letter-spacing: -0.035em;
     line-height: 1;
   }
-  .mini-prod {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
   .mini-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     background: var(--brand) center / cover no-repeat;
     border: 1px solid #e3e8e4;
   }

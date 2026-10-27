@@ -1,19 +1,6 @@
 ---
 /* Example storefronts, the way competitors show client work. Fictional brands and creators, tagged as examples. */
 import Showcase from '../examples/Showcase.astro';
-import type { PriceArm } from '../../lib/pricing';
-interface Props {
-  arm: PriceArm;
-}
-const { arm } = Astro.props;
-const perSale = (49 * (20 + arm.first)) / 100;
-
-const stats = [
-  { n: '212', l: 'sales', s: 'from 11 creators' },
-  { n: '8,940', l: 'clicks that didn’t buy', s: 'cost Fernwood $0' },
-  { n: `$${perSale.toFixed(2)}`, l: 'per sale', s: 'paid after each one' },
-  { n: '$0', l: 'before the first sale', s: 'no fee, no retainer' },
-];
 ---
 
 <section class="section gallery" id="examples" aria-labelledby="gal-h">
@@ -25,33 +12,12 @@ const stats = [
   </div>
 
   <Showcase side="brand" />
-
-  <div class="wrap">
-    <div class="results" data-reveal>
-      <div class="r-head">
-        <span class="tag">Example</span>
-        <p class="r-title">Fernwood’s first 90 days.</p>
-      </div>
-      <ul class="r-stats">
-        {
-          stats.map((s) => (
-            <li>
-              <b class="num">{s.n}</b>
-              <span class="l">{s.l}</span>
-              <span class="s">{s.s}</span>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="r-foot">Illustration, not a customer result.</p>
-    </div>
-  </div>
 </section>
 
 <style>
   .gallery {
     padding-top: clamp(56px, 8vw, 120px);
-    overflow: hidden;
+    overflow-x: clip;
   }
   .head {
     display: grid;
@@ -60,99 +26,5 @@ const stats = [
   }
   .head h2 {
     max-width: 15ch;
-  }
-  .results {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
-    gap: 24px 48px;
-    padding: clamp(24px, 3vw, 40px);
-    border-radius: 28px;
-    background: var(--ink);
-    color: var(--on-ink);
-  }
-  .r-head {
-    display: grid;
-    gap: 10px;
-    align-content: start;
-  }
-  .r-foot {
-    color: var(--on-ink-muted);
-    font-size: 13.5px;
-  }
-  .tag {
-    width: fit-content;
-    font: 10px/1 var(--mono);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 6px 8px;
-    border-radius: 999px;
-    background: var(--ink-2);
-    color: var(--on-ink-muted);
-  }
-  .r-title {
-    font-size: clamp(24px, 2.2vw, 34px);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    font-weight: 700;
-    max-width: 12ch;
-  }
-  .r-stats {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--ink-rule);
-    border-radius: 18px;
-    overflow: hidden;
-  }
-  .r-stats li {
-    display: grid;
-    gap: 4px;
-    align-content: start;
-    padding: 20px 18px 22px;
-    background: var(--ink);
-  }
-  .r-stats b {
-    font-family: var(--sans);
-    font-size: clamp(36px, 3.6vw, 56px);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    font-weight: 700;
-  }
-  .r-stats li:nth-child(2) b {
-    color: var(--yellow);
-  }
-  .r-stats li:nth-child(3) b {
-    color: var(--on-ink-muted);
-  }
-  .r-stats .l {
-    font-weight: 600;
-    font-size: 15px;
-  }
-  .r-stats .s {
-    font-size: 13px;
-    color: var(--on-ink-muted);
-    line-height: 1.35;
-  }
-  .r-foot {
-    grid-column: 1 / -1;
-  }
-  @media (max-width: 900px) {
-    .results {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .r-stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rail {
-      overflow-x: auto;
-    }
-    .track {
-      animation: none;
-    }
   }
 </style>
