@@ -1,0 +1,86 @@
+---
+/* The deal, in plain words, right under the hero. People said the money terms were the first thing they went looking for. */
+interface Props {
+  title: string;
+  items: Array<{ h: string; p: string }>;
+}
+const { title, items } = Astro.props;
+---
+
+<section class="section terms" aria-labelledby="terms-h">
+  <div class="wrap">
+    <div class="head">
+      <h2 class="display-l" id="terms-h" data-reveal>{title}</h2>
+    </div>
+    <ol class="cards">
+      {
+        items.map((it, i) => (
+          <li data-reveal style={`--d:${i * 0.06}s`}>
+            <b>{it.h}</b>
+            <p>{it.p}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .terms {
+    padding-block: clamp(72px, 9vw, 144px);
+    background: var(--white);
+    border-block: 1px solid var(--rule);
+  }
+  .head {
+    display: grid;
+    gap: 14px;
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+  .head h2 {
+    max-width: 16ch;
+  }
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .cards li {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding: 26px 24px 28px;
+    border-radius: 22px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+  }
+  .cards b {
+    font-size: clamp(21px, 1.8vw, 26px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  /* the lead term stands apart by contrast, not yellow (yellow is for the sale itself) */
+  .cards li:first-child {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--on-ink);
+  }
+  .cards li:first-child p {
+    color: var(--on-ink-muted);
+  }
+  .cards p {
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--graphite);
+  }
+  /* one row across, however many terms there are; one column on phones, so no card ever sits alone */
+  @media (max-width: 760px) {
+    .cards {
+      grid-auto-flow: row;
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

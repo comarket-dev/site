@@ -1,0 +1,47 @@
+{
+ "owner-hero": {
+  "w": 200,
+  "h": 133,
+  "original": false
+ },
+ "owner-pack": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "owner-call": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "creator-mic": {
+  "w": 600,
+  "h": 900,
+  "original": false
+ },
+ "creator-desk": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "creator-work": {
+  "w": 600,
+  "h": 900,
+  "original": false
+ },
+ "creator-record": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "camera-man": {
+  "w": 600,
+  "h": 900,
+  "original": false
+ },
+ "makeup": {
+  "w": 200,
+  "h": 133,
+  "original": false
+ }
+}

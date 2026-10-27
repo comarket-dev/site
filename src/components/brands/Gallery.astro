@@ -1,0 +1,30 @@
+---
+/* Example storefronts, the way competitors show client work. Fictional brands and creators, tagged as examples. */
+import Showcase from '../examples/Showcase.astro';
+---
+
+<section class="section gallery" id="examples" aria-labelledby="gal-h">
+  <div class="wrap head">
+    <h2 class="display-l" id="gal-h" data-reveal>Every creator gets a storefront in your brand.</h2>
+    <p class="lede muted" data-reveal style="--d:.08s">
+      Your logo, colors and offer, with the creator’s name on top. Nothing to build.
+    </p>
+  </div>
+
+  <Showcase side="brand" />
+</section>
+
+<style>
+  .gallery {
+    padding-top: clamp(56px, 8vw, 120px);
+    overflow-x: clip;
+  }
+  .head {
+    display: grid;
+    gap: 18px;
+    margin-bottom: clamp(36px, 5vw, 64px);
+  }
+  .head h2 {
+    max-width: 15ch;
+  }
+</style>

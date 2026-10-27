@@ -1,0 +1,313 @@
+---
+/* Pagewell x Lena O., per design/brands/README.md: a canvas. Lilac page, the editor open on Lena's launch template
+   with its headline selected (the Lime selection, Lena's cursor tag), Lena's line in her own lowercase, one Violet
+   button. Drawn at 390 x 846 design pixels (StorePhone.astro scales it). Fictional, labeled as an example. */
+import BrandMark from '../BrandMark.astro';
+import StoreFoot from '../StoreFoot.astro';
+---
+
+<div class="root">
+  <header class="lock">
+    <span class="brand"><BrandMark id="pagewell" size="24" />pagewell</span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>Lena O.</span>
+  </header>
+
+  <h1>Ship your launch page tonight.</h1>
+  <p class="sub">Landing pages for makers, no designer needed. Lena’s followers get their first page free.</p>
+
+  <!-- the editor, Lena's template open -->
+  <div class="ed">
+    <div class="bar">
+      <span class="doc">Lena’s launch template</span>
+      <span class="pub">Publish</span>
+    </div>
+    <div class="canvas">
+      <i class="cross tl"></i><i class="cross tr"></i><i class="cross bl"></i><i class="cross br"></i>
+      <div class="pg">
+        <span class="pg-logo">◆ driftnote</span>
+        <div class="sel">
+          <b>Notes that write their own changelog.</b>
+          <i class="h h1"></i><i class="h h2"></i><i class="h h3"></i><i class="h h4"></i>
+          <span class="tagname">Lena</span>
+        </div>
+        <div class="pg-form"><span>you@email.com</span><b>Join the waitlist</b></div>
+        <span class="pg-count">412 people waiting</span>
+      </div>
+    </div>
+  </div>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <blockquote>“no designer, no figma, like 20 min. this is the template i use for every launch.”</blockquote>
+    <figcaption>Lena O., @lena.codes</figcaption>
+  </figure>
+
+  <div class="buy">
+    <span class="cta">Build my free page</span>
+    <StoreFoot first="Lena" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --violet: #7a3ef0;
+    --ink: #17112b;
+    --lilac: #f1ecff;
+    --lime: #d8f45b;
+    --foot: #6b6382;
+    position: relative;
+    height: 100%;
+    padding: 50px 22px 0;
+    background: var(--lilac);
+    color: var(--ink);
+    font-family: 'Pagewell', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+  .brand,
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .x {
+    font-size: 15px;
+    font-weight: 400;
+    color: #8f88a6;
+  }
+  .av {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/lena.jpg) center / cover;
+    flex: none;
+  }
+  h1 {
+    margin: 16px 0 0;
+    font-size: 44px;
+    line-height: 0.96;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+  .sub {
+    margin: 12px 0 0;
+    font-size: 15.5px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: #4a4363;
+    text-wrap: pretty;
+  }
+
+  /* the editor */
+  .ed {
+    margin: 20px -6px 0;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgb(23 17 43 / 0.08),
+      0 20px 36px -20px rgb(60 30 140 / 0.45);
+    overflow: hidden;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px 8px 12px;
+    border-bottom: 1px solid #ece8f6;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .pub {
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--violet);
+    color: #fff;
+    font-size: 11px;
+  }
+  .canvas {
+    position: relative;
+    padding: 18px;
+    background:
+      radial-gradient(circle, #d9d2ee 1px, transparent 1.4px) 0 0 / 14px 14px,
+      #f7f5fc;
+  }
+  /* corner crosshairs, the canvas's own registration marks */
+  .cross {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+  }
+  .cross::before,
+  .cross::after {
+    content: '';
+    position: absolute;
+    background: #b6acd6;
+  }
+  .cross::before {
+    left: 4px;
+    top: 0;
+    width: 1px;
+    height: 9px;
+  }
+  .cross::after {
+    top: 4px;
+    left: 0;
+    width: 9px;
+    height: 1px;
+  }
+  .tl {
+    left: 5px;
+    top: 5px;
+  }
+  .tr {
+    right: 5px;
+    top: 5px;
+  }
+  .bl {
+    left: 5px;
+    bottom: 5px;
+  }
+  .br {
+    right: 5px;
+    bottom: 5px;
+  }
+  /* Lena's page, in the template's own simple style */
+  .pg {
+    display: grid;
+    gap: 10px;
+    padding: 14px 16px 16px;
+    border-radius: 8px;
+    background: #fffdf7;
+    box-shadow: 0 1px 3px rgb(23 17 43 / 0.12);
+    font-family: Georgia, serif;
+    color: #1d1a16;
+  }
+  .pg-logo {
+    font: 600 10px/1 system-ui, sans-serif;
+    letter-spacing: 0.02em;
+  }
+  .sel {
+    position: relative;
+    padding: 3px 4px;
+    outline: 1.5px solid var(--lime);
+    outline-offset: 0;
+  }
+  .sel b {
+    display: block;
+    font-size: 21px;
+    line-height: 1.08;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .h {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #fff;
+    border: 1.5px solid #9bbd16;
+  }
+  .h1 {
+    left: -4px;
+    top: -4px;
+  }
+  .h2 {
+    right: -4px;
+    top: -4px;
+  }
+  .h3 {
+    left: -4px;
+    bottom: -4px;
+  }
+  .h4 {
+    right: -4px;
+    bottom: -4px;
+  }
+  .tagname {
+    position: absolute;
+    right: -8px;
+    top: -21px;
+    padding: 3px 7px;
+    border-radius: 6px 6px 6px 0;
+    background: var(--violet);
+    color: #fff;
+    font: 600 10px/1 'Pagewell', system-ui, sans-serif;
+  }
+  .pg-form {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    font: 500 10px/1 system-ui, sans-serif;
+  }
+  .pg-form span {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #e2ded5;
+    border-radius: 6px;
+    color: #9a958b;
+  }
+  .pg-form b {
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #1d1a16;
+    color: #fffdf7;
+    font-weight: 600;
+  }
+  .pg-count {
+    font: 400 9.5px/1 system-ui, sans-serif;
+    color: #8a857b;
+  }
+
+  .note {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    column-gap: 12px;
+    margin: 22px 0 0;
+  }
+  .av.big {
+    width: 46px;
+    height: 46px;
+    grid-row: span 2;
+  }
+  blockquote {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.32;
+    font-weight: 500;
+    text-wrap: pretty;
+  }
+  figcaption {
+    margin-top: 5px;
+    font-size: 12.5px;
+    color: #6b6382;
+  }
+
+  .buy {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 94px;
+    display: grid;
+    gap: 12px;
+  }
+  .cta {
+    display: grid;
+    place-items: center;
+    height: 54px;
+    border-radius: 14px;
+    background: var(--violet);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+</style>

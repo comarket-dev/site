@@ -1,0 +1,545 @@
+---
+import Icon from './Icon.astro';
+import { env } from 'cloudflare:workers';
+interface Props {
+  side: 'brand' | 'creator';
+}
+const { side } = Astro.props;
+const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY || '';
+const brand = side === 'brand';
+---
+
+<section class="section band-ink on-ink waitlist" id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
+  <div class="wrap grid">
+    <div class="intro">
+      <h2 class="display-l" id="wl-h">{brand ? 'Get your first creator sales.' : 'Claim your page.'}</h2>
+      <p class="lede muted">
+        {brand ? 'Join now. We build your storefront and line up your first creators when your spot opens.' : 'Pick your handle. It’s yours when your spot opens.'}
+      </p>
+    </div>
+
+    <div class="more">
+      <div class="preview" data-preview>
+        {
+          brand ? (
+            <div class="mini" data-mini style="--brand:#1E0E3F">
+              <span class="url num" data-mini-url>
+                yourapp.comarket.si/creators/sarah
+              </span>
+              <div class="mini-body">
+                <span class="lock">
+                  <span class="mini-logo" data-mini-logo />
+                  <b data-mini-name>Your brand</b>
+                  <span class="x">×</span>
+                  <span class="face" />
+                  <b>Sarah K.</b>
+                </span>
+                <span class="mini-h">
+                  <span data-mini-name>Your brand</span>, picked by Sarah.
+                </span>
+                <span class="mini-sub">Sarah’s readers get your offer here.</span>
+                <span class="mini-cta">Get started</span>
+              </div>
+            </div>
+          ) : (
+            <div class="hub">
+              <span class="url num" data-hub-url>
+                comarket.si/<b data-hub-handle>yourname</b>
+              </span>
+              <div class="hub-body">
+                <span class="ava" data-hub-ava>
+                  Y
+                </span>
+                <b data-hub-name>@yourname</b>
+                <span class="hub-row">Your first storefront</span>
+                <span class="hub-row dim">Your next one</span>
+              </div>
+            </div>
+          )
+        }
+      </div>
+
+    </div>
+
+    <div class="formcol">
+      <form class="form" data-form novalidate>
+        {
+          brand ? (
+            <div class="field">
+              <label class="label" for="wl-site">
+                Your website
+              </label>
+              <div class="inline">
+                <input id="wl-site" name="site" inputmode="url" autocomplete="url" placeholder="yourapp.com" required />
+                <button type="button" class="btn ghost" data-preview-btn>
+                  Preview
+                </button>
+              </div>
+              <span class="err" data-err="site" />
+            </div>
+          ) : (
+            <>
+              <div class="field">
+                <label class="label" for="wl-handle">
+                  Handle
+                </label>
+                <div class="at">
+                  <span class="num" aria-hidden="true">comarket.si/</span>
+                  <input id="wl-handle" name="handle" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="yourname" required />
+                </div>
+                <span class="err" data-err="handle" />
+              </div>
+            </>
+          )
+        }
+        <div class="field">
+          <label class="label" for="wl-email">
+            {brand ? 'Work email' : 'Email'}
+          </label>
+          <input id="wl-email" name="email" type="email" autocomplete="email" placeholder={brand ? 'you@company.com' : 'you@email.com'} required />
+          <span class="err" data-err="email"></span>
+        </div>
+        {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
+        <button class="btn submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <Icon name="arrow-right" class="arr" /></button>
+        <p class="risk">{brand ? 'No card needed. You pay nothing until a new customer pays.' : 'Free, always. Brands pay Comarket, never you.'}</p>
+        <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
+        <!-- PLACEHOLDER: hello@comarket.si is not a live inbox yet; confirm the address before deploy -->
+        <p class="founder">
+          <span>Questions before you join? Email us directly at <a href="mailto:hello@comarket.si">hello@comarket.si</a>.</span>
+        </p>
+        <p class="err form-err" data-err="form" role="alert"></p>
+      </form>
+
+      <div class="issued" data-issued hidden>
+        <div class="stage">
+          <canvas data-pass-canvas aria-label="Your Comarket pass"></canvas>
+          <img data-pass-still alt="" hidden />
+        </div>
+        <div class="meta">
+          <span class="label" data-issued-kind>{brand ? 'Brand pass' : 'Creator pass'}</span>
+          <h3 class="display-m" data-issued-h>You’re in.</h3>
+          <p class="muted" data-issued-p>Drag the pass to turn it over.</p>
+          <div class="acts">
+            <button type="button" class="btn ghost" data-save>Save image</button>
+            <a class="btn ghost" data-share target="_blank" rel="noopener">Share on X</a>
+          </div>
+        </div>
+
+        <div class="refer">
+          <p>{brand ? 'Know creators who already talk about your product? Send them your link.' : 'Know a creator who’d want this? Send them your link.'}</p>
+          <div class="refer-row">
+            <span class="num" data-ref-url>comarket.si/creators</span>
+            <button type="button" class="btn" data-ref-copy>Copy my link</button>
+          </div>
+        </div>
+
+        <form class="profile" data-profile novalidate>
+          <div class="profile-head">
+            <h4>Help us match you faster.</h4>
+            <span class="muted">Optional. Takes 10 seconds.</span>
+          </div>
+          {
+            (brand
+              ? [
+                  ['sells', 'What do you sell?', ['Software', 'An app', 'A subscription box', 'Physical products', 'Courses or memberships', 'Something else']],
+                  ['pays', 'How do customers pay you?', ['Stripe, on my site', 'Shopify', 'App Store or Google Play', 'Something else']],
+                  ['price', 'Your main plan’s price', ['Under $20 a month', '$20 to $50', '$50 to $150', 'Over $150', 'A one-time price']],
+                ]
+              : [
+                  ['platform', 'Where’s your audience?', ['YouTube', 'TikTok', 'Instagram', 'Substack or a newsletter', 'Reddit', 'X', 'A podcast', 'A blog', 'Somewhere else']],
+                  ['followers', 'How many followers there?', ['Under 1,000', '1,000 to 5,000', '5,000 to 20,000', '20,000 to 50,000', 'Over 50,000']],
+                  ['topic', 'What does your audience ask you about?', ['Software and apps', 'Money and work', 'Beauty and skincare', 'Food and drink', 'Health and fitness', 'Something else']],
+                ]
+            ).map(([name, q, opts]) => (
+              <fieldset class="q">
+                <legend>{q}</legend>
+                <div class="opts">
+                  {(opts as string[]).map((o) => (
+                    <label class="opt">
+                      <input type="radio" name={name as string} value={o} />
+                      <span>{o}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))
+          }
+          <div class="acts">
+            <button type="submit" class="btn" disabled data-profile-save>Save my answers</button>
+            <button type="button" class="btn ghost" data-profile-skip>Skip</button>
+          </div>
+        </form>
+        <p class="saved" data-profile-saved hidden aria-live="polite">Saved. That helps us match you.</p>
+      </div>
+    </div>
+  </div>
+  {siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+</section>
+
+<style>
+  /* the pitch, then the form beside it, the preview under the pitch. Stacked, the form comes straight after the
+     pitch so the heading and the fields stay together. */
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'intro form'
+      'more form';
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(32px, 6vw, 96px);
+    row-gap: 28px;
+    align-items: start;
+  }
+  .intro {
+    grid-area: intro;
+  }
+  .more {
+    grid-area: more;
+    display: grid;
+    gap: 28px;
+    align-content: start;
+  }
+  .formcol {
+    grid-area: form;
+  }
+  .intro {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+  }
+  .intro h2 {
+    max-width: 12ch;
+  }
+  .preview {
+    margin-top: 12px;
+  }
+  .mini,
+  .hub {
+    width: min(440px, 100%);
+    border-radius: 20px;
+    background: var(--white);
+    color: #16201b;
+    overflow: hidden;
+    border: 1px solid var(--ink-rule);
+    box-shadow: 0 40px 80px -50px rgb(0 0 0 / 0.6);
+    transition: transform 0.6s var(--ease);
+  }
+  .mini.bump {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+  .url {
+    display: block;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #4b5650;
+    border-bottom: 1px solid #e3e8e4;
+    background: #f6f8f5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mini-body,
+  .hub-body {
+    padding: 22px;
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .lock .x {
+    color: #8a948e;
+    font-size: 12px;
+  }
+  .face {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/sarah.jpg) center / cover;
+  }
+  .mini-sub {
+    margin-top: -4px;
+    font-size: 14px;
+    color: #4b5650;
+  }
+  .mini-h {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .mini-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--brand) center / cover no-repeat;
+    border: 1px solid #e3e8e4;
+  }
+  .mini-cta {
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .hub-body {
+    justify-items: center;
+    text-align: center;
+  }
+  .hub .ava {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 26px;
+    background: conic-gradient(from 210deg, #fbe0b6, #006eb8, #fbe0b6);
+    color: #fff;
+  }
+  .hub-row {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e3e8e4;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .hub-row.dim {
+    color: #9aa4aa;
+    border-style: dashed;
+  }
+  .formcol {
+    position: relative;
+  }
+  .form {
+    display: grid;
+    gap: 18px;
+    padding: clamp(20px, 3vw, 36px);
+    border: 1px solid var(--ink-rule);
+    border-radius: 24px;
+    background: #071533;
+  }
+  .inline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  .inline .btn {
+    --h: 56px;
+  }
+  .at {
+    position: relative;
+  }
+  .at span {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--on-ink-muted);
+  }
+  /* the same comarket.si/ prefix as the hero's field, so it reads as the same page */
+  .at span {
+    font-size: 15px;
+  }
+  .at input {
+    padding-left: 134px;
+    font-family: var(--mono);
+    font-size: 15px;
+  }
+  .risk {
+    margin-top: -6px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--on-ink);
+    text-align: center;
+  }
+  .fine {
+    margin-top: -10px;
+    text-align: center;
+  }
+  .founder {
+    display: grid;
+    gap: 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ink-rule);
+    text-align: center;
+    justify-items: center;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--on-ink-muted);
+  }
+  .founder a {
+    color: var(--on-ink);
+  }
+  .refer,
+  .profile {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid var(--ink-rule);
+    border-radius: 20px;
+  }
+  .refer p {
+    font-weight: 600;
+  }
+  .refer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .refer-row .num {
+    flex: 1 1 200px;
+    min-width: 0;
+    font-size: 13.5px;
+    color: var(--on-ink-muted);
+    overflow-wrap: anywhere;
+  }
+  .refer-row .btn {
+    --h: 44px;
+  }
+  .profile[hidden],
+  .saved[hidden] {
+    display: none;
+  }
+  .profile-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .profile-head h4 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .profile-head span {
+    font-size: 13.5px;
+  }
+  .q {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .q legend {
+    padding: 0;
+    margin-bottom: 8px;
+    font-size: 14.5px;
+    color: var(--on-ink-muted);
+  }
+  .opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .opt {
+    position: relative;
+    cursor: pointer;
+  }
+  .opt input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .opt span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--ink-rule);
+    font-size: 14px;
+    transition:
+      background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease),
+      color 0.2s var(--ease);
+  }
+  .opt:hover span {
+    border-color: var(--on-ink-muted);
+  }
+  .opt input:checked + span {
+    background: var(--on-ink);
+    border-color: var(--on-ink);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .opt input:focus-visible + span {
+    outline: 2px solid var(--on-ink);
+    outline-offset: 2px;
+  }
+  .profile .acts .btn {
+    --h: 44px;
+  }
+  .saved {
+    font-weight: 600;
+  }
+  .submit {
+    --h: 60px;
+    font-size: 16px;
+    width: 100%;
+  }
+  .fine a {
+    color: var(--on-ink);
+  }
+  .form-err {
+    min-height: 0;
+  }
+  .issued {
+    display: grid;
+    gap: 20px;
+  }
+  .stage {
+    position: relative;
+    aspect-ratio: 1.35;
+    max-width: 100%;
+    border-radius: 24px;
+    background: radial-gradient(120% 90% at 50% 30%, #2f1d63 0%, #1e0e3f 70%);
+    border: 1px solid var(--ink-rule);
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: grab;
+  }
+  .stage canvas,
+  .stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .meta {
+    display: grid;
+    gap: 10px;
+  }
+  .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'intro' 'form' 'more';
+      grid-template-rows: auto;
+    }
+  }
+</style>
+
+<script>
+  import { mountWaitlist } from '../scripts/waitlist';
+  import { onPage } from '../scripts/ui';
+  onPage(() => {
+    const el = document.querySelector<HTMLElement>('[data-waitlist]');
+    return el ? [mountWaitlist(el)] : [];
+  });
+</script>

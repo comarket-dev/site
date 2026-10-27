@@ -1,0 +1,16 @@
+{
+  "_license": "Kaboompics Standard License (kaboompics.com/page/terms-of-use, read 2026-10-26): commercial use allowed; professional models are covered by model releases on file, available on request; never used in a way that implies personal endorsement, participation or recommendation by the person depicted. So: no names, quotes, handles, results or product UI on these people. They illustrate a side of the market, unnamed.",
+  "_how": "Open each `source`, press Download, Original size, and save it as design/people/originals/<id>.jpg. Then run `python3 scripts/people.py`. Until then the script builds from the low-res stand-ins in design/people/standins/.",
+  "_cast": "Two protagonists, one per side, so each page tells one person's story: the shop owner (brands) and the podcaster (creators). Three more creators appear once, as the creators Comarket finds.",
+  "people": [
+    { "id": "owner-hero", "source": "https://kaboompics.com/photo/20562/working-from-the-sofa-with-a-laptop-in-a-bright-home-office-lifestyle-scene", "focal": [0.5, 0.35], "alt": "A shop owner smiling at her laptop at home, an order of red shoes beside her", "where": "/brands hero" },
+    { "id": "owner-pack", "source": "https://kaboompics.com/photo/20582/careful-tissue-wrapping-for-a-boutique-clothing-order-in-a-white-box", "focal": [0.5, 0.5], "alt": "The same shop owner wrapping a clothing order in tissue, her laptop open beside the box", "where": "/brands, Pay for sales, not posts" },
+    { "id": "owner-call", "source": "https://kaboompics.com/photo/20550/woman-talking-on-the-phone-while-enjoying-coffee-during-remote-work", "focal": [0.56, 0.34], "alt": "The shop owner on a call with a coffee in hand", "where": "/brands FAQ; fork Brands face" },
+    { "id": "creator-mic", "source": "https://kaboompics.com/photo/38507/smiling-black-woman-recording-audio", "focal": [0.56, 0.32], "alt": "A podcaster smiling as she records at her microphone", "where": "/creators hero" },
+    { "id": "creator-desk", "source": "https://kaboompics.com/photo/38534/smiling-black-woman-behind-laptop", "focal": [0.52, 0.3], "alt": "The same podcaster smiling at something on her laptop", "where": "/creators, Brands come to you; fork Creators face" },
+    { "id": "creator-work", "source": "https://kaboompics.com/photo/38517/black-woman-using-laptop-beside-planner-in-home-office", "focal": [0.5, 0.35], "alt": "The podcaster planning at her desk, laptop and planner open", "where": "/creators, See what your link could earn" },
+    { "id": "creator-record", "source": "https://kaboompics.com/photo/38508/black-woman-recording-a-podcast-at-home", "focal": [0.6, 0.38], "alt": "A podcaster recording at home", "where": "/brands, We find the creators (row of three)" },
+    { "id": "camera-man", "source": "https://kaboompics.com/photo/13088/male-photographer-taking-a-picture-in-a-plant-filled-room", "focal": [0.5, 0.4], "alt": "A photographer aiming his camera in a room full of plants", "where": "/brands, We find the creators (row of three)" },
+    { "id": "makeup", "source": "https://kaboompics.com/photo/13750/smiling-woman-at-a-makeup-vanity-with-lipstick-eyeshadow-palette-and-brushes", "focal": [0.44, 0.3], "alt": "A beauty creator smiling at her vanity mid-routine", "where": "/brands, We find the creators (row of three)" }
+  ]
+}

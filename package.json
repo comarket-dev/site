@@ -1,0 +1,29 @@
+{
+  "name": "comarket-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy",
+    "test": "node --test --disable-warning=ExperimentalWarning tests/*.test.ts",
+    "db:migrate": "node scripts/migrate.mjs",
+    "assets:textures": "node scripts/render-pass-textures.mjs",
+    "assets:blender": "blender -b -P design/pass/build_pass.py -- public/assets/pass"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "14.3.4",
+    "astro": "7.3.8",
+    "postgres": "3.4.9",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "0.186.0",
+    "wrangler": "4.149.0"
+  }
+}

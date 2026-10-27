@@ -1,0 +1,248 @@
+---
+import Icon from '../Icon.astro';
+import { PRICING } from '../../lib/pricing-client';
+import type { PriceArm } from '../../lib/pricing';
+interface Props {
+  arm: PriceArm;
+}
+const { arm } = Astro.props;
+// the starting position, drawn on the server so the table and the result read right before any script runs
+const P0 = 49;
+const R0 = 20;
+const first0 = PRICING.split(P0, R0, arm.first);
+const year0 = PRICING.totals(P0, R0, arm, 12, 0);
+const keep0 = Math.round((year0.seller / Math.max(0.01, year0.gross)) * 100);
+const m = PRICING.money;
+---
+
+<section class="section band-ink on-ink split" id="split" aria-labelledby="split-h" data-split data-first={arm.first} data-after={arm.after}>
+  <div class="wrap">
+    <div class="step-head">
+      <h2 class="display-l" id="split-h" data-reveal>You keep most of every sale.</h2>
+    </div>
+
+    <div class="grid">
+      <div class="controls" role="group" aria-labelledby="split-h">
+        <label class="ctl">
+          <span class="row"><span class="label">Your plan</span><b class="num" data-price-out>${P0}/mo</b></span>
+          <input type="range" min="9" max="299" step="1" value={P0} data-price aria-label="Your plan price per month" />
+        </label>
+        <label class="ctl">
+          <span class="row"><span class="label">Creator rate you set</span><b class="num" data-rate-out>{R0}%</b></span>
+          <input type="range" min="10" max="30" step="1" value={R0} data-rate aria-label="Creator commission rate" />
+        </label>
+        <p class="ours label">Comarket takes {arm.first}% of the first payment, {arm.after}% after</p>
+
+        <dl class="table num">
+          <div class="th"><dt></dt><dd>First payment</dd><dd>12 months</dd></div>
+          <div><dt><i class="k you"></i>You</dt><dd data-o="seller-1">{m(first0.seller)}</dd><dd data-o="seller-12">{m(year0.seller, false)}</dd></div>
+          <div><dt><i class="k cre"></i>Creator</dt><dd data-o="creator-1">{m(first0.creator)}</dd><dd data-o="creator-12">{m(year0.creator, false)}</dd></div>
+          <div><dt><i class="k com"></i>Comarket</dt><dd data-o="comarket-1">{m(first0.comarket)}</dd><dd data-o="comarket-12">{m(year0.comarket, false)}</dd></div>
+        </dl>
+
+        <div class="result">
+          <p class="keep" aria-live="polite">
+            <span class="label">You keep</span>
+            <b data-keep>{keep0}%</b>
+          </p>
+          <a class="btn go" href="#waitlist" data-split-cta>Get my first creator sales <Icon name="arrow-right" class="arr" /></a>
+        </div>
+      </div>
+
+      <div class="coin" data-coin>
+        <canvas aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+  /* the inputs, the table and what you keep sit in one panel, so the answer reads as the sum of the rows above it */
+  .controls {
+    display: grid;
+    gap: 28px;
+    padding: clamp(22px, 2.6vw, 36px);
+    border-radius: 28px;
+    background: var(--ink-2);
+    border: 1px solid var(--ink-rule);
+  }
+  .ctl {
+    display: grid;
+    gap: 10px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .row b {
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .ours {
+    color: var(--on-ink);
+  }
+  .table {
+    margin: 0;
+    display: grid;
+    border-top: 1px solid var(--ink-rule);
+    font-size: 15px;
+  }
+  .table div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 140px 140px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ink-rule);
+    align-items: center;
+  }
+  .table .th {
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+  }
+  .table dt {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-family: var(--sans);
+  }
+  .table dd {
+    margin: 0;
+    text-align: right;
+  }
+  .k {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .k.you {
+    background: var(--paper);
+  }
+  .k.cre {
+    background: var(--cream);
+  }
+  .k.com {
+    background: var(--blue);
+  }
+  .coin {
+    position: relative;
+    aspect-ratio: 1 / 0.86;
+    max-width: 100%;
+    min-height: 320px;
+  }
+  .coin canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .result {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+  }
+  .keep {
+    display: grid;
+    gap: 6px;
+  }
+  .keep b {
+    font-size: clamp(56px, 6vw, 88px);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .split .btn.go {
+    background: var(--paper);
+    border-color: var(--paper);
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .split .btn.go:hover {
+    background: var(--white);
+    border-color: var(--white);
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .coin {
+      order: -1;
+    }
+    .table div {
+      grid-template-columns: minmax(0, 1fr) 96px 96px;
+    }
+    .coin {
+      min-height: 0;
+      aspect-ratio: 1 / 0.7;
+    }
+  }
+</style>
+
+<script>
+  import { PRICING } from '../../lib/pricing-client';
+  import { fillRange, onPage, onceVisible } from '../../scripts/ui';
+
+  onPage(() => {
+    const root = document.querySelector<HTMLElement>('[data-split]');
+    if (!root) return [];
+    const arm = { id: 'shown', first: Number(root.dataset.first), after: Number(root.dataset.after) };
+    const price = root.querySelector<HTMLInputElement>('[data-price]')!;
+    const rate = root.querySelector<HTMLInputElement>('[data-rate]')!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-o="${k}"]`)!;
+    const keep = root.querySelector<HTMLElement>('[data-keep]')!;
+    let coin: { set: (shares: [number, number, number]) => void; dispose: () => void } | null = null;
+
+    const update = () => {
+      fillRange(price);
+      fillRange(rate);
+      const p = Number(price.value);
+      const r = Number(rate.value);
+      root.querySelector('[data-price-out]')!.textContent = `$${p}/mo`;
+      root.querySelector('[data-rate-out]')!.textContent = `${r}%`;
+      const first = PRICING.split(p, r, arm.first);
+      const year = PRICING.totals(p, r, arm, 12, 0);
+      const fmt = PRICING.money;
+      out('seller-1').textContent = fmt(first.seller);
+      out('creator-1').textContent = fmt(first.creator);
+      out('comarket-1').textContent = fmt(first.comarket);
+      out('seller-12').textContent = fmt(year.seller, false);
+      out('creator-12').textContent = fmt(year.creator, false);
+      out('comarket-12').textContent = fmt(year.comarket, false);
+      const share = year.seller / Math.max(0.01, year.gross);
+      keep.textContent = `${Math.round(share * 100)}%`;
+      coin?.set([year.seller, year.creator, year.comarket]);
+    };
+    price.addEventListener('input', update);
+    rate.addEventListener('input', update);
+    update();
+
+    const stop = onceVisible(
+      root,
+      async () => {
+        const { mountCoin } = await import('../../scripts/coin');
+        const c = root.querySelector<HTMLElement>('[data-coin]')!;
+        coin = await mountCoin(c.querySelector('canvas')!);
+        update();
+      },
+      0.05,
+    );
+    return [
+      stop,
+      () => {
+        price.removeEventListener('input', update);
+        rate.removeEventListener('input', update);
+        coin?.dispose();
+      },
+    ];
+  });
+</script>

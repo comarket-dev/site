@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "comarket-site",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-09-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./dist", "binding": "ASSETS" },
+  "observability": { "enabled": true },
+
+  // Caches experiment weights between requests. Create with:
+  //   npx wrangler kv namespace create EXPERIMENTS
+  "kv_namespaces": [{ "binding": "EXPERIMENTS", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+
+  // Neon Postgres through Hyperdrive. Create with:
+  //   npx wrangler hyperdrive create comarket --connection-string="<neon url>"
+  // For local dev, set CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE
+  // or edit localConnectionString below.
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "REPLACE_WITH_HYPERDRIVE_ID",
+      "localConnectionString": "postgresql://comarket:comarket@localhost:5432/comarket"
+    }
+  ],
+
+  "vars": {
+    // "even" splits pricing traffic evenly. "bandit" turns on Thompson sampling.
+    "PRICING_MODE": "even",
+    // Cloudflare Turnstile site key. Leave empty to skip the bot check.
+    "PUBLIC_TURNSTILE_SITE_KEY": "",
+    // Sender for confirmation email, e.g. "Comarket <hello@comarket.si>". Empty skips email.
+    "EMAIL_FROM": ""
+  }
+  // Secrets (wrangler secret put): RESEND_API_KEY, TURNSTILE_SECRET_KEY
+}

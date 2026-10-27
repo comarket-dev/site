@@ -1,0 +1,276 @@
+---
+/* What one product could pay you, from your views, posts, its price and your rate. */
+import Icon from '../Icon.astro';
+import Person from '../Person.astro';
+---
+
+<div data-earn>
+  <section class="section band-2 est" id="earnings" aria-labelledby="est-h">
+    <div class="wrap">
+      <div class="step-head">
+        <h2 class="display-l" id="est-h" data-reveal>See what your link could earn.</h2>
+      </div>
+      <div class="grid">
+        <div class="controls">
+          <label class="ctl">
+            <span class="row"><span class="label">Views per post</span><b class="num" data-out="views">2,500</b></span>
+            <input type="range" min="0" max="100" step="1" value="27" data-in="views" aria-label="Typical views per post" />
+          </label>
+          <label class="ctl">
+            <span class="row"><span class="label">Posts a month that mention it</span><b class="num" data-out="posts">2</b></span>
+            <input type="range" min="1" max="16" step="1" value="2" data-in="posts" aria-label="Posts per month" />
+          </label>
+          <label class="ctl">
+            <span class="row"><span class="label">Product price</span><b class="num" data-out="price">$49/mo</b></span>
+            <input type="range" min="9" max="199" step="1" value="49" data-in="price" aria-label="Product price per month" />
+          </label>
+          <label class="ctl">
+            <span class="row"><span class="label">Your rate</span><b class="num" data-out="rate">20%</b></span>
+            <input type="range" min="10" max="30" step="1" value="20" data-in="rate" aria-label="Your commission rate" />
+          </label>
+          <div class="desk" data-reveal style="--d:.08s"><Person id="creator-work" class="shot" sizes="(max-width: 1180px) 1px, 34vw" /></div>
+        </div>
+        <div class="result">
+          <span class="label">By month 12, per month</span>
+          <div class="peak">
+            <b class="big" data-out="range" aria-live="polite">$90 to $520</b>
+            <a class="btn go" href="#waitlist">Claim my page <Icon name="arrow-right" class="arr" /></a>
+          </div>
+          <svg class="chart" viewBox="0 0 600 300" data-chart role="img" aria-label="Estimated monthly earnings over twelve months">
+            <g data-grid></g>
+            <path data-band fill="rgb(0 110 184 / 0.14)"></path>
+            <path data-mid fill="none" stroke="#1E0E3F" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+            <g data-ticks></g>
+          </svg>
+          <p class="assume">An estimate from typical click and purchase rates, not a promise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .est {
+    padding-bottom: clamp(64px, 8vw, 128px);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: stretch;
+  }
+  /* the sliders, then the podcaster at her planner in the height the chart column leaves, so both columns end
+     together; the photo takes only spare height and never makes the row taller */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .desk {
+    flex: 1 1 0;
+    min-height: 0;
+    margin-top: 8px;
+  }
+  /* wide screens: the four sliders pair up, which frees the height the photo fills */
+  @media (min-width: 1181px) {
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto auto minmax(0, 1fr);
+      gap: 26px 24px;
+    }
+    .desk {
+      grid-column: 1 / -1;
+      margin-top: 4px;
+    }
+    .controls .row .label {
+      letter-spacing: 0.05em;
+    }
+  }
+  /* the photo never sets the row's height: it fills whatever the chart column leaves */
+  .desk {
+    position: relative;
+  }
+  .desk :global(.shot) {
+    position: absolute;
+    inset: 0;
+  }
+  /* too little height left to hold a person (the script checks): leave the space empty rather than force a sliver */
+  .desk.thin {
+    display: none;
+  }
+  .ctl {
+    display: grid;
+    gap: 10px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .row b {
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .result {
+    display: grid;
+    gap: 14px;
+  }
+  /* the estimate and the action that follows it, side by side */
+  .peak {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 28px;
+  }
+  .big {
+    font-size: clamp(48px, 7vw, 112px);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .chart {
+    width: 100%;
+    height: clamp(220px, 26vw, 340px);
+    overflow: visible;
+  }
+  .chart :global(text) {
+    font: 11px var(--mono);
+    fill: var(--graphite);
+  }
+  .assume {
+    max-width: 62ch;
+    font-size: 13.5px;
+    color: var(--graphite);
+  }
+  /* below this the two columns are close in height, so there's no real space to fill: no photo */
+  @media (max-width: 1180px) {
+    .desk {
+      display: none;
+    }
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  import { estimate } from '../../lib/estimate';
+  import { fillRange, onPage, track } from '../../scripts/ui';
+
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  let W = 600;
+  let H = 270;
+  /** Draw in real pixels so labels stay readable at any width. */
+  function fit(svg: SVGSVGElement) {
+    W = Math.max(240, Math.round(svg.clientWidth || 600));
+    H = Math.max(160, Math.round((svg.clientHeight || 300) - 34));
+    svg.setAttribute('viewBox', `0 -14 ${W} ${H + 48}`);
+  }
+
+  function niceMax(v: number) {
+    if (v <= 0) return 10;
+    const p = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / p;
+    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p;
+  }
+  const money = (n: number) => (n >= 1000 ? `$${(Math.round(n / 100) / 10).toLocaleString('en-US')}k` : `$${Math.round(n / 10) * 10}`);
+  function text(parent: Element, x: number, y: number, s: string, anchor = 'middle') {
+    const t = document.createElementNS(SVGNS, 'text');
+    t.setAttribute('x', String(x));
+    t.setAttribute('y', String(y));
+    t.setAttribute('text-anchor', anchor);
+    t.textContent = s;
+    parent.append(t);
+  }
+  function hline(parent: Element, y: number, stroke: string) {
+    const l = document.createElementNS(SVGNS, 'line');
+    l.setAttribute('x1', '0');
+    l.setAttribute('x2', String(W));
+    l.setAttribute('y1', String(y));
+    l.setAttribute('y2', String(y));
+    l.setAttribute('stroke', stroke);
+    l.setAttribute('vector-effect', 'non-scaling-stroke');
+    parent.append(l);
+  }
+
+  onPage(() => {
+    const root = document.querySelector<HTMLElement>('[data-earn]');
+    if (!root) return [];
+    const $in = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const $out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const q = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    let used = false;
+
+    const views = () => Math.round(500 * Math.pow(400, Number($in('views').value) / 100) / 100) * 100;
+
+    const draw = () => {
+      ['views', 'posts', 'price', 'rate'].forEach((k) => fillRange($in(k)));
+      const input = { viewsPerPost: views(), postsPerMonth: Number($in('posts').value), price: Number($in('price').value), rate: Number($in('rate').value) };
+      $out('views').textContent = input.viewsPerPost.toLocaleString('en-US');
+      $out('posts').textContent = String(input.postsPerMonth);
+      $out('price').textContent = `$${input.price}/mo`;
+      $out('rate').textContent = `${input.rate}%`;
+      const e = estimate(input);
+      const lo = e.low[11];
+      const hi = e.high[11];
+      $out('range').textContent = `${money(lo)} to ${money(hi)}`;
+
+      // earnings chart
+      fit(q<SVGSVGElement>('[data-chart]'));
+      const max = niceMax(Math.max(...e.high) * 1.05);
+      const x = (m: number) => (m / 11) * W;
+      const y = (v: number) => H - (v / max) * H;
+      const top = e.high.map((v, m) => `${m ? 'L' : 'M'}${x(m)},${y(v)}`).join('');
+      const bot = [...e.low].reverse().map((v, k) => `L${x(11 - k)},${y(v)}`).join('');
+      q('[data-band]').setAttribute('d', `${top}${bot}Z`);
+      q('[data-mid]').setAttribute('d', e.mid.map((v, m) => `${m ? 'L' : 'M'}${x(m)},${y(v)}`).join(''));
+      const grid = q('[data-grid]');
+      const ticks = q('[data-ticks]');
+      grid.replaceChildren();
+      ticks.replaceChildren();
+      [0, 0.5, 1].forEach((f) => {
+        hline(grid, y(max * f), '#EADCC6');
+        text(ticks, 0, y(max * f) - 6, f ? money(max * f) : '$0', 'start');
+      });
+      [1, 6, 12].forEach((m) => text(ticks, x(m - 1), H + 22, `month ${m}`, m === 1 ? 'start' : m === 12 ? 'end' : 'middle'));
+    };
+
+    const onInput = () => {
+      draw();
+      if (!used) {
+        used = true;
+        track('estimator_used');
+      }
+    };
+    const inputs = Array.from(root.querySelectorAll<HTMLInputElement>('[data-in]'));
+    inputs.forEach((i) => i.addEventListener('input', onInput));
+    draw();
+    const ro = new ResizeObserver(() => draw());
+    root.querySelectorAll('svg').forEach((svg) => ro.observe(svg));
+    return [() => inputs.forEach((i) => i.removeEventListener('input', onInput)), () => ro.disconnect()];
+  });
+</script>
+
+<script>
+  import { onPage } from '../../scripts/ui';
+  // The photo only takes height the chart column leaves. If that's too little to hold a person, drop it.
+  onPage(() => {
+    const desk = document.querySelector<HTMLElement>('#earnings .desk');
+    const col = desk?.parentElement;
+    if (!desk || !col || !('ResizeObserver' in window)) return;
+    const check = () => {
+      desk.classList.remove('thin');
+      desk.classList.toggle('thin', desk.getBoundingClientRect().height < 180);
+    };
+    const ro = new ResizeObserver(check);
+    ro.observe(col);
+    check();
+    return [() => ro.disconnect()];
+  });
+</script>

@@ -1,0 +1,224 @@
+---
+/* Quietly x Jonah P., per design/brands/README.md: night mode. Midnight page, the promise in light Manrope, the timer
+   ring as the hero with the apps it's holding back dimmed beneath it, Jonah's pinned comment in his own lowercase,
+   the lifetime offer and one Lamp button. Drawn at 390 x 846 design pixels. Fictional, labeled as an example. */
+import BrandMark from '../BrandMark.astro';
+import StoreFoot from '../StoreFoot.astro';
+
+// the ring: 52 minutes of a 90-minute session left, so 38 minutes elapsed
+const R = 88;
+const C = 2 * Math.PI * R;
+const done = 38 / 90;
+const BLOCKED = ['Slack', 'Mail', 'X', 'YouTube'];
+---
+
+<div class="root">
+  <header class="lock">
+    <span class="brand"><BrandMark id="quietly" size="22" />quietly</span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>Jonah P.</span>
+  </header>
+
+  <h1>Fewer tabs.<br />Deeper work.</h1>
+  <p class="sub">A focus timer and app blocker for Mac. Jonah’s viewers get lifetime 40%&nbsp;off.</p>
+
+  <!-- the session, running -->
+  <div class="session">
+    <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r={R} fill="none" stroke="#173942" stroke-width="3"></circle>
+      <circle
+        cx="100"
+        cy="100"
+        r={R}
+        fill="none"
+        stroke="#F4C77B"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray={`${(C * done).toFixed(1)} ${C.toFixed(1)}`}
+        transform="rotate(-90 100 100)"></circle>
+    </svg>
+    <div class="time">
+      <b>52:00</b>
+      <span>Deep work · 2 of 4</span>
+    </div>
+  </div>
+  <div class="blocked">
+    <span class="lbl">Blocked until 11:40</span>
+    <span class="apps">{BLOCKED.map((a) => <i>{a}</i>)}</span>
+  </div>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <span>
+      <blockquote>“the focus app is quietly. four focused hours a day, most days.”</blockquote>
+      <figcaption>Jonah P., pinned on YouTube</figcaption>
+    </span>
+  </figure>
+
+  <div class="buy">
+    <span class="cta">Get lifetime for $36 <s>$60</s></span>
+    <StoreFoot first="Jonah" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --midnight: #0a2229;
+    --teal: #0f4c5c;
+    --mist: #dce8e6;
+    --lamp: #f4c77b;
+    --slate: #6e8c92;
+    --foot: #6e8c92;
+    position: relative;
+    height: 100%;
+    padding: 50px 22px 0;
+    background: var(--midnight);
+    color: var(--mist);
+    font-family: 'Quietly', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    font-size: 21px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  .brand,
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .x {
+    font-size: 14px;
+    color: var(--slate);
+  }
+  .av {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/jonah.jpg) center / cover;
+    flex: none;
+  }
+  h1 {
+    margin: 16px 0 0;
+    font-size: 46px;
+    line-height: 1;
+    font-weight: 200;
+    letter-spacing: -0.03em;
+  }
+  .sub {
+    margin: 12px 0 0;
+    font-size: 15px;
+    line-height: 1.42;
+    color: #a9bfbe;
+    text-wrap: pretty;
+  }
+  .session {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 18px auto 0;
+  }
+  .ring {
+    position: absolute;
+    inset: 0;
+  }
+  .time {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 4px;
+  }
+  .time b {
+    font-size: 50px;
+    line-height: 1;
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .time span {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate);
+  }
+  .blocked {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #0f2f37;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .lbl {
+    color: var(--slate);
+  }
+  .apps {
+    display: flex;
+    gap: 5px;
+  }
+  .apps i {
+    font-style: normal;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #163e48;
+    color: #6e8c92;
+    text-decoration: line-through;
+    text-decoration-color: rgb(110 140 146 / 0.7);
+  }
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0 0;
+  }
+  .av.big {
+    width: 42px;
+    height: 42px;
+  }
+  blockquote {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.3;
+    font-weight: 400;
+    text-wrap: pretty;
+  }
+  figcaption {
+    margin-top: 4px;
+    font-size: 11.5px;
+    color: var(--slate);
+  }
+
+  .buy {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 94px;
+    display: grid;
+    gap: 12px;
+  }
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 52px;
+    border-radius: 999px;
+    background: var(--lamp);
+    color: var(--midnight);
+    font-size: 16.5px;
+    font-weight: 600;
+  }
+  .cta s {
+    font-weight: 400;
+    opacity: 0.55;
+  }
+</style>

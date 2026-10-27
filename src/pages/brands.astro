@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Outcome from '../components/brands/Outcome.astro';
+import Gallery from '../components/brands/Gallery.astro';
+import Find from '../components/brands/Find.astro';
+import Split from '../components/brands/Split.astro';
+import Faq from '../components/Faq.astro';
+import Waitlist from '../components/Waitlist.astro';
+import Footer from '../components/Footer.astro';
+import { priceArm } from '../lib/experiments';
+
+const arm = priceArm(Astro.locals.arms ?? {});
+
+const faq = [
+  {
+    q: 'What does it cost?',
+    a: `Nothing upfront and nothing monthly. On each sale you pay the creator rate you set plus ${arm.first}% of the first payment and ${arm.after}% of renewals, for 12 months. Then the customer is all yours.`,
+  },
+  {
+    q: 'What if the buyer was already my customer?',
+    a: 'Then you pay nothing. We check email, phone and card against your Stripe customers, so you only pay for customers you didn’t have.',
+  },
+  {
+    q: 'Who are the creators, and do I approve them?',
+    a: 'People with 1,000 to 50,000 followers who already post about the problem you solve. We find them and pitch your offer. You approve each one before their storefront goes live.',
+  },
+  {
+    q: 'Do I have to change my checkout?',
+    a: 'No. Buyers pay on your site, through your Stripe. You connect Stripe once, we bill commission monthly and pay the creators ourselves.',
+  },
+  {
+    q: 'What data do you see?',
+    a: 'Through Stripe we read your customer list to check buyers. We use it only to decide whether a sale counts, and we never sell or share it.',
+  },
+  {
+    q: 'Does it work with App Store purchases or Shopify?',
+    a: 'Not yet. We track sales through a web checkout on Stripe today. Shopify stores are next; join early access and we’ll tell you when it opens.',
+  },
+];
+---
+
+<Base
+  title="Pay-per-sale creator marketing for brands · Comarket"
+  description="Micro-creators your buyers already follow send them to a storefront in your brand. No retainer, no monthly fee: you pay only for completed sales from new customers."
+  stage="brands"
+  og="/og/og-brands.jpg"
+>
+  <Nav side="brands" />
+  <main>
+    <Hero
+      side="brands"
+      title="Turn creator traffic into customers with storefronts built to convert."
+      mark="built to convert."
+      sub="We connect you with creators your target audience already follows, and give each one a co-branded storefront in your look. We succeed when you do, so we only take a share of completed sales."
+      placeholder="yourapp.com"
+      button="Show me my storefront"
+      last="You pay your share"
+      label="Example: a creator's post links to a storefront for the example brand Fernwood. The buyer pays, the sale is confirmed, and only then does Fernwood pay its share."
+    />
+    <Gallery />
+    <Outcome arm={arm} />
+    <Find />
+    <Split arm={arm} />
+    <Faq items={faq} person="owner-call" />
+    <Waitlist side="brand" />
+  </main>
+  <Footer side="brands" />
+</Base>

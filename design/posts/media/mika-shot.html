@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
+<style>
+  /* Pingfield's endpoint view, screenshotted at 3am */
+  body { width: 600px; height: 336px; background: #0b1117; color: #d7e0e8; }
+  .bar { display: flex; align-items: center; gap: 9px; padding: 12px 16px; border-bottom: 1px solid #1c2630; }
+  .bar svg { width: 16px; height: 16px; color: #c8f560; }
+  .bar code { font: 600 13px/1 ui-monospace, Menlo, monospace; color: #fff; }
+  .bar .m { font: 700 10px/1 ui-monospace, Menlo, monospace; color: #0b1117; background: #c8f560; padding: 3px 5px; border-radius: 4px; }
+  .bar .sp { flex: 1; }
+  .pill { font-size: 11px; font-weight: 600; color: #ffb4a8; background: rgba(255, 90, 70, 0.14); border: 1px solid rgba(255, 90, 70, 0.4); padding: 4px 8px; border-radius: 999px; display: flex; gap: 6px; align-items: center; }
+  .pill i { width: 6px; height: 6px; border-radius: 50%; background: #ff5a46; }
+  .stats { display: flex; gap: 28px; padding: 12px 16px 0; }
+  .stats small { display: block; font-size: 10.5px; color: #7d8b98; }
+  .stats b { font: 600 19px/1.2 ui-monospace, Menlo, monospace; color: #fff; }
+  .stats b.bad { color: #ff7a66; }
+  .graph { position: absolute; left: 16px; right: 16px; top: 104px; height: 120px; }
+  .legend { position: absolute; left: 16px; top: 230px; display: flex; gap: 14px; font-size: 10px; color: #7d8b98; }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .log { position: absolute; left: 16px; right: 16px; bottom: 12px; display: grid; gap: 6px; font: 11px/1.3 ui-monospace, Menlo, monospace; }
+  .log div { display: flex; gap: 10px; }
+  .log span { color: #7d8b98; flex: none; }
+  .log .hi { color: #c8f560; }
+</style></head>
+<body>
+  <div class="bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5zM3 13l9 5 9-5M3 17.5l9 5 9-5"/></svg>
+    <span class="m">POST</span><code>/api/signup</code>
+    <span class="sp"></span>
+    <span class="pill"><i></i>Empty responses detected</span>
+  </div>
+  <div class="stats">
+    <div><small>Failed silently, 21d</small><b class="bad">4.1%</b></div>
+    <div><small>Status codes</small><b>200 OK</b></div>
+    <div><small>Body size, failing</small><b class="bad">0 B</b></div>
+    <div><small>Region</small><b>db-replica-2</b></div>
+  </div>
+  <svg class="graph" viewBox="0 0 568 150" preserveAspectRatio="none">
+    <g stroke="#16202a"><path d="M0 30H568M0 70H568M0 110H568M0 149H568"/></g>
+    <g fill="#2a3a48">
+      <rect x="4" y="128" width="14" height="22"/><rect x="24" y="131" width="14" height="19"/><rect x="44" y="126" width="14" height="24"/><rect x="64" y="129" width="14" height="21"/><rect x="84" y="127" width="14" height="23"/><rect x="104" y="130" width="14" height="20"/><rect x="124" y="128" width="14" height="22"/><rect x="144" y="126" width="14" height="24"/><rect x="164" y="129" width="14" height="21"/><rect x="184" y="131" width="14" height="19"/><rect x="204" y="127" width="14" height="23"/><rect x="224" y="128" width="14" height="22"/><rect x="244" y="130" width="14" height="20"/><rect x="264" y="126" width="14" height="24"/><rect x="284" y="129" width="14" height="21"/><rect x="304" y="127" width="14" height="23"/><rect x="324" y="128" width="14" height="22"/><rect x="344" y="131" width="14" height="19"/><rect x="364" y="126" width="14" height="24"/><rect x="384" y="129" width="14" height="21"/>
+      <rect x="424" y="129" width="14" height="21"/><rect x="444" y="132" width="14" height="18"/><rect x="464" y="133" width="14" height="17"/><rect x="484" y="134" width="14" height="16"/><rect x="504" y="133" width="14" height="17"/><rect x="524" y="134" width="14" height="16"/><rect x="544" y="134" width="14" height="16"/>
+    </g>
+    <g fill="#ff5a46">
+      <rect x="4" y="142" width="14" height="8"/><rect x="44" y="144" width="14" height="6"/><rect x="104" y="141" width="14" height="9"/><rect x="164" y="143" width="14" height="7"/><rect x="224" y="140" width="14" height="10"/><rect x="284" y="142" width="14" height="8"/><rect x="344" y="141" width="14" height="9"/>
+      <rect x="404" y="18" width="14" height="132"/>
+    </g>
+    <line x1="411" x2="411" y1="0" y2="150" stroke="#c8f560" stroke-dasharray="3 3" opacity=".7"/>
+    <text x="420" y="12" font-size="10" font-family="Menlo, monospace" fill="#c8f560">03:12 alert</text>
+  </svg>
+  <div class="legend"><span><i style="background:#2a3a48"></i>OK</span><span><i style="background:#ff5a46"></i>200 with empty body</span><span>Sep 30 to Oct 21</span></div>
+  <div class="log">
+    <div><span>03:12</span>Alert sent to Mika (SMS, call after 2 min)</div>
+    <div><span>03:19</span>Root cause: connection pool exhausted on db-replica-2</div>
+    <div><span>03:41</span><b class="hi">Fixed. 0 empty responses since</b></div>
+  </div>
+</body></html>

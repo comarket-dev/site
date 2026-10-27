@@ -1,0 +1,78 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import '../styles/brand-fonts.css';
+import Stage from '../components/Stage.astro';
+import Consent from '../components/Consent.astro';
+import { priceArm } from '../lib/experiments';
+
+interface Props {
+  title: string;
+  description: string;
+  stage: 'fork' | 'brands' | 'creators' | 'none';
+  og?: string;
+  noindex?: boolean;
+}
+const { title, description, stage, og = '/og/og-fork.jpg', noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// the phone's sale split shows the same cut this visitor's pricing shows
+const cut = priceArm(Astro.locals.arms ?? {}).first;
+const ogUrl = new URL(og, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#FFF8EC" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/FragmentMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Comarket" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+    <ClientRouter fallback="swap" />
+    <script is:inline>
+      /* Which device the fork shows, and its slot's proportions, before first paint. Mirrors stage/devices.ts:
+         pickDevice, CHROME_TOP and the bezel sizes. Change one, change both. */
+      (function () {
+        function pick() {
+          var w = innerWidth, h = innerHeight, a = w / h, coarse = matchMedia('(pointer: coarse)').matches;
+          var kind = w < 600 || (coarse && Math.min(screen.width, screen.height) < 600) ? 'phone' : coarse || a < 1.15 ? 'tablet' : w >= 1800 ? 'monitor' : 'laptop';
+          var r = 0.72 / 1.52;
+          if (kind === 'tablet') r = 1.064 / ((h + 74) / w + 0.064);
+          if (kind === 'laptop') r = (1.032 * 1.015) / ((h + 84) / w + 0.05 + 0.045);
+          if (kind === 'monitor') r = 1.036 / ((h + 84) / w + 0.076 + 0.24);
+          var d = document.documentElement;
+          d.dataset.device = kind;
+          d.style.setProperty('--device-aspect', r.toFixed(4));
+        }
+        pick();
+        window.cmDevice = pick;
+      })();
+    </script>
+  </head>
+  <body data-stage={stage} data-cut={cut}>
+    <Stage />
+    <slot />
+    {Astro.locals.needsConsent && <Consent />}
+    <script>
+      import { bindReveals, onPage } from '../scripts/ui';
+      onPage(() => [bindReveals()]);
+    </script>
+  </body>
+</html>

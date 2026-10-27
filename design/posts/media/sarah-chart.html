@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
+<style>
+  /* A region capture of Fernwood's dashboard (design/brands/README.md: Paper behind white cards, Moss hairlines,
+     Instrument Sans, one Sprout marker), annotated in a screenshot tool before it went in the newsletter */
+  @font-face { font-family: 'Fernwood Sans'; font-weight: 400 600; src: url(../../../public/fonts/brands/fernwood-sans.woff2); }
+  body { width: 600px; height: 300px; background: #f3f0e8; font-family: 'Fernwood Sans', system-ui, sans-serif; }
+  .card { position: absolute; inset: 14px 16px; background: #fff; border-radius: 14px; border: 1px solid #dce2d5; padding: 16px 18px; color: #0f2a1e; }
+  .top { display: flex; align-items: center; gap: 8px; }
+  .top svg { width: 16px; height: 16px; }
+  .top b { font-size: 13px; font-weight: 600; color: #0f2a1e; }
+  .top .sp { flex: 1; }
+  .seg { display: flex; background: #f0f2ed; border-radius: 7px; padding: 2px; }
+  .seg span { font-size: 10.5px; color: #6e7d72; padding: 4px 8px; border-radius: 5px; }
+  .seg span.on { background: #fff; color: #0f2a1e; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .kpis { display: flex; gap: 26px; margin-top: 12px; }
+  .kpi small { display: block; font-size: 10.5px; color: #6e7d72; }
+  .kpi b { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: #0f2a1e; font-variant-numeric: tabular-nums; }
+  .kpi em { font-style: normal; font-size: 11px; font-weight: 600; color: #1e6b47; margin-left: 4px; }
+  svg.chart { position: absolute; left: 18px; right: 18px; bottom: 26px; width: calc(100% - 36px); height: 140px; }
+  .x { position: absolute; left: 18px; right: 18px; bottom: 8px; display: flex; justify-content: space-between; font-size: 9.5px; color: #6e7d72; }
+  /* annotation layer: red box, arrow, note */
+  .ann-box { position: absolute; left: 376px; top: 120px; width: 124px; height: 92px; border: 3px solid #ff3b30; border-radius: 10px; }
+  .ann-note { position: absolute; left: 236px; top: 214px; font: 700 13px/1.15 -apple-system, system-ui; color: #fff; background: #ff3b30; padding: 5px 8px; border-radius: 7px; transform: rotate(-2deg); }
+</style></head>
+<body>
+  <div class="card">
+    <div class="top">
+      <svg viewBox="0 0 24 24"><path d="M3.5 20.5C3.5 10.8 10.3 4 20.5 3.5 20 13.7 13.2 20.5 3.5 20.5ZM4.6 18.2 14 8.8 15.2 10 5.8 19.4Z" fill="#1E6B47" fill-rule="evenodd"/></svg>
+      <b>Trial to paid</b>
+      <span class="sp"></span>
+      <div class="seg"><span>30d</span><span class="on">90d</span><span>12m</span></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><small>Conversion</small><b>21.4%</b><em>+12.2 pts</em></div>
+      <div class="kpi"><small>Trials</small><b>1,140</b></div>
+      <div class="kpi"><small>Median time to pay</small><b>6 days</b></div>
+    </div>
+    <svg class="chart" viewBox="0 0 564 150" preserveAspectRatio="none">
+      <g stroke="#edf0ea" stroke-width="1"><path d="M0 34H564M0 76H564M0 118H564M0 146H564"/></g>
+      <path d="M0 132 L47 128 L94 134 L141 129 L188 131 L235 126 L282 128 L329 124 L376 96 L423 70 L470 58 L517 50 L564 46 L564 150 L0 150Z" fill="#1e6b47" fill-opacity=".09"/>
+      <path d="M0 132 L47 128 L94 134 L141 129 L188 131 L235 126 L282 128 L329 124 L376 96 L423 70 L470 58 L517 50 L564 46" fill="none" stroke="#1e6b47" stroke-width="2.4" stroke-linejoin="round"/>
+      <line x1="336" x2="336" y1="10" y2="146" stroke="#0f2a1e" stroke-dasharray="3 4" stroke-width="1.2" opacity=".5"/>
+      <rect x="226" y="8" width="106" height="18" rx="9" fill="#c8e36a"/>
+      <text x="279" y="21" text-anchor="middle" font-size="10" font-family="Fernwood Sans, system-ui" fill="#0f2a1e" font-weight="600">Integrations fixed</text>
+    </svg>
+    <div class="x"><span>Jul 21</span><span>Aug 4</span><span>Aug 18</span><span>Sep 1</span><span>Sep 15</span><span>Sep 29</span><span>Oct 13</span></div>
+  </div>
+  <div class="ann-box"></div>
+  <div class="ann-note">this is the whole post</div>
+</body></html>

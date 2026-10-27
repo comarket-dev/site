@@ -1,0 +1,21 @@
+@font-face { font-family: Satoshi; src: url(../../public/fonts/Satoshi-Variable.woff2) format('woff2'); font-weight: 300 900; }
+@font-face { font-family: 'TikTok Sans'; src: url(fonts/tiktoksans.woff2) format('woff2'); font-weight: 300 900; }
+@font-face { font-family: Anton; src: url(fonts/anton.woff2) format('woff2'); }
+@font-face { font-family: 'Archivo Black'; src: url(fonts/archivoblack.woff2) format('woff2'); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+svg { display: block; }
+
+/* iOS status bar, light or dark */
+.sb { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 -apple-system, system-ui; z-index: 50; }
+.sb.dark { color: #fff; }
+.sb.light { color: #000; }
+.sb .r { display: flex; align-items: center; gap: 5px; }
+.sb .bars { display: flex; align-items: flex-end; gap: 1.5px; height: 11px; }
+.sb .bars i { width: 3px; border-radius: 1px; background: currentColor; }
+.sb .bars i:nth-child(1) { height: 4px; } .sb .bars i:nth-child(2) { height: 6px; } .sb .bars i:nth-child(3) { height: 8.5px; } .sb .bars i:nth-child(4) { height: 11px; }
+.sb .bars i.off { opacity: 0.35; }
+.sb .batt { position: relative; width: 25px; height: 12px; border-radius: 4px; border: 1px solid currentColor; opacity: 0.9; padding: 1.5px; }
+.sb .batt::after { content: ''; position: absolute; right: -3.5px; top: 3.5px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; opacity: 0.5; }
+.sb .batt b { display: block; height: 100%; border-radius: 2px; background: currentColor; }
+.sb .batt.low b { background: #ffd60a; }

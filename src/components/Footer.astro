@@ -1,0 +1,116 @@
+---
+interface Props {
+  side?: 'brands' | 'creators';
+}
+const { side } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="foot band-ink on-ink">
+  <div class="wrap top">
+    <p class="line">Creator marketing, paid per sale.</p>
+    <nav class="cols" aria-label="Footer">
+      <div>
+        <a href="/brands" aria-current={side === 'brands' ? 'page' : undefined}>For brands</a>
+        <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>For creators</a>
+        <a href="/?fork=1">Home</a>
+      </div>
+      <div>
+        {side && <a href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'}</a>}
+        <a href="/privacy">Privacy</a>
+      </div>
+    </nav>
+  </div>
+  <div class="mark">
+    <canvas class="dots" data-perforate="Comarket" aria-hidden="true"></canvas>
+    <span class="sr-only">Comarket</span>
+  </div>
+  <div class="wrap bottom">
+    <div class="legal label">
+      <span>© {year} Comarket</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(80px, 10vw, 140px);
+    overflow: hidden;
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+  }
+  .line {
+    font-size: var(--fs-m);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    max-width: 14ch;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .cols div {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .cols a {
+    text-decoration: none;
+    font-size: 17px;
+    width: fit-content;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.5s var(--ease);
+  }
+  .cols a:hover,
+  .cols a[aria-current='page'] {
+    background-size: 100% 1px;
+  }
+  .mark {
+    margin-top: clamp(64px, 8vw, 120px);
+    padding-left: max(8px, env(safe-area-inset-left, 0px));
+    padding-right: max(8px, env(safe-area-inset-right, 0px));
+  }
+  .dots {
+    width: 100%;
+    height: clamp(90px, 21vw, 330px);
+  }
+  .bottom {
+    display: grid;
+    gap: 14px;
+    padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+  .microprint {
+    color: var(--on-ink-muted);
+  }
+  .legal {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 760px) {
+    .top {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  import { perforate } from '../scripts/perforate';
+  let stop: (() => void) | null = null;
+  function bind() {
+    stop?.();
+    const c = document.querySelector<HTMLCanvasElement>('.foot [data-perforate]');
+    if (!c) return;
+    stop = perforate(c, { text: c.dataset.perforate || 'Comarket', color: '#FFF7EC', accent: '#FFF200', rows: 30 });
+  }
+  document.addEventListener('astro:page-load', bind);
+</script>

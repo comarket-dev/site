@@ -1,0 +1,476 @@
+---
+import Person from '../Person.astro';
+import type { PersonId } from '../../lib/people';
+// three creators, staggered down the row (y is the drop in tile heights)
+const cast: Array<{ id: PersonId; medium: string; y: number }> = [
+  { id: 'creator-record', medium: 'Podcast', y: 0 },
+  { id: 'camera-man', medium: 'Photo', y: 0.22 },
+  { id: 'makeup', medium: 'Beauty', y: 0.08 },
+];
+const sources = [
+  ['Substack', 1284],
+  ['YouTube', 322],
+  ['Reddit', 2016],
+  ['TikTok', 905],
+  ['Blogs', 411],
+] as const;
+---
+
+<section class="section band-ink on-ink find" id="find" aria-labelledby="find-h">
+  <div class="wrap">
+    <!-- the creators we find, first; the console under them shows how. Each tile names its medium, not the person. -->
+    <div class="found">
+      <ul class="cast" aria-label="Creators like the ones we find">
+        {
+          cast.map((c, i) => (
+            <li class="tile" style={`--y:${c.y}`}>
+              <figure data-reveal style={`--d:${0.04 + i * 0.06}s`}>
+                <div class="frame">
+                  <Person id={c.id} class="shot" sizes="(max-width: 720px) 64vw, 260px" />
+                </div>
+                <figcaption class="medium num">{c.medium}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="step-head">
+        <h2 class="display-l" id="find-h" data-reveal>We find the creators already talking about your problem.</h2>
+      </div>
+    </div>
+
+    <div class="console" data-replay data-reveal>
+      <header class="bar">
+        <span class="label"><i class="live"></i>Example run</span>
+        <div class="query num">
+          <span class="muted">topic</span>
+          <span class="q" data-query aria-label="trial to paid conversion">trial to paid conversion</span>
+        </div>
+        <div class="speed">
+          <button type="button" class="tiny" data-speed aria-label="Playback speed">1×</button>
+        </div>
+      </header>
+
+      <div class="body">
+        <ul class="sources" aria-label="Sources scanned">
+          {
+            sources.map(([name, n]) => (
+              <li>
+                <span>{name}</span>
+                <span class="num" data-count={n}>
+                  {n.toLocaleString('en-US')}
+                </span>
+              </li>
+            ))
+          }
+          <li class="total">
+            <span>Matched posts</span><span class="num" data-total>4,938</span>
+          </li>
+        </ul>
+
+        <div class="graph">
+          <canvas data-graph aria-hidden="true"></canvas>
+          <div class="legend label">
+            <span><i class="dot pass"></i>Passed vetting</span>
+            <span><i class="dot fail"></i>Fake followers or low engagement</span>
+          </div>
+        </div>
+
+        <ol class="shortlist num" data-shortlist aria-label="Shortlist"></ol>
+      </div>
+
+      <footer class="steps">
+        <ol class="track" data-steps>
+          <li data-step="0"><span>Scan</span><i></i></li>
+          <li data-step="1"><span>Vet</span><i></i></li>
+          <li data-step="2"><span>Pitch</span><i></i></li>
+          <li data-step="3"><span>Brief</span><i></i></li>
+        </ol>
+        <div class="ctrl">
+          <button type="button" class="tiny" data-toggle>Pause</button>
+          <button type="button" class="tiny" data-replay-btn>Replay</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+</section>
+
+<style>
+  .find h2 {
+    max-width: 15ch;
+  }
+  /* the row of three sits to the right; the headline rises into the row's lower left, beside the tiles, never on them */
+  .found {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 80px);
+  }
+  .cast {
+    grid-column: 2;
+    grid-row: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(12px, 1.4vw, 20px);
+    align-items: start;
+    /* room for the deepest drop, so the stagger never overflows the row */
+    padding-bottom: calc(0.22 * var(--tile-h));
+    --tile-h: calc((min(100vw, var(--max)) - var(--gl) - var(--gr)) * 0.48 / 3 * 4 / 3);
+  }
+  .tile {
+    transform: translateY(calc(var(--y) * var(--tile-h)));
+  }
+  figure {
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .frame {
+    aspect-ratio: 3 / 4;
+  }
+  .medium {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+  }
+  .found .step-head {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 0;
+    padding-right: clamp(16px, 3vw, 48px);
+  }
+  @media (max-width: 900px) {
+    .found {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    .found .step-head {
+      grid-row: 2;
+    }
+    .cast {
+      grid-column: 1;
+      --tile-h: calc((100vw - var(--gl) - var(--gr)) / 3 * 4 / 3);
+    }
+  }
+  /* phones: a scroll-snap row, edge to edge, the stagger kept small */
+  @media (max-width: 640px) {
+    .cast {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: 64vw;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gl);
+      margin-inline: calc(-1 * var(--gl)) calc(-1 * var(--gr));
+      padding-inline: var(--gl) var(--gr);
+      --tile-h: calc(64vw * 4 / 3);
+      padding-bottom: calc(0.12 * var(--tile-h));
+      scrollbar-width: none;
+    }
+    .cast::-webkit-scrollbar {
+      display: none;
+    }
+    .tile {
+      scroll-snap-align: start;
+      transform: translateY(calc(var(--y) * 0.5 * var(--tile-h)));
+    }
+  }
+  .console {
+    border: 1px solid var(--ink-rule);
+    border-radius: 22px;
+    background: linear-gradient(180deg, #0a1838 0%, #06122f 100%);
+    overflow: hidden;
+    box-shadow: 0 60px 120px -60px rgb(0 0 0 / 0.7);
+  }
+  .bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ink-rule);
+  }
+  .live {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--benzol);
+    margin-right: 10px;
+    box-shadow: 0 0 0 0 rgb(0 151 141 / 0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 8px rgb(0 151 141 / 0);
+    }
+  }
+  .query {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-self: center;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--ink-rule);
+    background: #071533;
+    min-width: min(420px, 100%);
+  }
+  .q::after {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    margin-left: 2px;
+    vertical-align: -2px;
+    background: var(--paper);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .tiny {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--ink-rule);
+    background: transparent;
+    color: var(--on-ink);
+    font: 12px/1 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s var(--ease);
+  }
+  .tiny:hover {
+    background: var(--ink-rule);
+  }
+  .body {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 300px;
+    min-height: 460px;
+  }
+  .sources {
+    list-style: none;
+    margin: 0;
+    padding: 20px;
+    display: grid;
+    align-content: start;
+    gap: 0;
+    border-right: 1px solid var(--ink-rule);
+    font-size: 14px;
+  }
+  .sources li {
+    display: flex;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--ink-rule);
+  }
+  .sources li span:first-child {
+    color: var(--on-ink-muted);
+  }
+  .sources .total {
+    margin-top: 10px;
+    border-bottom: 0;
+  }
+  .sources .total span:first-child {
+    color: var(--on-ink);
+  }
+  .graph {
+    position: relative;
+    min-width: 0;
+  }
+  .graph canvas {
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+  }
+  .legend {
+    position: absolute;
+    left: 18px;
+    bottom: 14px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--on-ink);
+  }
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 7px;
+    vertical-align: 0;
+  }
+  .dot.pass {
+    background: var(--benzol);
+  }
+  .dot.fail {
+    border: 1px solid var(--on-ink-muted);
+  }
+  .shortlist {
+    list-style: none;
+    margin: 0;
+    padding: 14px 16px;
+    border-left: 1px solid var(--ink-rule);
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    font-size: 12.5px;
+    overflow: hidden;
+  }
+  .shortlist :global(.row) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--ink-rule);
+    border-radius: 12px;
+    background: #071533;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  .shortlist :global(.row.in) {
+    opacity: 1;
+    transform: none;
+  }
+  .shortlist :global(.who) {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .shortlist :global(.who b) {
+    font-weight: 400;
+    color: var(--on-ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .shortlist :global(.who span),
+  .shortlist :global(.stats) {
+    color: var(--on-ink-muted);
+    font-size: 12px;
+  }
+  .shortlist :global(.stats) {
+    grid-column: 1;
+    display: flex;
+    gap: 10px;
+  }
+  .shortlist :global(.state) {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--ink-rule);
+  }
+  .track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(64px, 140px));
+    gap: 12px;
+    flex: 1;
+  }
+  .track li {
+    display: grid;
+    gap: 8px;
+    font: 11px/1 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+    transition: color 0.4s var(--ease);
+  }
+  .track li.on,
+  .track li.done {
+    color: var(--on-ink);
+  }
+  .track i {
+    display: block;
+    height: 2px;
+    background: var(--ink-rule);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .track i::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--benzol);
+    transform-origin: left;
+    transform: scaleX(var(--p, 0));
+  }
+  .ctrl {
+    display: flex;
+    gap: 8px;
+  }
+  @media (max-width: 1080px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sources {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 18px;
+      border-right: 0;
+      border-bottom: 1px solid var(--ink-rule);
+    }
+    .shortlist {
+      border-left: 0;
+      border-top: 1px solid var(--ink-rule);
+    }
+    /* newest rows arrive on top; show the latest three rather than cutting one in half */
+    .shortlist :global(.row:nth-child(n + 4)) {
+      display: none;
+    }
+    .graph canvas {
+      min-height: 320px;
+    }
+  }
+  @media (max-width: 640px) {
+    .bar {
+      grid-template-columns: 1fr auto;
+    }
+    .query {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      justify-self: stretch;
+      min-width: 0;
+    }
+    .sources {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .steps {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .track {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>
+
+<script>
+  import { mountReplay } from '../../scripts/replay';
+  import { onPage } from '../../scripts/ui';
+  onPage(() => {
+    const el = document.querySelector<HTMLElement>('#find [data-replay]');
+    return el ? [mountReplay(el)] : [];
+  });
+</script>

@@ -1,0 +1,35 @@
+---
+/* One licensed photo of a person (src/lib/people.ts). `face` is the square crop around their focal point, for small
+   round uses; otherwise the whole photo at its own proportions, framed by the caller with object-fit. */
+import { FACE_WIDTHS, PHOTO_WIDTHS, person, type PersonId } from '../lib/people';
+
+interface Props {
+  id: PersonId;
+  face?: boolean;
+  /** the img sizes attribute: how wide it shows */
+  sizes?: string;
+  class?: string;
+  eager?: boolean;
+  /** alt="" when the person is decoration next to copy that already says it */
+  decorative?: boolean;
+}
+const { id, face = false, sizes = '100vw', class: cls, eager = false, decorative = false } = Astro.props;
+const p = person(id);
+const base = `/assets/people/${id}${face ? '-face' : ''}`;
+const widths = face ? FACE_WIDTHS : PHOTO_WIDTHS;
+const srcset = widths.map((w) => `${base}-${w}.webp ${w}w`).join(', ');
+const [w, h] = face ? [1, 1] : [p.w, p.h];
+---
+
+<img
+  class:list={['person', cls]}
+  src={`${base}-${widths[1]}.webp`}
+  srcset={srcset}
+  sizes={sizes}
+  width={w}
+  height={h}
+  alt={decorative ? '' : p.alt}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  style={face ? undefined : `object-position: ${p.focal[0] * 100}% ${p.focal[1] * 100}%`}
+/>

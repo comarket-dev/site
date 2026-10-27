@@ -1,0 +1,250 @@
+---
+/* Pingfield x Mika R., per design/brands/README.md: a console. Night page, a two-sentence headline, the monitor for
+   Mika's signup endpoint with its uptime strip (one Alert bar: the silent failure) and the 3am incident, Mika's
+   comment in their Reddit voice, one Signal button. Drawn at 390 x 846 design pixels. Fictional, an example. */
+import BrandMark from '../BrandMark.astro';
+import StoreFoot from '../StoreFoot.astro';
+
+// 45 days, one bar each, all up but the day of the silent failure
+const BARS = Array.from({ length: 45 }, (_, i) => i === 31);
+---
+
+<div class="root">
+  <header class="lock">
+    <span class="brand"><BrandMark id="pingfield" size="24" />pingfield</span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>Mika R.</span>
+  </header>
+
+  <h1>200 OK.<br /><span>Still broken.</span></h1>
+  <p class="sub">Uptime monitoring that checks the response body, not just the status code. Mika’s readers get 3&nbsp;months at&nbsp;$9.</p>
+
+  <!-- the monitor -->
+  <div class="mon">
+    <div class="m-head">
+      <span class="ep"><b>POST</b> /api/signup</span>
+      <span class="up"><i></i>Up</span>
+    </div>
+    <span class="m-meta">every 30s · 6 regions · body + latency</span>
+    <div class="strip">{BARS.map((x) => <i class:list={[{ x }]}></i>)}</div>
+    <div class="m-axis"><span>45 days ago</span><span>today</span></div>
+    <div class="inc">
+      <i></i>
+      <span>
+        <b>3:02 am · 200 OK, empty body</b>
+        <em>Called Mika · fixed in 11 min</em>
+      </span>
+    </div>
+  </div>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <span>
+      <blockquote>“checks the actual body + latency and calls me at 3am, which is great and also terrible.”</blockquote>
+      <figcaption>u/mika_ships in r/SaaS</figcaption>
+    </span>
+  </figure>
+
+  <div class="buy">
+    <span class="cta">Start monitoring for $9</span>
+    <StoreFoot first="Mika" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --night: #0e151b;
+    --panel: #16212a;
+    --line: #24313c;
+    --signal: #c8f560;
+    --alert: #ff6b57;
+    --fog: #8d9aa5;
+    --foot: #8d9aa5;
+    position: relative;
+    height: 100%;
+    padding: 50px 22px 0;
+    background: var(--night);
+    color: #fff;
+    font-family: 'Pingfield', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    font: 500 19px/1 'Pingfield Mono', ui-monospace, monospace;
+    letter-spacing: -0.02em;
+  }
+  .brand,
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .x {
+    font: 400 14px/1 'Pingfield', system-ui, sans-serif;
+    color: var(--fog);
+  }
+  .av {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/mika.jpg) center / cover;
+    flex: none;
+  }
+  h1 {
+    margin: 18px 0 0;
+    font-size: 54px;
+    line-height: 0.96;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+  h1 span {
+    color: var(--fog);
+  }
+  .sub {
+    margin: 14px 0 0;
+    font-size: 15px;
+    line-height: 1.42;
+    color: #b8c2cb;
+    text-wrap: pretty;
+  }
+
+  .mon {
+    margin-top: 22px;
+    padding: 14px 14px 12px;
+    border-radius: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+  .m-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ep {
+    font: 500 14px/1 'Pingfield Mono', ui-monospace, monospace;
+  }
+  .ep b {
+    font-weight: 500;
+    color: var(--signal);
+    margin-right: 4px;
+  }
+  .up {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--signal);
+  }
+  .up i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 3px rgb(200 245 96 / 0.18);
+  }
+  .m-meta {
+    display: block;
+    margin-top: 6px;
+    font: 400 11px/1 'Pingfield Mono', ui-monospace, monospace;
+    color: var(--fog);
+  }
+  /* the uptime strip: one bar a day */
+  .strip {
+    display: flex;
+    gap: 3px;
+    height: 30px;
+    margin-top: 14px;
+  }
+  .strip i {
+    flex: 1;
+    border-radius: 1.5px;
+    background: var(--signal);
+    opacity: 0.85;
+  }
+  .strip i.x {
+    background: var(--alert);
+    opacity: 1;
+  }
+  .m-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font: 400 10px/1 'Pingfield Mono', ui-monospace, monospace;
+    color: #5f6c77;
+  }
+  .inc {
+    display: flex;
+    gap: 10px;
+    align-items: start;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .inc > i {
+    width: 8px;
+    height: 8px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: var(--alert);
+    flex: none;
+  }
+  .inc span {
+    display: grid;
+    gap: 3px;
+  }
+  .inc b {
+    font: 500 12.5px/1.2 'Pingfield Mono', ui-monospace, monospace;
+  }
+  .inc em {
+    font-style: normal;
+    font-size: 12px;
+    color: var(--fog);
+  }
+
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 0;
+  }
+  .av.big {
+    width: 42px;
+    height: 42px;
+  }
+  blockquote {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.32;
+    color: #e3e8ec;
+    text-wrap: pretty;
+  }
+  figcaption {
+    margin-top: 4px;
+    font: 400 11px/1 'Pingfield Mono', ui-monospace, monospace;
+    color: var(--fog);
+  }
+
+  .buy {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 94px;
+    display: grid;
+    gap: 12px;
+  }
+  .cta {
+    display: grid;
+    place-items: center;
+    height: 52px;
+    border-radius: 10px;
+    background: var(--signal);
+    color: var(--night);
+    font-size: 16.5px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+</style>

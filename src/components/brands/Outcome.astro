@@ -1,0 +1,471 @@
+---
+import Icon from '../Icon.astro';
+import Person from '../Person.astro';
+/* The core of the offer: the same post, paid two ways. A sponsored post bills before it runs; a storefront bills per
+   sale. Then the price, since it's the same idea in numbers. */
+import type { PriceArm } from '../../lib/pricing';
+interface Props {
+  arm: PriceArm;
+}
+const { arm } = Astro.props;
+const PRICE = 49;
+const RATE = 20;
+const FLAT = 400;
+const VIEWS = 12000;
+const CLICKS = 360;
+/** days of the month the example sales land on */
+const DAYS = [2, 3, 5, 8, 9, 12, 15, 17, 20, 23, 26, 29];
+const SALES = DAYS.length;
+const fee = (PRICE * (RATE + arm.first)) / 100;
+const usd = (v: number) => `$${v.toFixed(2)}`;
+---
+
+<section class="outcome" id="outcome" aria-labelledby="out-h">
+  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-views={VIEWS} data-clicks={CLICKS}>
+    <div class="scene">
+      <div class="wrap">
+        <h2 class="display-l" id="out-h">Pay for sales, not posts.</h2>
+        <!-- the order ships (her hands, the box), then what it cost: the cards rise over the band's bottom quarter -->
+        <div class="order" data-reveal>
+          <Person id="owner-pack" class="shot" sizes="(max-width: 1440px) 100vw, 1328px" />
+        </div>
+
+        <div class="cols">
+          <article class="card old" aria-label="A sponsored post">
+            <header><b>A sponsored post</b></header>
+            <div class="bill">
+              <b class="amt num">${FLAT}</b>
+              <span class="when">paid before it goes live</span>
+            </div>
+            <ul class="funnel num" aria-hidden="true">
+              <li><span>Views</span><b data-v>{VIEWS.toLocaleString('en-US')}</b></li>
+              <li><span>Clicks</span><b data-c>{CLICKS}</b></li>
+              <li><span>Sales</span><b data-s>{SALES}</b></li>
+            </ul>
+            <div class="when-paid" aria-hidden="true">
+              <div class="line"><i class="pay lump" style="--x:0"><span class="num">${FLAT}</span></i></div>
+              <div class="days num"><span>Day 1</span><span>Day 30</span></div>
+            </div>
+            <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / SALES)}</b></p>
+          </article>
+
+          <article class="card new" aria-label="A Comarket storefront">
+            <header><b>A Comarket storefront</b></header>
+            <div class="bill">
+              <b class="amt num" data-bill>{usd(fee * SALES)}</b>
+              <span class="when" data-when>paid only as each sale lands</span>
+            </div>
+            <ul class="funnel num" aria-hidden="true">
+              <li><span>Views</span><b data-v>{VIEWS.toLocaleString('en-US')}</b></li>
+              <li><span>Clicks</span><b data-c>{CLICKS}</b></li>
+              <li><span>Sales</span><b data-s>{SALES}</b></li>
+            </ul>
+            <div class="when-paid" aria-hidden="true">
+              <div class="line">{DAYS.map((d, i) => <i class="pay" data-tick style={`--x:${(d - 1) / 29};--i:${i}`} />)}</div>
+              <div class="days num"><span>Day 1</span><span>Day 30</span></div>
+            </div>
+            <p class="per"><span>Cost per sale</span><b class="num">{usd(fee)}</b></p>
+          </article>
+        </div>
+
+        <div class="end">
+          <p class="verdict">If the post flops, one costs you ${FLAT}. The other costs <mark class="hl">nothing.</mark></p>
+          <button class="replay" type="button" data-month-replay aria-describedby="out-ex">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.05-4.95" /><path d="M5 4.5V8h3.5" /></svg>
+            <span data-month-replay-label>Replay the month</span>
+          </button>
+        </div>
+        <p class="ex" id="out-ex">Example month: one post, 12,000 views, a ${PRICE}/mo product, a {RATE}% creator rate.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap terms">
+    <div class="panel">
+    <ul class="nums" aria-label="What Comarket costs">
+      <li><b class="num">$0</b><span>until a creator makes a sale</span></li>
+      <li><b class="num">{arm.first}%</b><span>of each sale’s first payment</span></li>
+      <li><b class="num">{arm.after}%</b><span>of renewals, for 12 months</span></li>
+    </ul>
+    <div class="under">
+      <p>Plus the creator’s rate, which you set. Buyers who were already your customers are free.</p>
+      <a class="btn big" href="#waitlist">Get early access <Icon name="arrow-right" class="arr" /></a>
+    </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .outcome {
+    position: relative;
+    z-index: 2;
+    background: var(--paper-2);
+    padding-bottom: clamp(64px, 8vw, 128px);
+  }
+  /* No pin: the finished month is on the page from the start, so a fast scroller reads the result. The run is a
+     replay on request. */
+  /* it follows the hero directly, which already leaves room below itself */
+  .scene {
+    padding-block: clamp(48px, 7vw, 120px) 0;
+  }
+  h2 {
+    max-width: 14ch;
+    margin-bottom: clamp(24px, 4vh, 44px);
+  }
+  /* 21:9 on desktop; --lap is a quarter of its height, from the content width it spans */
+  .order {
+    --cw: calc(min(100vw, var(--max)) - var(--gl) - var(--gr));
+    --lap: calc(var(--cw) * 9 / 21 / 4);
+    aspect-ratio: 21 / 9;
+  }
+  /* the hands and the box sit in the photo's upper middle; a wide band crops to them, not to the floor */
+  .order :global(.shot) {
+    object-position: 50% 28% !important;
+  }
+  .cols {
+    position: relative;
+    margin-top: calc(-1 * var(--lap));
+    padding-inline: clamp(0px, 2.4vw, 40px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 28px);
+  }
+  .card {
+    display: grid;
+    gap: 18px;
+    padding: clamp(20px, 2.4vw, 32px);
+    border-radius: 28px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+  }
+  .card.new {
+    border-color: var(--ink);
+    box-shadow: 0 30px 60px -40px rgb(30 14 63 / 0.45);
+  }
+  header b {
+    font-size: clamp(18px, 1.5vw, 22px);
+    letter-spacing: -0.02em;
+  }
+  .bill {
+    display: flex;
+    align-items: baseline;
+    gap: 6px 14px;
+    flex-wrap: wrap;
+  }
+  .amt {
+    font-family: var(--sans);
+    font-size: clamp(52px, 6vw, 96px);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+  }
+  .when {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--graphite);
+  }
+  .old .when {
+    color: var(--ink);
+  }
+  .funnel {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--rule);
+  }
+  .funnel li {
+    display: grid;
+    gap: 4px;
+    padding-top: 14px;
+  }
+  .funnel span {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--graphite);
+  }
+  .funnel b {
+    font-size: clamp(22px, 2vw, 30px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  /* when the money leaves: one lump before anything happens, or a little on each day a sale lands */
+  .when-paid {
+    display: grid;
+    gap: 8px;
+  }
+  .line {
+    position: relative;
+    height: 44px;
+    border-bottom: 1.5px solid var(--rule);
+  }
+  .pay {
+    position: absolute;
+    bottom: 0;
+    left: calc(var(--x) * (100% - 10px));
+    width: 10px;
+    height: 26px;
+    border-radius: 4px 4px 0 0;
+    background: var(--ink);
+    transform-origin: bottom;
+    transform: scaleY(var(--on, 1));
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .new .pay {
+    background: var(--yellow);
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
+  .pay.lump {
+    width: 34%;
+    height: 44px;
+    border-radius: 6px 6px 0 0;
+    background: var(--ink);
+    display: grid;
+    place-items: center;
+  }
+  .lump span {
+    color: var(--on-ink);
+    font-size: 14px;
+  }
+  .days {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--graphite);
+  }
+  .per {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-size: 16px;
+  }
+  .per b {
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .end {
+    margin-top: clamp(28px, 4vh, 44px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+  }
+  .replay {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 18px 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .replay:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .replay svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .replay[aria-busy='true'] svg {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .ex {
+    margin-top: 14px;
+    font-size: 13.5px;
+    color: var(--graphite);
+  }
+  .verdict {
+    font-size: clamp(26px, 2.8vw, 44px);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    max-width: 30ch;
+  }
+
+  /* the price, which is the same idea in numbers */
+  .terms {
+    padding-top: clamp(48px, 7vw, 104px);
+  }
+  /* the canonical price: the page's biggest numbers, on their own white panel ringed in ink */
+  .panel {
+    display: grid;
+    gap: 28px;
+    padding: clamp(24px, 3.4vw, 48px);
+    border-radius: 32px;
+    background: var(--white);
+    border: 1.5px solid var(--ink);
+    box-shadow: 0 40px 80px -56px rgb(30 14 63 / 0.5);
+  }
+  .nums {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .nums li {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    padding: 0 20px 0 0;
+  }
+  .nums li + li {
+    padding-left: 20px;
+    border-left: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  }
+  .nums b {
+    font-family: var(--sans);
+    font-size: clamp(64px, 8.4vw, 136px);
+    line-height: 1.04;
+    letter-spacing: -0.055em;
+    font-weight: 700;
+  }
+  .nums span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--graphite);
+  }
+  .under {
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px 32px;
+    flex-wrap: wrap;
+  }
+  .under p {
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.45;
+    max-width: 40ch;
+  }
+  .btn.big {
+    --h: 60px;
+    padding: 0 30px;
+    font-size: 17px;
+  }
+  .fine {
+    font-size: 13.5px;
+    color: var(--graphite);
+  }
+
+  @media (max-width: 720px) {
+    .order {
+      aspect-ratio: 4 / 3;
+      --lap: calc(var(--cw) * 3 / 4 / 4);
+    }
+    .order :global(.shot) {
+      border-radius: 16px;
+    }
+    .cols {
+      padding-inline: 10px;
+    }
+    .cols,
+    .nums {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .nums li,
+    .nums li + li {
+      padding: 18px 0;
+      border-left: 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .nums li:first-child {
+      padding-top: 0;
+    }
+    .end {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  import { onPage, reduceMotion } from '../../scripts/ui';
+
+  onPage(() => {
+    const el = document.querySelector<HTMLElement>('[data-outcome]');
+    if (!el) return [];
+    const fee = Number(el.dataset.fee);
+    const flat = Number(el.dataset.flat);
+    const SALES = Number(el.dataset.sales);
+    const $$ = (s: string) => Array.from(el.querySelectorAll<HTMLElement>(s));
+    const VIEWS = Number(el.dataset.views);
+    const CLICKS = Number(el.dataset.clicks);
+    const views = $$('[data-v]');
+    const clicks = $$('[data-c]');
+    const sold = $$('[data-s]');
+    const ticks = $$('[data-tick]');
+    const bill = el.querySelector<HTMLElement>('[data-bill]')!;
+    const when = el.querySelector<HTMLElement>('[data-when]')!;
+    const oldPer = el.querySelector<HTMLElement>('[data-old-per]')!;
+    const btn = el.querySelector<HTMLButtonElement>('[data-month-replay]')!;
+    const label = el.querySelector<HTMLElement>('[data-month-replay-label]')!;
+    const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+    const ramp = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+
+    /** One frame of the month at progress p: people see the post, click, buy; only one bill follows the buying. */
+    const draw = (p: number) => {
+      const v = ramp(p, 0.02, 0.3);
+      const c = ramp(p, 0.14, 0.42);
+      const n = Math.floor(ramp(p, 0.34, 0.96) * SALES + 0.001);
+      views.forEach((e) => (e.textContent = fmt(VIEWS * v)));
+      clicks.forEach((e) => (e.textContent = fmt(CLICKS * c)));
+      sold.forEach((e) => (e.textContent = String(n)));
+      ticks.forEach((t, k) => t.style.setProperty('--on', k < n ? '1' : '0'));
+      bill.textContent = `$${(fee * n).toFixed(2)}`;
+      when.textContent = n ? 'paid only as each sale lands' : 'nothing before it goes live';
+      oldPer.textContent = n ? `$${(flat / n).toFixed(2)}` : 'no sales yet';
+    };
+
+    // The page already shows the finished month. A replay runs it from day 1, then rests on the result again.
+    let raf = 0;
+    const replay = () => {
+      cancelAnimationFrame(raf);
+      if (reduceMotion()) return draw(1);
+      btn.setAttribute('aria-busy', 'true');
+      label.textContent = 'Playing the month';
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const p = Math.min(1, (now - t0) / 3600);
+        draw(p);
+        if (p < 1) raf = requestAnimationFrame(step);
+        else {
+          btn.removeAttribute('aria-busy');
+          label.textContent = 'Replay the month';
+        }
+      };
+      raf = requestAnimationFrame(step);
+    };
+    btn.addEventListener('click', replay);
+    return [
+      () => {
+        btn.removeEventListener('click', replay);
+        cancelAnimationFrame(raf);
+      },
+    ];
+  });
+</script>

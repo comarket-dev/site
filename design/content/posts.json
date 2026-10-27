@@ -1,0 +1,149 @@
+{
+  "_note": "Source shots for the example posts. Posts are composed in code (platform layout, captions, product UI); these are only the camera footage inside them. 'still' edits the creator's portrait so they stay the same person but in a new moment, outfit and light, never their profile picture. 'still-noref' has no person's face. Products are left blank and labeled in code. Two seeds per shot so we can pick.",
+  "style": "Candid phone footage, natural light, true-to-life colors, realistic skin texture, no retouching, no text, no captions, no logos, no labels, no watermark. Not a stock photo.",
+  "posts": [
+    {
+      "id": "lena-talk-a",
+      "creator": "lena",
+      "kind": "still",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 259,
+      "prompt": "The same woman from the reference photo, filmed by her phone's front camera propped on her desk at eye level. She is mid-sentence explaining something, mouth open mid-word, one eyebrow raised, pointing up over her shoulder with her index finger. She wears a faded grey crewneck sweatshirt, her hair tucked behind one ear, no earrings. Warm evening light from a desk lamp, a plain wall behind her. A frame grabbed from a casual vertical video: slightly soft focus, a little motion blur on the moving hand."
+    },
+    {
+      "id": "lena-talk-b",
+      "creator": "lena",
+      "kind": "still",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 260,
+      "prompt": "The same woman from the reference photo, filmed by her phone's front camera propped on her desk at eye level. She is mid-sentence explaining something, mouth open mid-word, one eyebrow raised, pointing up over her shoulder with her index finger. She wears a faded grey crewneck sweatshirt, her hair tucked behind one ear, no earrings. Warm evening light from a desk lamp, a plain wall behind her. A frame grabbed from a casual vertical video: slightly soft focus, a little motion blur on the moving hand."
+    },
+    {
+      "id": "devon-thumb-a",
+      "creator": "devon",
+      "kind": "still",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 255,
+      "prompt": "The same man from the reference photo, head and shoulders, leaning slightly toward the camera with raised eyebrows and an amused half-open-mouth expression, as if he just saw something surprising. One hand points to the left edge of the frame. Same glasses and twists, a black hoodie. Bright soft ring light, plain light grey wall. A sharp, well-lit photo he took for a video thumbnail."
+    },
+    {
+      "id": "devon-thumb-b",
+      "creator": "devon",
+      "kind": "still",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 256,
+      "prompt": "The same man from the reference photo, head and shoulders, leaning slightly toward the camera with raised eyebrows and an amused half-open-mouth expression, as if he just saw something surprising. One hand points to the left edge of the frame. Same glasses and twists, a black hoodie. Bright soft ring light, plain light grey wall. A sharp, well-lit photo he took for a video thumbnail."
+    },
+    {
+      "id": "jonah-thumb-a",
+      "creator": "jonah",
+      "kind": "still",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 243,
+      "prompt": "The same man from the reference photo, head and shoulders, holding his phone face-down toward the camera in one hand, with a knowing, slightly smug smile. Same beard, an olive overshirt. Warm soft key light from the side, plain off-white wall. A sharp, well-lit photo he took for a video thumbnail."
+    },
+    {
+      "id": "jonah-thumb-b",
+      "creator": "jonah",
+      "kind": "still",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 244,
+      "prompt": "The same man from the reference photo, head and shoulders, holding his phone face-down toward the camera in one hand, with a knowing, slightly smug smile. Same beard, an olive overshirt. Warm soft key light from the side, plain off-white wall. A sharp, well-lit photo he took for a video thumbnail."
+    },
+    {
+      "id": "priya-flatlay-a",
+      "creator": "priya",
+      "kind": "still-noref",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 203,
+      "prompt": "Overhead flat lay on a pale travertine bathroom counter: three skincare products in matching dusty terracotta packaging with completely blank, unlabeled fronts: a glass dropper bottle, a squat cream jar and a slim squeeze tube. Arranged loosely beside a folded white cotton face towel, a hair claw clip and a few water droplets. Soft morning window light with gentle long shadows. Shot on an iPhone, slight grain."
+    },
+    {
+      "id": "priya-flatlay-b",
+      "creator": "priya",
+      "kind": "still-noref",
+      "size": [
+        896,
+        1120
+      ],
+      "seed": 204,
+      "prompt": "Overhead flat lay on a pale travertine bathroom counter: three skincare products in matching dusty terracotta packaging with completely blank, unlabeled fronts: a glass dropper bottle, a squat cream jar and a slim squeeze tube. Arranged loosely beside a folded white cotton face towel, a hair claw clip and a few water droplets. Soft morning window light with gentle long shadows. Shot on an iPhone, slight grain."
+    },
+    {
+      "id": "ama-pour-a",
+      "creator": "ama",
+      "kind": "still-noref",
+      "size": [
+        768,
+        1344
+      ],
+      "seed": 211,
+      "prompt": "Vertical close-up of a Black woman's hands pouring amber tea from a speckled ceramic teapot into a small glass cup on a worn wooden kitchen counter. A matte sage-green tea tin with a completely blank, unlabeled front stands beside the cup, its lid off, loose tea leaves scattered. Steam rising, low golden early-morning sunlight from a window. Cream knit sleeves. A frame from a slow vertical phone video, slight grain."
+    },
+    {
+      "id": "ama-pour-b",
+      "creator": "ama",
+      "kind": "still-noref",
+      "size": [
+        768,
+        1344
+      ],
+      "seed": 212,
+      "prompt": "Vertical close-up of a Black woman's hands pouring amber tea from a speckled ceramic teapot into a small glass cup on a worn wooden kitchen counter. A matte sage-green tea tin with a completely blank, unlabeled front stands beside the cup, its lid off, loose tea leaves scattered. Steam rising, low golden early-morning sunlight from a window. Cream knit sleeves. A frame from a slow vertical phone video, slight grain."
+    },
+    {
+      "id": "ama-pour2-a",
+      "creator": "ama",
+      "kind": "still-noref",
+      "size": [
+        768,
+        1344
+      ],
+      "seed": 311,
+      "prompt": "Vertical close-up of a Black woman's hands pouring amber tea from a speckled ceramic teapot into a small clear glass cup on a worn wooden kitchen counter. A thin wisp of steam rises only from the hot tea in the glass cup. To the right, a hand's width away from the cup, stands a closed matte sage-green tea tin with its lid on and a completely blank, unlabeled front, cool and dry, nothing rising from it. A few loose tea leaves on the counter. Low golden early-morning sunlight from a window behind. Cream knit sleeves. A frame from a slow vertical phone video, slight grain."
+    },
+    {
+      "id": "ama-pour2-b",
+      "creator": "ama",
+      "kind": "still-noref",
+      "size": [
+        768,
+        1344
+      ],
+      "seed": 312,
+      "prompt": "Vertical close-up of a Black woman's hands pouring amber tea from a speckled ceramic teapot into a small clear glass cup on a worn wooden kitchen counter. A thin wisp of steam rises only from the hot tea in the glass cup. To the right, a hand's width away from the cup, stands a closed matte sage-green tea tin with its lid on and a completely blank, unlabeled front, cool and dry, nothing rising from it. A few loose tea leaves on the counter. Low golden early-morning sunlight from a window behind. Cream knit sleeves. A frame from a slow vertical phone video, slight grain."
+    },
+    {
+      "id": "ama-pour2-c",
+      "creator": "ama",
+      "kind": "still-noref",
+      "size": [
+        768,
+        1344
+      ],
+      "seed": 313,
+      "prompt": "Vertical close-up of a Black woman's hands pouring amber tea from a speckled ceramic teapot into a small clear glass cup on a worn wooden kitchen counter. A thin wisp of steam rises only from the hot tea in the glass cup. To the right, a hand's width away from the cup, stands a closed matte sage-green tea tin with its lid on and a completely blank, unlabeled front, cool and dry, nothing rising from it. A few loose tea leaves on the counter. Low golden early-morning sunlight from a window behind. Cream knit sleeves. A frame from a slow vertical phone video, slight grain."
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
+<style>
+  /* Devon's thumbnail, the way small tech channels make them: a cutout with a white edge, one before/after, three words */
+  body { width: 640px; height: 360px; background: radial-gradient(110% 120% at 30% 25%, #ffe9a8 0%, #f6bd3c 52%, #e39a17 100%); }
+  .mail { position: absolute; left: 22px; top: 152px; width: 206px; padding: 10px 12px; border-radius: 10px; background: #fff; box-shadow: 0 10px 26px rgba(90, 50, 0, 0.28); transform: rotate(-6deg); }
+  .mail div { font-size: 10px; color: #333; padding: 6px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; gap: 8px; }
+  .mail div:last-child { border: 0; }
+  .mail b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mail span { color: #999; flex: none; }
+  .x { position: absolute; left: 22px; top: 150px; width: 206px; height: 130px; transform: rotate(-6deg); }
+  .x::before, .x::after { content: ''; position: absolute; left: 50%; top: 50%; width: 228px; height: 12px; border-radius: 6px; background: #e5262a; box-shadow: 0 3px 6px rgba(0,0,0,.22); }
+  .x::before { transform: translate(-50%, -50%) rotate(30deg); }
+  .x::after { transform: translate(-50%, -50%) rotate(-30deg); }
+  .book { position: absolute; left: 176px; top: 172px; width: 226px; padding: 12px; border-radius: 12px; background: #fff; box-shadow: 0 16px 36px rgba(90, 50, 0, 0.32); transform: rotate(3deg); }
+  .book header { display: flex; align-items: center; gap: 8px; }
+  .book header svg { width: 22px; height: 22px; color: #2b1b00; }
+  .book header b { font: 700 13px/1.1 -apple-system, system-ui; color: #2b1b00; }
+  .book header span { font-size: 9.5px; color: #8a7a5c; display: block; }
+  .days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 10px; }
+  .days span { font-size: 9px; text-align: center; color: #6b5d40; padding: 5px 0; border-radius: 6px; background: #fbf4e4; }
+  .days span.on { background: #2b1b00; color: #fff; font-weight: 700; }
+  .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 5px; }
+  .slots span { font-size: 9.5px; text-align: center; padding: 6px 0; border-radius: 6px; border: 1px solid #ecdfc2; color: #2b1b00; }
+  .slots span.on { background: #f2b134; border-color: #f2b134; font-weight: 700; }
+  .ok { margin-top: 8px; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: #146c2e; }
+  .ok i { width: 14px; height: 14px; border-radius: 50%; background: #1fa34a; display: grid; place-items: center; }
+  .ok i::after { content: ''; width: 6px; height: 3px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+  .words { position: absolute; left: 26px; top: 18px; font: 400 52px/0.94 'Archivo Black', sans-serif; letter-spacing: -0.02em; color: #fff; -webkit-text-stroke: 7px #2b1b00; paint-order: stroke fill; }
+  .words em { font-style: normal; display: inline-block; background: #2b1b00; color: #ffd24a; -webkit-text-stroke: 0; padding: 3px 10px 7px; margin-top: 6px; transform: rotate(-2deg); }
+  .me { position: absolute; right: -62px; bottom: -6px; height: 366px; filter: drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 14px 22px rgba(60, 30, 0, 0.4)); }
+</style></head>
+<body>
+  <div class="mail">
+    <div><b>Re: Re: Re: does Tuesday work?</b><span>9:14</span></div>
+    <div><b>Re: Re: sorry, Thursday?</b><span>Mon</span></div>
+    <div><b>Re: what time zone is that</b><span>Mon</span></div>
+    <div><b>Quick call this week?</b><span>Fri</span></div>
+  </div>
+  <div class="x"></div>
+  <div class="book">
+    <header><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="4.5"/></svg><span><b>Book a call with Devon</b><span>30 min · Orbitly</span></span></header>
+    <div class="days"><span>Mon</span><span class="on">Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+    <div class="slots"><span>10:00</span><span class="on">2:30</span><span>4:00</span></div>
+    <div class="ok"><i></i>Booked. Invite sent to both of you.</div>
+  </div>
+  <div class="words">NO MORE<br><em>EMAIL TAG</em></div>
+  <img class="me" src="../keys/devon-key.png" alt="">
+</body></html>

@@ -1,0 +1,84 @@
+---
+/* YouTube post by the example creator jonah, composed in design/posts (see scripts/render-posts.py for its media).
+   Drawn at 400x552 design pixels; Post.astro scales it to fit. Fictional, labeled as an example where it's shown. */
+---
+
+<div class="root" aria-hidden="true">
+<div class="player"><span class="bar"><i></i></span></div>
+  <div class="wrap">
+    <h1>My Deep Work Desk Setup (4 hours a day, no willpower)</h1>
+    <div class="meta"><b>112K views</b> · 3w ago · #deepwork <b>...more</b></div>
+    <div class="ch"><span class="av"></span><b>Jonah P.</b><small>31.4K</small><span class="sp"></span><span class="sub">Subscribe</span></div>
+    <div class="acts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 10v10H4V10zM7 10l4-7c1.5 0 2.5 1 2.2 2.6L12.6 9H19a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7"/></svg>4.6K</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 5l7 7-7 7M21 12H9a6 6 0 0 0-6 6"/></svg>Share</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Save</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download</span>
+    </div>
+    <div class="cm">
+      <div class="hd">Comments<span>214</span></div>
+      <div class="pin">📌 Pinned by @jonah.desk</div>
+      <div class="row">
+        <span class="av"></span>
+        <div>
+          <div class="who"><b>@jonah.desk</b> · 3w</div>
+          <p>since about 200 of you asked: the focus app is Quietly. the lifetime deal is still 40% off here 👉 <a>quietly.comarket.si/creators/jonah</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root {
+  position: relative;
+  width: 400px;
+  height: 552px;
+ font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+svg { display: block; }
+
+/* iOS status bar, light or dark */
+.sb { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 -apple-system, system-ui; z-index: 50; }
+.sb.dark { color: #fff; }
+.sb.light { color: #000; }
+.sb .r { display: flex; align-items: center; gap: 5px; }
+.sb .bars { display: flex; align-items: flex-end; gap: 1.5px; height: 11px; }
+.sb .bars i { width: 3px; border-radius: 1px; background: currentColor; }
+.sb .bars i:nth-child(1) { height: 4px; } .sb .bars i:nth-child(2) { height: 6px; } .sb .bars i:nth-child(3) { height: 8.5px; } .sb .bars i:nth-child(4) { height: 11px; }
+.sb .bars i.off { opacity: 0.35; }
+.sb .batt { position: relative; width: 25px; height: 12px; border-radius: 4px; border: 1px solid currentColor; opacity: 0.9; padding: 1.5px; }
+.sb .batt::after { content: ''; position: absolute; right: -3.5px; top: 3.5px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; opacity: 0.5; }
+.sb .batt b { display: block; height: 100%; border-radius: 2px; background: currentColor; }
+.sb .batt.low b { background: #ffd60a; }
+
+
+  /* The mobile watch page: player, title, channel, actions, and Jonah's pinned comment with the link */
+  .root { width: 400px; height: 552px; background: #fff; color: #0f0f0f; font-family: Roboto, -apple-system, system-ui, sans-serif; }
+  .player { position: relative; width: 400px; height: 225px; background: #000 url(/assets/posts/jonah.jpg) center / cover; }
+  .player .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.3); }
+  .player .bar i { display: block; width: 0%; height: 100%; background: #f00; }
+  .wrap { padding: 10px 12px 0; }
+  h1 { font-size: 16px; line-height: 1.3; font-weight: 700; }
+  .meta { font-size: 11.5px; color: #606060; margin-top: 4px; }
+  .meta b { color: #0f0f0f; font-weight: 600; }
+  .ch { display: flex; align-items: center; gap: 9px; margin-top: 10px; }
+  .ch .av { width: 30px; height: 30px; border-radius: 50%; background: url(/assets/posts/avatars/jonah.jpg) center / cover; }
+  .ch b { font-size: 13.5px; font-weight: 600; }
+  .ch small { font-size: 11.5px; color: #606060; margin-left: 5px; }
+  .ch .sp { flex: 1; }
+  .ch .sub { font-size: 12.5px; font-weight: 600; color: #fff; background: #0f0f0f; padding: 7px 13px; border-radius: 999px; }
+  .acts { display: flex; gap: 7px; margin-top: 10px; white-space: nowrap; overflow: hidden; }
+  .acts span { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; background: #f2f2f2; padding: 7px 11px; border-radius: 999px; }
+  .acts svg { width: 15px; height: 15px; }
+  .cm { margin-top: 12px; background: #f2f2f2; border-radius: 12px; padding: 10px 11px; }
+  .cm .hd { font-size: 13px; font-weight: 700; }
+  .cm .hd span { font-weight: 400; color: #606060; margin-left: 4px; }
+  .cm .pin { font-size: 11px; color: #606060; margin-top: 8px; }
+  .cm .row { display: grid; grid-template-columns: 24px 1fr; gap: 0 8px; margin-top: 4px; }
+  .cm .row .av { width: 24px; height: 24px; border-radius: 50%; background: url(/assets/posts/avatars/jonah.jpg) center / cover; }
+  .cm .who { font-size: 11.5px; color: #606060; }
+  .cm .who b { color: #0f0f0f; font-weight: 600; background: #888; color: #fff; padding: 0 5px; border-radius: 9px; }
+  .cm p { font-size: 12.5px; line-height: 1.42; margin-top: 2px; }
+  .cm p a { color: #065fd4; }
+</style>

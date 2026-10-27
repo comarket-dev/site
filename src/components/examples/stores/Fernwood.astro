@@ -1,0 +1,260 @@
+---
+/* Fernwood x Sarah K., per design/brands/README.md: an editorial page on Paper, the co-brand lockup, the promise in
+   Instrument Serif with one italic word, what Fernwood is and Sarah's offer in one line, the product framed on a Fern
+   panel with its one stall marker, Sarah's note, one button. A still page, like a screenshot.
+   Drawn at 390 x 846 design pixels (StorePhone.astro scales it). Fictional, labeled as an example where it's shown. */
+import BrandMark from '../BrandMark.astro';
+import StoreFoot from '../StoreFoot.astro';
+
+const STEPS = [
+  { label: 'Signed up', n: 1140 },
+  { label: 'Created a project', n: 912 },
+  { label: 'Added an integration', n: 342, stall: true },
+  { label: 'Paid', n: 228 },
+];
+---
+
+<div class="root">
+  <header class="lock">
+    <span class="brand">
+      <BrandMark id="fernwood" size="24" />
+      Fernwood
+    </span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>Sarah K.</span>
+  </header>
+
+  <h1>Find the screen where your trials <em>stall.</em></h1>
+  <p class="sub">Onboarding analytics for SaaS teams. Sarah’s readers get 30&nbsp;days free.</p>
+
+  <div class="panel">
+    <div class="app">
+      <div class="head"><b>Trial onboarding</b><span>Last 30 days</span></div>
+      <ol>
+        {
+          STEPS.map((s) => (
+            <li class:list={[{ stall: s.stall }]}>
+              <span class="lab">{s.label}</span>
+              <span class="track" style={`--k:${((s.n / 1140) * 100).toFixed(1)}%`}>
+                <span class="bar"></span>
+                {s.stall && <span class="mark">570 stalled</span>}
+              </span>
+              <span class="n">{s.n.toLocaleString('en-US')}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <blockquote>“Fernwood showed me the screen my trials quit on. Mine was integrations. Of course it was.”</blockquote>
+    <figcaption>Sarah K., <i>Trial &amp; Error</i></figcaption>
+  </figure>
+
+  <div class="buy">
+    <span class="cta">Start my free 30 days</span>
+    <StoreFoot first="Sarah" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --fern: #1e6b47;
+    --pine: #0f2a1e;
+    --paper: #f3f0e8;
+    --moss: #dce2d5;
+    --lichen: #6e7d72;
+    --sprout: #c8e36a;
+    --foot: #6e7d72;
+    position: relative;
+    height: 100%;
+    padding: 50px 24px 0;
+    background: var(--paper);
+    color: var(--pine);
+    font-family: 'Fernwood Sans', -apple-system, system-ui, sans-serif;
+    overflow: hidden;
+  }
+
+  /* brand x creator, equal weight, both in Fernwood's serif */
+  .lock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 58px;
+    font: 25px/1 'Fernwood Serif', ui-serif, Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+  .brand,
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .x {
+    font: 400 15px/1 'Fernwood Sans', system-ui, sans-serif;
+    color: var(--lichen);
+  }
+  .av {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/sarah.jpg) center / cover;
+    flex: none;
+  }
+
+  h1 {
+    margin: 22px 0 0;
+    font: 46px/0.98 'Fernwood Serif', ui-serif, Georgia, serif;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h1 em {
+    color: var(--fern);
+  }
+  .sub {
+    margin: 14px 0 0;
+    font-size: 16px;
+    line-height: 1.42;
+    color: #3f5248;
+    text-wrap: pretty;
+  }
+
+  /* the product, framed on a Fern panel the way Fernwood's own site shows screenshots */
+  .panel {
+    margin: 20px -8px 0;
+    padding: 18px;
+    border-radius: 20px;
+    background: var(--fern);
+  }
+  .app {
+    border-radius: 12px;
+    background: #fff;
+    padding: 13px 14px 4px;
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 2px 8px;
+  }
+  .head b {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .head span {
+    font-size: 11.5px;
+    color: var(--lichen);
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--moss);
+  }
+  li {
+    display: grid;
+    grid-template-columns: 124px 1fr 36px;
+    align-items: center;
+    gap: 10px;
+    height: 32px;
+    padding: 0 2px;
+    font-size: 12px;
+    color: #4a5c52;
+    border-bottom: 1px solid #edf0ea;
+  }
+  li:last-child {
+    border-bottom: 0;
+  }
+  .lab {
+    white-space: nowrap;
+  }
+  .track {
+    position: relative;
+    height: 7px;
+    border-radius: 4px;
+    background: #eef1eb;
+  }
+  .bar {
+    display: block;
+    width: var(--k);
+    height: 100%;
+    border-radius: 4px;
+    background: #a9c9b5;
+  }
+  .n {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--pine);
+  }
+  /* the stall: Fernwood's one finding, and the brightest thing on the screen */
+  li.stall {
+    color: var(--pine);
+    font-weight: 600;
+  }
+  .stall .bar {
+    background: var(--fern);
+  }
+  /* pinned just past the end of the stalled bar */
+  .mark {
+    position: absolute;
+    left: calc(var(--k) + 6px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: var(--sprout);
+    color: var(--pine);
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .note {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    column-gap: 14px;
+    align-items: start;
+    margin: 22px 0 0;
+  }
+  .av.big {
+    width: 52px;
+    height: 52px;
+    grid-row: span 2;
+  }
+  blockquote {
+    margin: 0;
+    font: 19px/1.17 'Fernwood Serif', ui-serif, Georgia, serif;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+  figcaption {
+    margin-top: 7px;
+    font-size: 12.5px;
+    color: var(--lichen);
+  }
+
+  .buy {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 94px;
+    display: grid;
+    gap: 12px;
+  }
+  .cta {
+    display: grid;
+    place-items: center;
+    height: 54px;
+    border-radius: 999px;
+    background: var(--fern);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+</style>

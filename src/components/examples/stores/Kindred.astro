@@ -1,0 +1,197 @@
+---
+/* Kindred Skin x Priya N., per design/brands/README.md: shop the routine. A co-branded announcement bar, Priya's flat
+   lay (labels printed by scripts/print-labels.py), the promise in Newsreader with one italic phrase, the routine row,
+   Priya's line, the kit offer and one Clay button. Drawn at 390 x 846 design pixels. Fictional, an example. */
+import StoreFoot from '../StoreFoot.astro';
+
+const STEPS = [
+  ['Cleanse', 'Gentle Cleanser'],
+  ['Treat', 'Barrier Serum'],
+  ['Repair', 'Repair Cream'],
+];
+---
+
+<div class="root">
+  <div class="ann">Priya’s community: a free travel kit with the routine</div>
+  <header class="lock">
+    <span class="wm">kindred</span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>Priya N.</span>
+  </header>
+
+  <div class="photo" role="img" aria-label="Kindred's Gentle Cleanser, Barrier Serum and Repair Cream on a bathroom counter"></div>
+
+  <h1>Skin that stops <em>fighting back.</em></h1>
+  <p class="sub">Barrier-repair skincare for dry, sensitive skin. Ceramides, no fragrance.</p>
+
+  <ol class="steps">
+    {
+      STEPS.map(([v, p], i) => (
+        <li>
+          <i>{i + 1}</i>
+          <span>
+            <b>{v}</b>
+            {p}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <blockquote>“my skin was SO angry all winter. these three fixed it 🤍”</blockquote>
+  </figure>
+
+  <div class="buy">
+    <div class="price"><span>The Reset Routine</span><b>$86 <i>+ free travel kit</i></b></div>
+    <span class="cta">Get my routine and free kit</span>
+    <StoreFoot first="Priya" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --clay: #b8664f;
+    --cocoa: #3a2420;
+    --cream: #f7f1ea;
+    --blush: #f1ddd2;
+    --sand: #e6d8c8;
+    --foot: #8a7266;
+    position: relative;
+    height: 100%;
+    padding-top: 50px;
+    background: var(--cream);
+    color: var(--cocoa);
+    font-family: 'Kindred', Georgia, serif;
+    overflow: hidden;
+  }
+  .ann {
+    padding: 8px 16px;
+    background: var(--clay);
+    color: #fff;
+    text-align: center;
+    font: 500 12px/1.3 -apple-system, system-ui, sans-serif;
+    letter-spacing: 0.01em;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 54px;
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 21px;
+  }
+  .x {
+    font: 400 14px/1 -apple-system, system-ui, sans-serif;
+    color: #a18d82;
+  }
+  .av {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/priya.jpg) center / cover;
+    flex: none;
+  }
+  .photo {
+    height: 214px;
+    background: url(/assets/stores/kindred.jpg) 50% 50% / cover;
+  }
+  h1 {
+    margin: 16px 22px 0;
+    font-size: 34px;
+    line-height: 1.02;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  h1 em {
+    color: var(--clay);
+  }
+  .sub {
+    margin: 8px 22px 0;
+    font: 400 14.5px/1.4 -apple-system, system-ui, sans-serif;
+    color: #6b5149;
+  }
+  /* the routine: three steps, one word each */
+  .steps {
+    list-style: none;
+    margin: 14px 22px 0;
+    padding: 12px 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--sand);
+  }
+  .steps li {
+    display: flex;
+    gap: 6px;
+  }
+  .steps i {
+    font-size: 17px;
+    line-height: 1;
+    color: var(--clay);
+  }
+  .steps span {
+    display: grid;
+    font: 400 10.5px/1.3 -apple-system, system-ui, sans-serif;
+    color: #8a7266;
+  }
+  .steps b {
+    font: 500 15px/1.1 'Kindred', Georgia, serif;
+    color: var(--cocoa);
+  }
+
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 22px 0;
+  }
+  .av.big {
+    width: 40px;
+    height: 40px;
+  }
+  blockquote {
+    margin: 0;
+    font: italic 16px/1.25 'Kindred', Georgia, serif;
+  }
+
+  .buy {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 94px;
+    display: grid;
+    gap: 10px;
+  }
+  .price {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 16px;
+  }
+  .price b {
+    font-weight: 500;
+  }
+  .price i {
+    font: 600 12px/1 -apple-system, system-ui, sans-serif;
+    color: var(--clay);
+  }
+  .cta {
+    display: grid;
+    place-items: center;
+    height: 52px;
+    border-radius: 999px;
+    background: var(--clay);
+    color: #fff;
+    font: 600 16px/1 -apple-system, system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+</style>

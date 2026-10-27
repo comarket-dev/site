@@ -1,0 +1,13 @@
+---
+/* One of our icons (src/lib/icons.ts), 1em square, centred on the text it sits in. Other attributes are passed on,
+   including the parent's style scope, so a parent's scoped rules (like `.go .arr`) reach it. */
+import { ICONS, type IconName } from '../lib/icons';
+interface Props {
+  name: IconName;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { name, class: cls, ...rest } = Astro.props;
+---
+
+<svg {...rest} class:list={['icon', cls]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[name]} />

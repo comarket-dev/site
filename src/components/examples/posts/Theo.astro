@@ -1,0 +1,79 @@
+---
+/* X post by the example creator theo, composed in design/posts (see scripts/render-posts.py for its media).
+   Drawn at 400x600 design pixels; Post.astro scales it to fit. Fictional, labeled as an example where it's shown. */
+---
+
+<div class="root" aria-hidden="true">
+<div class="tw">
+    <span class="av"></span>
+    <div>
+      <div class="who"><b>Theo M.</b><span>@theo.ships · 4h</span><span class="sp"></span><span>···</span></div>
+      <div class="txt">the fastest way to get paid as a freelancer is embarrassingly boring<br /><br />automatic reminders on day 3, 7 and 14<br /><br />my average time to get paid went from 41 days to 4. i changed nothing else</div>
+      <img loading="lazy" decoding="async" class="img" src="/assets/posts/theo.jpg" alt="">
+      <div class="acts">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg>86</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V7a2 2 0 0 1 2-2h11l-3-3M20 15v2a2 2 0 0 1-2 2H7l3 3"/></svg>312</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-8.8-8.6C1.9 8.3 3.9 5 7.2 5c1.9 0 3.3 1 4.8 2.8C13.5 6 14.9 5 16.8 5c3.3 0 5.3 3.3 4 6.4C19 15.6 12 20 12 20z"/></svg>2.4K</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20V12M10 20V6M15 20v-9M20 20V4"/></svg>184K</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
+      </div>
+    </div>
+    <span class="line"></span>
+  </div>
+  <div class="tw reply">
+    <span class="av"></span>
+    <div>
+      <div class="who"><b>Theo M.</b><span>@theo.ships · 4h</span><span class="sp"></span><span>···</span></div>
+      <div class="txt">the tool if anyone asks (2 months free) → <a>tallyhawk.comarket.si/cre…</a></div>
+      <div class="acts">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg>9</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V7a2 2 0 0 1 2-2h11l-3-3M20 15v2a2 2 0 0 1-2 2H7l3 3"/></svg>14</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-8.8-8.6C1.9 8.3 3.9 5 7.2 5c1.9 0 3.3 1 4.8 2.8C13.5 6 14.9 5 16.8 5c3.3 0 5.3 3.3 4 6.4C19 15.6 12 20 12 20z"/></svg>203</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20V12M10 20V6M15 20v-9M20 20V4"/></svg>21K</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root {
+  position: relative;
+  width: 400px;
+  height: 540px;
+ font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+svg { display: block; }
+
+/* iOS status bar, light or dark */
+.sb { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 -apple-system, system-ui; z-index: 50; }
+.sb.dark { color: #fff; }
+.sb.light { color: #000; }
+.sb .r { display: flex; align-items: center; gap: 5px; }
+.sb .bars { display: flex; align-items: flex-end; gap: 1.5px; height: 11px; }
+.sb .bars i { width: 3px; border-radius: 1px; background: currentColor; }
+.sb .bars i:nth-child(1) { height: 4px; } .sb .bars i:nth-child(2) { height: 6px; } .sb .bars i:nth-child(3) { height: 8.5px; } .sb .bars i:nth-child(4) { height: 11px; }
+.sb .bars i.off { opacity: 0.35; }
+.sb .batt { position: relative; width: 25px; height: 12px; border-radius: 4px; border: 1px solid currentColor; opacity: 0.9; padding: 1.5px; }
+.sb .batt::after { content: ''; position: absolute; right: -3.5px; top: 3.5px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; opacity: 0.5; }
+.sb .batt b { display: block; height: 100%; border-radius: 2px; background: currentColor; }
+.sb .batt.low b { background: #ffd60a; }
+
+
+  /* A post on X with Theo's own reply under it, where the link lives */
+  .root { width: 400px; height: 540px; background: #fff; color: #0f1419; }
+  .tw { display: grid; grid-template-columns: 40px 1fr; gap: 0 10px; padding: 12px 14px 0; position: relative; }
+  .av { width: 40px; height: 40px; border-radius: 50%; background: url(/assets/posts/avatars/theo.jpg) center / cover; }
+  .line { position: absolute; left: 33px; top: 58px; bottom: -14px; width: 2px; background: #cfd9de; }
+  .who { display: flex; align-items: center; gap: 4px; font-size: 14px; white-space: nowrap; }
+  .who b { font-weight: 700; }
+  .who span { color: #536471; overflow: hidden; text-overflow: ellipsis; }
+  .who .sp { flex: 1; }
+  .txt { font-size: 14.5px; line-height: 1.38; margin-top: 2px; white-space: pre-line; }
+  .txt a { color: #1d9bf0; }
+  .img { display: block; width: 100%; margin-top: 10px; border-radius: 14px; border: 1px solid #cfd9de; }
+  .acts { display: flex; justify-content: space-between; margin: 10px 0 12px; color: #536471; font-size: 12.5px; }
+  .acts span { display: flex; align-items: center; gap: 5px; }
+  .acts svg { width: 16px; height: 16px; }
+  .reply { border-top: 0; }
+</style>

@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Terms from '../components/Terms.astro';
+import Posts from '../components/creators/Posts.astro';
+import Pitch from '../components/creators/Pitch.astro';
+import Hub from '../components/creators/Hub.astro';
+import Credit from '../components/creators/Credit.astro';
+import Earnings from '../components/creators/Earnings.astro';
+import Faq from '../components/Faq.astro';
+import Waitlist from '../components/Waitlist.astro';
+import Footer from '../components/Footer.astro';
+
+const faq = [
+  {
+    q: 'When do I get paid?',
+    a: 'Once a month, to your bank through Stripe, after the brand’s refund window closes. Every renewal pays you again for 12 months.',
+  },
+  {
+    q: 'What counts as a sale?',
+    a: 'A completed payment from someone new to the brand who came through your link. If they already used the brand, that sale pays nothing, and your dashboard shows why.',
+  },
+  {
+    q: 'Do I need a big following?',
+    a: 'No. Brands only pay when you sell, so there’s no follower minimum. We work with creators from about 1,000 followers.',
+  },
+  {
+    q: 'Does it work for podcasts, Pinterest or a blog?',
+    a: 'Yes. Your page is a short link, comarket.si/yourname, that’s easy to say on air, pin or paste. You can also keep your Linktree and put this link inside it.',
+  },
+  {
+    q: 'Will my audience know I earn from it?',
+    a: 'Yes. Every storefront says you earn a commission, so the disclosure is built in.',
+  },
+  { q: 'Can I turn a brand down?', a: 'Always. You choose which brands go on your page, and you can take one off whenever you like.' },
+];
+---
+
+<Base
+  title="Get paid by brands on every sale · Comarket for creators"
+  description="From about 1,000 followers. Brands pitch you with the rate up front, you get a storefront with your name on it, and every renewal pays you again. Free, always."
+  stage="creators"
+  og="/og/og-creators.jpg"
+>
+  <Nav side="creators" />
+  <main>
+    <Hero
+      side="creators"
+      title="Get matched with brands your audience wants, and earn more from every one."
+      mark="earn more"
+      sub="We make you a co-branded storefront that resonates with your followers. Every offer from brands shows its rate up front to make sure you get paid what you deserve."
+      placeholder="yourname"
+      prefix="comarket.si/"
+      button="Claim my page"
+      last="You get paid"
+      label="Example: Sarah K.'s newsletter links to a storefront. A reader buys, the sale is confirmed, and Sarah's payout grows every month the customer stays."
+    />
+    <Terms
+      title="You earn on sales. You never pay us."
+      items={[
+        { h: 'Paid on every sale.', p: 'Each sale pays the rate you accepted, like 20%, and every renewal pays it again for 12 months.' },
+        { h: 'Free, always.', p: 'Brands pay Comarket. Your rate is never cut to pay us.' },
+        { h: 'Monthly, to your bank.', p: 'Through Stripe, after the brand’s refund window.' },
+      ]}
+    />
+    <Posts />
+    <Pitch />
+    <Hub />
+    <Credit />
+    <Earnings />
+    <Faq items={faq} />
+    <Waitlist side="creator" />
+  </main>
+  <Footer side="creators" />
+</Base>
