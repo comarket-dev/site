@@ -1,12 +1,4 @@
 ---
-import Person from '../Person.astro';
-import type { PersonId } from '../../lib/people';
-// three creators, staggered down the row (y is the drop in tile heights)
-const cast: Array<{ id: PersonId; medium: string; y: number }> = [
-  { id: 'creator-record', medium: 'Podcast', y: 0 },
-  { id: 'camera-man', medium: 'Photo', y: 0.22 },
-  { id: 'makeup', medium: 'Beauty', y: 0.08 },
-];
 const sources = [
   ['Substack', 1284],
   ['YouTube', 322],
@@ -18,25 +10,8 @@ const sources = [
 
 <section class="section band-ink on-ink find" id="find" aria-labelledby="find-h">
   <div class="wrap">
-    <!-- the creators we find, first; the console under them shows how. Each tile names its medium, not the person. -->
-    <div class="found">
-      <ul class="cast" aria-label="Creators like the ones we find">
-        {
-          cast.map((c, i) => (
-            <li class="tile" style={`--y:${c.y}`}>
-              <figure data-reveal style={`--d:${0.04 + i * 0.06}s`}>
-                <div class="frame">
-                  <Person id={c.id} class="shot" sizes="(max-width: 720px) 64vw, 260px" />
-                </div>
-                <figcaption class="medium num">{c.medium}</figcaption>
-              </figure>
-            </li>
-          ))
-        }
-      </ul>
-      <div class="step-head">
-        <h2 class="display-l" id="find-h" data-reveal>We find the creators already talking about your problem.</h2>
-      </div>
+    <div class="step-head">
+      <h2 class="display-l" id="find-h" data-reveal>We find the creators already talking about your problem.</h2>
     </div>
 
     <div class="console" data-replay data-reveal>
@@ -98,86 +73,6 @@ const sources = [
 <style>
   .find h2 {
     max-width: 15ch;
-  }
-  /* the row of three sits to the right; the headline rises into the row's lower left, beside the tiles, never on them */
-  .found {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
-    align-items: end;
-    margin-bottom: clamp(40px, 6vw, 80px);
-  }
-  .cast {
-    grid-column: 2;
-    grid-row: 1;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(12px, 1.4vw, 20px);
-    align-items: start;
-    /* room for the deepest drop, so the stagger never overflows the row */
-    padding-bottom: calc(0.22 * var(--tile-h));
-    --tile-h: calc((min(100vw, var(--max)) - var(--gl) - var(--gr)) * 0.48 / 3 * 4 / 3);
-  }
-  .tile {
-    transform: translateY(calc(var(--y) * var(--tile-h)));
-  }
-  figure {
-    margin: 0;
-    display: grid;
-    gap: 10px;
-  }
-  .frame {
-    aspect-ratio: 3 / 4;
-  }
-  .medium {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--on-ink-muted);
-  }
-  .found .step-head {
-    grid-column: 1;
-    grid-row: 1;
-    margin-bottom: 0;
-    padding-right: clamp(16px, 3vw, 48px);
-  }
-  @media (max-width: 900px) {
-    .found {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-    }
-    .found .step-head {
-      grid-row: 2;
-    }
-    .cast {
-      grid-column: 1;
-      --tile-h: calc((100vw - var(--gl) - var(--gr)) / 3 * 4 / 3);
-    }
-  }
-  /* phones: a scroll-snap row, edge to edge, the stagger kept small */
-  @media (max-width: 640px) {
-    .cast {
-      grid-template-columns: none;
-      grid-auto-flow: column;
-      grid-auto-columns: 64vw;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-padding-inline: var(--gl);
-      margin-inline: calc(-1 * var(--gl)) calc(-1 * var(--gr));
-      padding-inline: var(--gl) var(--gr);
-      --tile-h: calc(64vw * 4 / 3);
-      padding-bottom: calc(0.12 * var(--tile-h));
-      scrollbar-width: none;
-    }
-    .cast::-webkit-scrollbar {
-      display: none;
-    }
-    .tile {
-      scroll-snap-align: start;
-      transform: translateY(calc(var(--y) * 0.5 * var(--tile-h)));
-    }
   }
   .console {
     border: 1px solid var(--ink-rule);

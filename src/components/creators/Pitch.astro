@@ -1,7 +1,6 @@
 ---
 import Icon from '../Icon.astro';
 import BrandMark from '../examples/BrandMark.astro';
-import Person from '../Person.astro';
 /* What a brand match looks like when it reaches a creator. Example brand, example rate. */
 const points = [
   { h: 'Brands pay only on sales, so they say yes.', p: 'No upfront budget means no follower minimum. Creators your size get real offers.' },
@@ -29,10 +28,6 @@ const points = [
       </ul>
     </div>
 
-    <!-- the podcaster at her laptop is the column's backdrop; the example offer overlaps its lower left, always below
-         her face (the card starts 52% down the photo) -->
-    <div class="stage">
-      <div class="backdrop" data-reveal><Person id="creator-desk" class="shot" sizes="(max-width: 960px) 100vw, 560px" /></div>
     <article class="card" data-reveal style="--d:.1s" aria-label="Example brand offer">
       <header class="c-top">
         <span class="c-from">Comarket · new brand match</span>
@@ -88,7 +83,6 @@ const points = [
         </div>
       </div>
     </article>
-    </div>
   </div>
 </section>
 
@@ -102,21 +96,6 @@ const points = [
     grid-template-columns: minmax(0, 1fr) minmax(0, 600px);
     gap: 48px clamp(40px, 6vw, 104px);
     align-items: start;
-  }
-  /* sizes come from the column's own width: the photo is 4:5 and inset by --in on the left, where the card overhangs */
-  .stage {
-    container-type: inline-size;
-    --in: clamp(32px, 9cqw, 64px);
-    --ph: calc((100cqw - var(--in)) * 5 / 4);
-  }
-  .backdrop {
-    margin-left: var(--in);
-    aspect-ratio: 4 / 5;
-  }
-  .stage .card {
-    position: relative;
-    width: min(480px, 86cqw);
-    margin-top: calc(-0.48 * var(--ph));
   }
   .copy {
     display: grid;
@@ -369,19 +348,6 @@ const points = [
   @media (max-width: 960px) {
     .grid {
       grid-template-columns: minmax(0, 1fr);
-    }
-    /* one column: the photo above the card, which overlaps its bottom 15% */
-    .stage {
-      --in: 0px;
-      width: 100%;
-      max-width: 560px;
-    }
-    .stage .card {
-      width: auto;
-      margin: calc(-0.15 * var(--ph)) 10px 0;
-    }
-    .backdrop :global(.shot) {
-      border-radius: 16px;
     }
   }
   @media (max-width: 460px) {

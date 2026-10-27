@@ -1,21 +1,16 @@
 ---
 /* Straight answers to what people worry about before they join. */
-import Person from './Person.astro';
-import type { PersonId } from '../lib/people';
 interface Props {
   items: Array<{ q: string; a: string }>;
   title?: string;
-  /** a licensed photo for the empty column under the title, desktop only */
-  person?: PersonId;
 }
-const { items, title = 'Questions people ask first.', person } = Astro.props;
+const { items, title = 'Questions people ask first.' } = Astro.props;
 ---
 
 <section class="section faq" id="faq" aria-labelledby="faq-h">
   <div class="wrap grid">
     <div class="side">
       <h2 class="display-m" id="faq-h" data-reveal>{title}</h2>
-      {person && <div class="ph" data-reveal style="--d:.08s"><Person id={person} class="shot" sizes="340px" /></div>}
     </div>
     <div class="list">
       {
@@ -35,7 +30,7 @@ const { items, title = 'Questions people ask first.', person } = Astro.props;
 
 <style>
   .faq {
-    background: var(--paper-2);
+    background: var(--grain), var(--paper-2);
   }
   .grid {
     display: grid;
@@ -51,18 +46,6 @@ const { items, title = 'Questions people ask first.', person } = Astro.props;
   }
   .side h2 {
     max-width: 12ch;
-  }
-  /* a tall portrait under the title; the column is sticky, so she rides beside the questions */
-  .side .ph {
-    width: min(100%, 340px);
-    aspect-ratio: 4 / 5;
-    margin-top: clamp(12px, 2vw, 28px);
-  }
-  /* a short window can't hold the title and the portrait at once; let the column scroll with the page */
-  @media (max-height: 720px) {
-    .side {
-      position: static;
-    }
   }
   details {
     border-top: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
@@ -131,10 +114,6 @@ const { items, title = 'Questions people ask first.', person } = Astro.props;
     }
     .side {
       position: static;
-    }
-    /* phones and tablets: the answers come first, no photo */
-    .side .ph {
-      display: none;
     }
     details p {
       padding-right: 0;

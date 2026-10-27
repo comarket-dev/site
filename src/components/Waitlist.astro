@@ -1,15 +1,22 @@
 ---
 import Icon from './Icon.astro';
+import Person from './Person.astro';
+import { person, type PersonId } from '../lib/people';
 import { env } from 'cloudflare:workers';
 interface Props {
   side: 'brand' | 'creator';
+  /** the people this is for, edge to edge across the top of the band; the form card rises over its foot */
+  photo?: PersonId;
 }
-const { side } = Astro.props;
+const { side, photo } = Astro.props;
+/* a band this wide keeps only a slice of the photo's height: crop nearer the top, so heads stay whole */
+const focal = photo ? ([person(photo).focal[0], person(photo).focal[1] * 0.5] as [number, number]) : undefined;
 const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY || '';
 const brand = side === 'brand';
 ---
 
-<section class="section band-ink on-ink waitlist" id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
+<section class:list={['section band-ink on-ink waitlist', { 'has-photo': photo }]} id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
+  {photo && <Person id={photo} class="lead" sizes="100vw" focal={focal} />}
   <div class="wrap grid">
     <div class="intro">
       <h2 class="display-l" id="wl-h">{brand ? 'Get your first creator sales.' : 'Claim your page.'}</h2>
@@ -177,6 +184,28 @@ const brand = side === 'brand';
 </section>
 
 <style>
+  /* with people: the photo runs edge to edge across the top of the band, graded so its shadows are this ink, and
+     the form card rises over its foot, so the last thing on the page is people and the one thing to do */
+  .has-photo {
+    padding-top: 0;
+  }
+  .waitlist > :global(.lead) {
+    height: clamp(300px, 36vw, 560px);
+    margin-bottom: clamp(40px, 5vw, 72px);
+  }
+  .has-photo .formcol {
+    position: relative;
+    margin-top: calc(-1 * clamp(140px, 14vw, 240px));
+  }
+  @media (max-width: 900px) {
+    .waitlist > :global(.lead) {
+      height: clamp(240px, 64vw, 420px);
+    }
+    .has-photo .formcol {
+      margin-top: 0;
+    }
+  }
+
   /* the pitch, then the form beside it, the preview under the pitch. Stacked, the form comes straight after the
      pitch so the heading and the fields stay together. */
   .grid {

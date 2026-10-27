@@ -1,7 +1,6 @@
 ---
 /* What one product could pay you, from your views, posts, its price and your rate. */
 import Icon from '../Icon.astro';
-import Person from '../Person.astro';
 ---
 
 <div data-earn>
@@ -28,7 +27,6 @@ import Person from '../Person.astro';
             <span class="row"><span class="label">Your rate</span><b class="num" data-out="rate">20%</b></span>
             <input type="range" min="10" max="30" step="1" value="20" data-in="rate" aria-label="Your commission rate" />
           </label>
-          <div class="desk" data-reveal style="--d:.08s"><Person id="creator-work" class="shot" sizes="(max-width: 1180px) 1px, 34vw" /></div>
         </div>
         <div class="result">
           <span class="label">By month 12, per month</span>
@@ -59,45 +57,10 @@ import Person from '../Person.astro';
     gap: clamp(32px, 5vw, 80px);
     align-items: stretch;
   }
-  /* the sliders, then the podcaster at her planner in the height the chart column leaves, so both columns end
-     together; the photo takes only spare height and never makes the row taller */
   .controls {
     display: flex;
     flex-direction: column;
     gap: 26px;
-  }
-  .desk {
-    flex: 1 1 0;
-    min-height: 0;
-    margin-top: 8px;
-  }
-  /* wide screens: the four sliders pair up, which frees the height the photo fills */
-  @media (min-width: 1181px) {
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-rows: auto auto minmax(0, 1fr);
-      gap: 26px 24px;
-    }
-    .desk {
-      grid-column: 1 / -1;
-      margin-top: 4px;
-    }
-    .controls .row .label {
-      letter-spacing: 0.05em;
-    }
-  }
-  /* the photo never sets the row's height: it fills whatever the chart column leaves */
-  .desk {
-    position: relative;
-  }
-  .desk :global(.shot) {
-    position: absolute;
-    inset: 0;
-  }
-  /* too little height left to hold a person (the script checks): leave the space empty rather than force a sliver */
-  .desk.thin {
-    display: none;
   }
   .ctl {
     display: grid;
@@ -145,12 +108,6 @@ import Person from '../Person.astro';
     max-width: 62ch;
     font-size: 13.5px;
     color: var(--graphite);
-  }
-  /* below this the two columns are close in height, so there's no real space to fill: no photo */
-  @media (max-width: 1180px) {
-    .desk {
-      display: none;
-    }
   }
   @media (max-width: 900px) {
     .grid {
@@ -254,23 +211,5 @@ import Person from '../Person.astro';
     const ro = new ResizeObserver(() => draw());
     root.querySelectorAll('svg').forEach((svg) => ro.observe(svg));
     return [() => inputs.forEach((i) => i.removeEventListener('input', onInput)), () => ro.disconnect()];
-  });
-</script>
-
-<script>
-  import { onPage } from '../../scripts/ui';
-  // The photo only takes height the chart column leaves. If that's too little to hold a person, drop it.
-  onPage(() => {
-    const desk = document.querySelector<HTMLElement>('#earnings .desk');
-    const col = desk?.parentElement;
-    if (!desk || !col || !('ResizeObserver' in window)) return;
-    const check = () => {
-      desk.classList.remove('thin');
-      desk.classList.toggle('thin', desk.getBoundingClientRect().height < 180);
-    };
-    const ro = new ResizeObserver(check);
-    ro.observe(col);
-    check();
-    return [() => ro.disconnect()];
   });
 </script>

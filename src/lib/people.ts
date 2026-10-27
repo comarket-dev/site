@@ -28,5 +28,15 @@ export function person(id: PersonId): Person {
   return p;
 }
 
-export const PHOTO_WIDTHS = [480, 960, 1600];
+export const PHOTO_WIDTHS = [480, 960, 1600, 2400];
 export const FACE_WIDTHS = [96, 192, 384];
+
+/** Owner review only: `?hero=band` and `?photo=<id>` try another hero look or photo on a live page. */
+export function heroPreview(url: URL, photo: PersonId, look: 'split' | 'band' = 'split') {
+  const h = url.searchParams.get('hero');
+  const ph = url.searchParams.get('photo');
+  return {
+    look: h === 'band' || h === 'split' ? h : look,
+    photo: ph && byId.has(ph as PersonId) ? (ph as PersonId) : photo,
+  };
+}

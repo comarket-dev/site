@@ -58,6 +58,12 @@ examples, "Pay for sales, not posts", the agent replay, then the rest; no fit li
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
 tap-to-skip, feels right.
 
+**People and warmth (2026-10-27, in review):** the rejected photo tiles are gone. The owner picked four Pexels photos
+(`design/people/people.json`). A texture and warmth direction, "warm stock" (`design/texture/README.md`, board in
+`design/texture/board.png`), puts one paper grain on every section and one warm grade on every photo. The hero has two
+looks to choose from (`?hero=split|band`, `?photo=<id>`); the /brands waitlist opens with a photo band. Awaiting the
+owner's pick before sourcing more photos. Details in A-GRADE.md, "People and warmth, round 3".
+
 **Pages:** `/` (the fork), `/brands`, `/creators`, `/privacy`, 404. Built, tested, not deployed. `npm run build` and
 `npm test` (10 tests) pass.
 

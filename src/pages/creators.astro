@@ -9,9 +9,11 @@ import Hub from '../components/creators/Hub.astro';
 import Credit from '../components/creators/Credit.astro';
 import Earnings from '../components/creators/Earnings.astro';
 import Faq from '../components/Faq.astro';
+import { heroPreview } from '../lib/people';
 import Waitlist from '../components/Waitlist.astro';
 import Footer from '../components/Footer.astro';
 
+const hero = heroPreview(Astro.url, 'cook');
 const faq = [
   {
     q: 'When do I get paid?',
@@ -55,6 +57,8 @@ const faq = [
       button="Claim my page"
       last="You get paid"
       label="Example: Sarah K.'s newsletter links to a storefront. A reader buys, the sale is confirmed, and Sarah's payout grows every month the customer stays."
+      photo={hero.photo}
+      look={hero.look}
     />
     <Terms
       title="You earn on sales. You never pay us."

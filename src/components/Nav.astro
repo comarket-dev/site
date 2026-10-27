@@ -66,6 +66,12 @@ const cta = side === 'creators' ? 'Claim my page' : 'Get early access';
     border: 1px solid currentColor;
     border-color: color-mix(in oklab, currentColor 30%, transparent);
   }
+  /* the switch can sit over a hero photo, so it carries its own paper */
+  .nav:not(.on-dark) .switch {
+    background: color-mix(in oklab, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
   .switch a {
     font-size: 14px;
     font-weight: 600;

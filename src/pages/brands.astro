@@ -10,8 +10,10 @@ import Faq from '../components/Faq.astro';
 import Waitlist from '../components/Waitlist.astro';
 import Footer from '../components/Footer.astro';
 import { priceArm } from '../lib/experiments';
+import { heroPreview } from '../lib/people';
 
 const arm = priceArm(Astro.locals.arms ?? {});
+const hero = heroPreview(Astro.url, 'shop-plan');
 
 const faq = [
   {
@@ -58,13 +60,15 @@ const faq = [
       button="Show me my storefront"
       last="You pay your share"
       label="Example: a creator's post links to a storefront for the example brand Fernwood. The buyer pays, the sale is confirmed, and only then does Fernwood pay its share."
+      photo={hero.photo}
+      look={hero.look}
     />
     <Gallery />
     <Outcome arm={arm} />
     <Find />
     <Split arm={arm} />
-    <Faq items={faq} person="owner-call" />
-    <Waitlist side="brand" />
+    <Faq items={faq} />
+    <Waitlist side="brand" photo={hero.photo === 'florists' ? 'shop-plan' : 'florists'} />
   </main>
   <Footer side="brands" />
 </Base>

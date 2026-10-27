@@ -4,6 +4,7 @@ import PhoneSlot from './PhoneSlot.astro';
 import Steps from './Steps.astro';
 import Person from './Person.astro';
 import { hlClasses } from '../lib/hl';
+import type { PersonId } from '../lib/people';
 
 interface Props {
   side: 'brands' | 'creators';
@@ -17,14 +18,25 @@ interface Props {
   label: string;
   /** the email step that opens once the phone shows the visitor's own page */
   join?: { button: string; fine?: string };
+  /** the people in this side's world, large, to an edge, with the phone standing across the photo's edge */
+  photo: PersonId;
+  /** split: the photo bleeds off the top, right and bottom, the phone on its left edge.
+      band: a wide photo across the hero's foot, the phone stepping down into it. */
+  look?: 'split' | 'band';
 }
-const { side, title, mark, sub, placeholder, prefix, button, last, label, join } = Astro.props;
+const { side, title, mark, sub, placeholder, prefix, button, last, label, join, photo, look = 'split' } = Astro.props;
 const at = title.lastIndexOf(mark);
 const [before, after] = at >= 0 ? [title.slice(0, at), title.slice(at + mark.length)] : [title, ''];
 const brand = side === 'brands';
 ---
 
-<section class="hero" data-hero data-side={side}>
+<section class:list={['hero', look]} data-hero data-side={side}>
+  <Person
+    id={photo}
+    class="backdrop"
+    eager
+    sizes={look === 'band' ? '100vw' : '(max-width: 960px) 100vw, 46vw'}
+  />
   <div class="wrap inner">
     <div class="copy">
       <h1 class="title" data-reveal style="--d:.06s">
@@ -76,10 +88,6 @@ const brand = side === 'brands';
     </div>
 
     <div class="show" data-reveal style="--d:.1s">
-      <!-- the person whose world this is; the phone stands in front of the photo's edge -->
-      <div class="scene">
-        <Person id={brand ? 'owner-hero' : 'creator-mic'} eager sizes="(max-width: 520px) 70vw, (max-width: 960px) 46vw, 460px" />
-      </div>
       <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
       <Steps last={last} class="steps compact" />
     </div>
@@ -87,8 +95,9 @@ const brand = side === 'brands';
 </section>
 
 <style>
-  /* The stage's canvas (z-index 1) draws the phone. The hero's copy and tracker sit above it; the photo sits under
-     it, so the phone stands in front of the person. */
+  /* The stage's canvas (z-index 1) draws the phone. The photo sits under it (z-index 0), the copy and the tracker
+     over it (2), so the phone stands across the photo's edge: half on the people, half on the paper. The photo's
+     light spills onto the paper beside it (--sun, design/texture/README.md). */
   .hero {
     position: relative;
     min-height: 100vh;
@@ -97,6 +106,19 @@ const brand = side === 'brands';
     align-items: center;
     /* clip sideways only (the poster overhangs); shadows may spill into the next section */
     overflow-x: clip;
+    --ph: max(380px, min(68vh, 640px));
+    /* the phone's width, from the slot's 0.72 : 1.52 */
+    --pw: calc(var(--ph) * 0.4737);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero > :global(.backdrop) {
+    position: absolute;
+    z-index: 0;
   }
   .inner {
     display: grid;
@@ -225,16 +247,13 @@ const brand = side === 'brands';
     position: relative;
     z-index: 2;
   }
-  /* the phone (--ph tall) in front of the left edge of the person's photo, the step tracker under both */
+  /* the phone, the step tracker under it */
   .show {
-    --ph: max(380px, min(68vh, 640px));
     display: grid;
-    grid-template-columns: auto auto;
     grid-template-areas:
-      'phone scene'
-      'steps steps';
-    align-items: center;
-    justify-content: end;
+      'phone'
+      'steps';
+    justify-items: center;
     row-gap: 14px;
   }
   .show :global(.slot) {
@@ -242,26 +261,56 @@ const brand = side === 'brands';
     height: var(--ph);
     z-index: 1;
   }
-  .scene {
-    grid-area: scene;
-    position: relative;
-    height: calc(var(--ph) * 0.84);
-    aspect-ratio: 4 / 5;
-    margin-left: calc(var(--ph) * -0.2);
-    border-radius: 28px;
-    overflow: hidden;
-    background: var(--rule);
-  }
-  .scene :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
   .show :global(.steps) {
     grid-area: steps;
     justify-self: center;
     max-width: 380px;
+  }
+
+  /* split: the photo takes the right of the screen, top to bottom, and the phone's centre sits on its left edge.
+     --bw is the photo's width; the margin puts the phone there from inside the centred wrap. */
+  .split {
+    --bw: clamp(420px, 46vw, 940px);
+  }
+  .split > :global(.backdrop) {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--bw);
+  }
+  .split .inner {
+    gap: clamp(24px, 4vw, 64px);
+  }
+  .split .show {
+    margin-right: calc((min(100vw, var(--max)) - 100vw) / 2 - var(--gr) + var(--bw) - var(--pw) / 2);
+  }
+  .split::before {
+    background: radial-gradient(34% 62% at calc(100% - var(--bw)) 34%, rgb(253 191 104 / 0.22), transparent 72%);
+  }
+
+  /* band: the photo runs edge to edge across the hero's foot (--bh tall). The phone steps down into it by --lap;
+     the copy ends 40px above it. The tracker row under the phone is --tr tall. */
+  .band {
+    --bh: clamp(340px, 48vh, 540px);
+    --lap: calc(var(--ph) * 0.36);
+    --tr: 46px;
+    min-height: 0;
+  }
+  .band > :global(.backdrop) {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--bh);
+  }
+  .band .inner {
+    align-items: end;
+    padding-bottom: calc(var(--bh) - var(--lap) - var(--tr));
+  }
+  .band .copy {
+    margin-bottom: calc(var(--lap) + var(--tr) + 40px);
+  }
+  .band::before {
+    background: radial-gradient(60% 34% at 50% calc(100% - var(--bh)), rgb(253 191 104 / 0.24), transparent 72%);
   }
 
   @media (max-width: 960px) {
@@ -273,9 +322,42 @@ const brand = side === 'brands';
     .title {
       font-size: clamp(34px, 9vw, 60px);
     }
-    .show {
+    .hero {
       --ph: max(340px, min(62svh, 560px));
-      justify-content: center;
+    }
+    /* stacked: the copy, then the photo to both edges, then the phone hanging off the photo's foot, so it covers
+       hands and counter and never a face. The wrap steps aside (display: contents) so the three can be ordered. */
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      min-height: 0;
+    }
+    .inner {
+      display: contents;
+    }
+    .copy {
+      order: 0;
+      padding: 92px var(--gr) 0 var(--gl);
+    }
+    .hero > :global(.backdrop) {
+      order: 1;
+      position: relative;
+      inset: auto;
+      width: auto;
+      height: clamp(260px, 74vw, 460px);
+      margin-top: 40px;
+    }
+    .split .show,
+    .show {
+      order: 2;
+      margin: calc(var(--ph) * -0.3) 0 0;
+      padding: 0 var(--gr) clamp(40px, 7vh, 88px) var(--gl);
+    }
+    .band .copy {
+      margin-bottom: 0;
+    }
+    .hero::before {
+      display: none;
     }
   }
   @media (max-width: 520px) {
@@ -302,14 +384,8 @@ const brand = side === 'brands';
     .result {
       padding-left: 4px;
     }
-    /* phone and photo side by side still, smaller, inside a 358px column */
-    .show {
-      --ph: min(54svh, 400px);
-    }
-    .scene {
-      height: calc(var(--ph) * 0.8);
-      aspect-ratio: 3 / 4;
-      border-radius: 22px;
+    .hero {
+      --ph: min(58svh, 440px);
     }
   }
 </style>

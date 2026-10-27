@@ -1,6 +1,5 @@
 ---
 import Icon from '../Icon.astro';
-import Person from '../Person.astro';
 /* The core of the offer: the same post, paid two ways. A sponsored post bills before it runs; a storefront bills per
    sale. Then the price, since it's the same idea in numbers. */
 import type { PriceArm } from '../../lib/pricing';
@@ -25,11 +24,6 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     <div class="scene">
       <div class="wrap">
         <h2 class="display-l" id="out-h">Pay for sales, not posts.</h2>
-        <!-- the order ships (her hands, the box), then what it cost: the cards rise over the band's bottom quarter -->
-        <div class="order" data-reveal>
-          <Person id="owner-pack" class="shot" sizes="(max-width: 1440px) 100vw, 1328px" />
-        </div>
-
         <div class="cols">
           <article class="card old" aria-label="A sponsored post">
             <header><b>A sponsored post</b></header>
@@ -99,7 +93,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
   .outcome {
     position: relative;
     z-index: 2;
-    background: var(--paper-2);
+    background: var(--grain), var(--paper-2);
     padding-bottom: clamp(64px, 8vw, 128px);
   }
   /* No pin: the finished month is on the page from the start, so a fast scroller reads the result. The run is a
@@ -112,20 +106,8 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     max-width: 14ch;
     margin-bottom: clamp(24px, 4vh, 44px);
   }
-  /* 21:9 on desktop; --lap is a quarter of its height, from the content width it spans */
-  .order {
-    --cw: calc(min(100vw, var(--max)) - var(--gl) - var(--gr));
-    --lap: calc(var(--cw) * 9 / 21 / 4);
-    aspect-ratio: 21 / 9;
-  }
-  /* the hands and the box sit in the photo's upper middle; a wide band crops to them, not to the floor */
-  .order :global(.shot) {
-    object-position: 50% 28% !important;
-  }
   .cols {
     position: relative;
-    margin-top: calc(-1 * var(--lap));
-    padding-inline: clamp(0px, 2.4vw, 40px);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(14px, 2vw, 28px);
@@ -373,16 +355,6 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
   }
 
   @media (max-width: 720px) {
-    .order {
-      aspect-ratio: 4 / 3;
-      --lap: calc(var(--cw) * 3 / 4 / 4);
-    }
-    .order :global(.shot) {
-      border-radius: 16px;
-    }
-    .cols {
-      padding-inline: 10px;
-    }
     .cols,
     .nums {
       grid-template-columns: minmax(0, 1fr);
