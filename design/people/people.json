@@ -1,6 +1,6 @@
 {
  "_license": "Two sources. Kaboompics Standard License (kaboompics.com/page/terms-of-use, read 2026-10-26): commercial use; model releases on file; never imply personal endorsement, participation or recommendation. Pexels License (pexels.com/license, read 2026-10-27): commercial use, no attribution needed; no model releases are collected, and identifiable people must not be shown in a way that implies they endorse a product or in a bad light. So for both: no names, quotes, handles, results or product UI on these people. They illustrate a side of the market, unnamed. Pexels photos are credited in the `credit` field even though the license doesn't ask for it.",
- "_how": "Originals live in design/people/originals/<id>.jpg (Pexels: images.pexels.com/photos/<n>/pexels-photo-<n>.jpeg). Run `python3 scripts/people.py` to build public/assets/people/. `grade: warm` bakes the site's photo grade (design/texture/README.md). Kaboompics entries without an original still build from design/people/standins/ until they're removed.",
+ "_how": "Originals live in design/people/originals/<id>.jpg (Pexels: images.pexels.com/photos/<n>/pexels-photo-<n>.jpeg). Run `python3 scripts/people.py` to build public/assets/people/ (480 to 3200 wide). `grade: warm` bakes the site's photo grade (design/texture/README.md). Kaboompics entries without an original build from design/people/standins/; none are used on the site now.",
  "people": [
   {
    "id": "shop-plan",
@@ -12,7 +12,7 @@
     0.4
    ],
    "alt": "A shop owner and a creator planning a post on the sofa in his vintage clothing shop",
-   "where": "/creators hero (phone between their eyes); /brands waitlist (card between their eyes)",
+   "where": "both waitlists (/brands and /creators): the form card between their faces (spots.form)",
    "spots": {
     "phone": {
      "z": 1.6,
@@ -77,7 +77,7 @@
     0.26
    ],
    "alt": "Two florists laughing as they arrange flowers at the counter of their shop",
-   "where": "/brands hero (phone at the basket); /creators waitlist (card at the basket)",
+   "where": "both heroes (/brands and /creators): the banner, the phone right of the second florist (spots.phone); the fork on phones (beside the device)",
    "spots": {
     "phone": {
      "z": 1,
@@ -128,7 +128,7 @@
     0.5
    ],
    "alt": "A cook setting up her camera on the kitchen counter before she films",
-   "where": "the fork"
+   "where": "the fork: Creators column on desktop, beside the device on phones"
   },
   {
    "id": "candle-maker",
@@ -140,7 +140,7 @@
     0.34
    ],
    "alt": "A candle maker smiling as she pours wax at the table in her studio",
-   "where": "the fork, Brands column (desktop)"
+   "where": "the fork: Brands column on desktop"
   },
   {
    "id": "owner-hero",
@@ -150,7 +150,7 @@
     0.35
    ],
    "alt": "A shop owner smiling at her laptop at home, an order of red shoes beside her",
-   "where": "/brands hero"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "owner-pack",
@@ -160,7 +160,7 @@
     0.5
    ],
    "alt": "The same shop owner wrapping a clothing order in tissue, her laptop open beside the box",
-   "where": "/brands, Pay for sales, not posts"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "owner-call",
@@ -170,7 +170,7 @@
     0.34
    ],
    "alt": "The shop owner on a call with a coffee in hand",
-   "where": "/brands FAQ; fork Brands face"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "creator-mic",
@@ -180,7 +180,7 @@
     0.32
    ],
    "alt": "A podcaster smiling as she records at her microphone",
-   "where": "/creators hero"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "creator-desk",
@@ -190,7 +190,7 @@
     0.3
    ],
    "alt": "The same podcaster smiling at something on her laptop",
-   "where": "/creators, Brands come to you; fork Creators face"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "creator-work",
@@ -200,7 +200,7 @@
     0.35
    ],
    "alt": "The podcaster planning at her desk, laptop and planner open",
-   "where": "/creators, See what your link could earn"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "creator-record",
@@ -210,7 +210,7 @@
     0.38
    ],
    "alt": "A podcaster recording at home",
-   "where": "/brands, We find the creators (row of three)"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "camera-man",
@@ -220,7 +220,7 @@
     0.4
    ],
    "alt": "A photographer aiming his camera in a room full of plants",
-   "where": "/brands, We find the creators (row of three)"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   },
   {
    "id": "makeup",
@@ -230,7 +230,7 @@
     0.3
    ],
    "alt": "A beauty creator smiling at her vanity mid-routine",
-   "where": "/brands, We find the creators (row of three)"
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
   }
  ],
  "_spots": "Where a photo's people are looking, so the phone or the sign-up card can sit there (Scene.astro). Fractions of the whole photo: z is the photo's width as a multiple of the screen's, x the object's centre, tx where on screen that centre lands, y0 to y1 the rows shown, top the object's top, h the phone's height (phone) or w the card's width (form), all in photo widths or heights. `m` is the same for phones (960px and under)."

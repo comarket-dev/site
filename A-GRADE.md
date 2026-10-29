@@ -1,12 +1,14 @@
 # A-grade experiment
 
-A throwaway copy of `../site`, made 2026-10-24 to try fixing every finding from the UX-law audit and competitor
-research. Delete this whole folder to drop it; nothing in `../site` depends on it. Not a git repo on purpose.
+A trial copy of the site, made 2026-10-24 to try fixing every finding from the UX-law audit and competitor research,
+then used for the people-photo and "warm stock" rounds (2026-10-26 to 27). It lives on the `a-grade` branch of
+comarket-dev/site; the owner may delete the branch. Nothing on the main site depends on it.
 
-- Dev server: http://localhost:4322 (the original runs on :4321). Both use the same local Postgres.
+- Dev server: http://localhost:4322 (the original runs on :4321), on its own database (`comarket_agrade`). Without a
+  database the waitlist answers "isn't connected yet", which is expected.
 - The owner's standing rules in AGENTS.md still apply in full (no em dashes, outcome first, first-person CTAs,
-  creators "claim", yellow marks the sale moment, no icon libraries, no clipped text, never commit).
-- Note: all eight example storefronts are already built here (AGENTS.md "Next 1" is stale on that point).
+  creators "claim", yellow marks the sale moment, no icon libraries, no clipped text, commit only when asked).
+- Note: all eight example storefronts are already built here.
 
 ## Who owns which files (only edit your own; ask the owner of a file for changes to it)
 
@@ -248,52 +250,46 @@ answer, not a card.
 - yarn (yarn.css, lead): the nav's "Get early access" over ink bands was painted flat by Nav.astro's .on-dark rule; it now gets the paper yarn.
 - Checked: all pages at 1512x860, 1440x960, 1920x1080 and 390x844 (no page errors, no sideways overflow); the switch both ways and browser back; build passes; 10 tests pass; no em dashes.
 
-## HANDOFF (paused 2026-10-27): start here
+## HANDOFF (2026-10-29): start here
 
-**State.** Builds, 10 tests pass, no page errors, no em dashes. All law-audit work and the owner's round of reverts are done
-(see the logs above). The open work is **people photos**, and both attempts so far were rejected by the owner.
+**State.** Pushed to `a-grade` through round 6 (commit 5b74c7e). Builds, 10 tests pass, no page errors and no sideways
+overflow at 1512x860, 1440x960, 1920x1080 and 390x844, no em dashes. Everything below is in review with the owner.
 
-**What the owner rejected, in their words:**
-1. "Their current integration does not feel natural, it feels like they were tacked on."
-2. "Many of these images are far too low of quality still. They also feel implemented like widgets rather than naturally fitting in."
-3. "The hero section, which arguably needs it the most, is missing a human touch."
-4. Wants **collaborative photos showing two people**, "namely the hero", and nothing overused or obviously stock.
-5. Asked us to study Awwwards-level consumer sites for how people are integrated.
+**Where the people are now** (sources and credits in `design/people/people.json`, all Pexels, all graded "warm"):
+- Both heroes: the florists (5414021) as a short banner across the top, heads to shoulders, fading into the paper.
+  The copy sits high in the first screen; the phone stands right of the second florist's head, sized per viewport
+  (Hero.astro, `Scene.astro` with `fit`, the florists' `spots.phone`). Phones stack copy, photo, phone.
+- Both waitlists: B, the shop owner and creator (7679663). The form card sits between their faces at every size (its
+  width and place come from the faces' inner edges, `fl` and `fr` in `spots.form`); heading, lede and preview sit left
+  of her head on an ink scrim. Side by side from 1280px, stacked below.
+- The fork: full-height photos from under the wordmark to the bottom on desktop, a candle maker (5761119) for Brands
+  and the cook (12674093) for Creators, each side's word, line and button on the photo over an ink gradient. Hovering
+  zooms a side; the device no longer previews or tilts (stage.ts `FORK_HOVER_PREVIEW = false`). Phones: the florists
+  and the cook beside the device, plain cards under it.
+- Unused: shop-film (7679677) and the Kaboompics stand-ins from rounds 1 and 2.
 
-**What is in the code now (all of it is the rejected direction; redo, don't polish):**
-- `Hero.astro`: a rounded 4:5 photo tile (`.scene`) behind the 3D phone (owner-hero / creator-mic). Widget-like.
-- `index.astro`: 64px round faces above "Brands"/"Creators" on the fork cards (26px beside the word on phones).
-- UI agent edits, half finished when it hit a usage limit: small framed photos beside section H2s in `brands/Outcome.astro`,
-  `brands/Find.astro`, `brands/Split.astro`, `creators/Earnings.astro`, `creators/Pitch.astro`, `Faq.astro` (`person`
-  prop, passed from `brands.astro`), plus a "people" block at the end of `src/styles/global.css`. None of it is logged
-  above. Remove or replace all of it.
-- Pipeline (keep): `design/people/people.json` (ids, sources, focal points, alt), `scripts/people.py` (builds
-  `public/assets/people/`), `src/lib/people.ts`, `src/components/Person.astro`.
-- `design/people/standins/` are 200 to 600px thumbnails. That is the quality problem. Full-size files never got downloaded.
+**How the pieces work:**
+- `src/components/Scene.astro` draws a photo edge to edge, zoomed and shifted so a spot its people look at (people.json
+  `spots`, fractions of the photo, with `m` for 960px and under) lands where an object sits. The phone or the card
+  then reads as what they're looking at. New photo, new placement: add a spot, don't hand-tune pixels.
+- "Warm stock" (`design/texture/README.md`, board in `design/texture/board.png`): one grain and small creases on every
+  surface (`scripts/texture.py`), anchored to the page by `src/scripts/paper.ts` so creases run across sections; one
+  warm grade baked into every photo (`scripts/people.py`); Cream Yellow light only as soft washes.
+- Yarn buttons (on trial): every conversion button has class `convert`; `src/styles/yarn.css` knits them from
+  `scripts/yarn.py` tiles calibrated to the palette (blue, blue-ink hover, paper on ink, including the nav over ink).
+  Roll back with `const YARN = false` in `src/layouts/Base.astro`.
+- Brands/Creators switch: `src/scripts/switch.ts` + `src/styles/switch.css` keep the photo, nav and phone still and
+  animate the hero text (about 700ms; instant with reduced motion). It can stall under software WebGL in headless
+  Chromium; it runs on a normal GPU.
 
-**Sourcing constraints learned:**
-- Kaboompics (current source) is the one free library with model releases on file (Standard License), but its site
-  has a Cloudflare bot wall: downloads only work by a human clicking Download, Original size. Automated fetches get 403.
-- Pexels works headless (search pages load, `images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg?w=2400` serves
-  full size). Kaboompics' photographer (Karolina Grabowska) also posts there, which may carry the same release coverage.
-  Other Pexels uploads have no release check. Pexels terms forbid implying the person endorses a product.
-- Every free license here forbids implying the person endorses, uses or recommends anything. So licensed people are
-  never named, quoted, given a handle or result, or shown using our product UI. They illustrate a side of the market.
-  The 8 AI example creators (`src/lib/examples.ts`) stay as the named example people until the owner arranges a real
-  shoot with releases that allow endorsement-style use.
-- "Not overused": avoid the most-downloaded Pexels names (cottonbro, Mikhail Nilov, Andrea Piacquadio), posed
-  handshakes, headsets, and glass-office meetings. Prefer candid, warm, home and studio settings that fit palette 295.
+**License limits (unchanged):** Pexels collects no model releases and forbids implying endorsement, so the people in
+these photos are never named, quoted, given a handle or result, or shown using our product. They illustrate a side of
+the market. The named example people stay the 8 fictional creators in `src/lib/examples.ts`.
 
-**Awwwards and consumer references (what "integrated, not a widget" means):**
-- Patreon: a full-bleed portrait IS the hero, with giant type over it; elsewhere, portraits scattered among huge type.
-- Kajabi: one big portrait takes half the hero, edge to edge in its column.
-- Stan: the person and their phone storefront are one composition, the phone overlapping the photo.
-- Spotify for Artists and Linktree: cut-outs breaking frame edges, people over flat palette shapes.
-- Common thread: photos are large, high-res, bleed to an edge or fill a column, and share layout with the type. Never a
-  small rounded thumbnail next to a heading.
+**Sourcing, from a cloud session:** Pexels search pages sit behind a bot check (don't try to get around it); find
+candidates with web search and download full size from `images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg`.
+Kaboompics downloads need a human. Avoid overused names (cottonbro, Mikhail Nilov, Andrea Piacquadio), posed handshakes,
+headsets and glass offices; zoom into faces and hands at full size before showing anything.
 
-**Suggested next direction (not yet shown to the owner):** a hero with a large, edge-bleeding photo of two people
-working together, e.g. a shop owner and a creator at one table for /brands, and a creator filming with a friend for
-/creators. "Co-branded" becomes literally two people. The 3D phone stands across the photo's edge. Then at most one
-large, edge-bleeding photo on a few sections, chosen for the story, not one per section. Show the owner a hero first
-(owner rule: show visual work live and early), before doing sections.
+**Next (owner):** the example posts and storefronts sections. Still open from the photo work: the owner's verdict on
+the yarn trial; JSON-LD; the items in AGENTS.md "Next".
