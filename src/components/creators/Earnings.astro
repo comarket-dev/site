@@ -1,5 +1,6 @@
 ---
 /* What one product could pay you, from your views, posts, its price and your rate. */
+import Icon from '../Icon.astro';
 ---
 
 <div data-earn>
@@ -29,7 +30,10 @@
         </div>
         <div class="result">
           <span class="label">By month 12, per month</span>
-          <b class="big" data-out="range">$90 to $520</b>
+          <div class="peak">
+            <b class="big" data-out="range" aria-live="polite">$90 to $520</b>
+            <a class="btn convert go" href="#waitlist">Claim my page <Icon name="arrow-right" class="arr" /></a>
+          </div>
           <svg class="chart" viewBox="0 0 600 300" data-chart role="img" aria-label="Estimated monthly earnings over twelve months">
             <g data-grid></g>
             <path data-band fill="rgb(0 110 184 / 0.14)"></path>
@@ -44,14 +48,18 @@
 </div>
 
 <style>
+  .est {
+    padding-bottom: clamp(64px, 8vw, 128px);
+  }
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: clamp(32px, 5vw, 80px);
-    align-items: center;
+    align-items: stretch;
   }
   .controls {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 26px;
   }
   .ctl {
@@ -71,6 +79,14 @@
   .result {
     display: grid;
     gap: 14px;
+  }
+  /* the estimate and the action that follows it, side by side */
+  .peak {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 28px;
   }
   .big {
     font-size: clamp(48px, 7vw, 112px);

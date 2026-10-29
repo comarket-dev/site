@@ -30,7 +30,8 @@ const { items, title = 'Questions people ask first.' } = Astro.props;
 
 <style>
   .faq {
-    background: var(--paper-2);
+    background: var(--grain), var(--paper-2);
+    background-position: var(--paper-x, 0px) var(--paper-y, 0px);
   }
   .grid {
     display: grid;
@@ -95,7 +96,8 @@ const { items, title = 'Questions people ask first.' } = Astro.props;
     transition: transform 0.45s var(--ease);
   }
   details[open] summary i {
-    background: var(--yellow);
+    background: var(--ink);
+    color: var(--paper);
   }
   details[open] summary i::after {
     transform: translate(-50%, -50%) rotate(0deg);

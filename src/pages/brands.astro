@@ -10,30 +10,27 @@ import Faq from '../components/Faq.astro';
 import Waitlist from '../components/Waitlist.astro';
 import Footer from '../components/Footer.astro';
 import { priceArm } from '../lib/experiments';
+import { heroPreview } from '../lib/people';
 
 const arm = priceArm(Astro.locals.arms ?? {});
-
+const hero = heroPreview(Astro.url, 'florists');
 
 const faq = [
-  {
-    q: 'When do I pay?',
-    a: 'Only when a sale completes: the buyer’s payment goes through on your Stripe. Views, clicks and trials that don’t convert cost nothing.',
-  },
   {
     q: 'What does it cost?',
     a: `Nothing upfront and nothing monthly. On each sale you pay the creator rate you set plus ${arm.first}% of the first payment and ${arm.after}% of renewals, for 12 months. Then the customer is all yours.`,
   },
   {
-    q: 'Do I have to change my checkout?',
-    a: 'No. Buyers pay on your site, through your Stripe. You connect Stripe once, we bill commission monthly and pay the creators ourselves.',
-  },
-  {
     q: 'What if the buyer was already my customer?',
-    a: 'Then you pay nothing. We check email, phone and card against your Stripe customers, so commission only goes to customers you didn’t have.',
+    a: 'Then you pay nothing. We check email, phone and card against your Stripe customers, so you only pay for customers you didn’t have.',
   },
   {
     q: 'Who are the creators, and do I approve them?',
-    a: 'People with 1,000 to 50,000 followers who already post about the problem you solve. We find them and pitch your offer. You approve each one before their storefront goes live.',
+    a: 'People with 1,000 to 100,000 followers who already post about the problem you solve. We find them and pitch your offer. You approve each one before their storefront goes live.',
+  },
+  {
+    q: 'Do I have to change my checkout?',
+    a: 'No. Buyers pay on your site, through your Stripe. You connect Stripe once, we bill commission monthly and pay the creators ourselves.',
   },
   {
     q: 'What data do you see?',
@@ -47,8 +44,8 @@ const faq = [
 ---
 
 <Base
-  title="Comarket for brands · Turn creator traffic into customers"
-  description="We connect you with creators your target audience already follows and give each one a co-branded storefront in your look. We only take a share of completed sales."
+  title="Performance-based influencer marketing for SaaS · Comarket"
+  description="Micro-influencers your buyers already follow send them to a storefront in your brand. No retainer, no fee per post: pay only for sales from new customers."
   stage="brands"
   og="/og/og-brands.jpg"
 >
@@ -63,13 +60,15 @@ const faq = [
       button="Show me my storefront"
       last="You pay your share"
       label="Example: a creator's post links to a storefront for the example brand Fernwood. The buyer pays, the sale is confirmed, and only then does Fernwood pay its share."
+      photo={hero.photo}
+      look={hero.look}
     />
     <Gallery />
-    <Find />
     <Outcome arm={arm} />
+    <Find />
     <Split arm={arm} />
     <Faq items={faq} />
-    <Waitlist side="brand" />
+    <Waitlist side="brand" photo="shop-plan" />
   </main>
   <Footer side="brands" />
 </Base>

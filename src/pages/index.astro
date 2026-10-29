@@ -1,84 +1,321 @@
 ---
 import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
-import PhoneSlot from '../components/PhoneSlot.astro';
+import Footer from '../components/Footer.astro';
+import Person from '../components/Person.astro';
+import { person, type PersonId } from '../lib/people';
+import { priceArm } from '../lib/experiments';
+
+const arm = priceArm(Astro.locals.arms ?? {});
+/* the plain-text section under the fork: for search (design/seo/fork-section.md) and for anyone who scrolls */
+const QA = [
+  {
+    q: 'What is pay-per-sale influencer marketing?',
+    a: 'You pay creators a commission on completed sales instead of a fee per post. On Comarket a sale counts only when someone new to your brand completes a payment, and nothing is due upfront.',
+  },
+  {
+    q: 'How do I find micro-influencers who work on commission?',
+    a: 'Most creators turn down commission-only offers because a plain affiliate link rarely pays: the clicks land on a homepage that wasn’t made for their audience, and a sale pays once. Comarket fixes both. Each creator gets a storefront in your brand with their name and their offer on it, so more of their clicks become sales, and every renewal pays them again for 12 months. We find creators who already post about the problem you solve and pitch your offer with their rate up front, so the ones who say yes want to sell it.',
+  },
+  {
+    q: 'Does it work for SaaS and subscription businesses?',
+    a: 'Yes. Comarket tracks sales through Stripe web checkouts today, and renewals keep paying the creator for 12 months. Shopify stores are next; App Store purchases aren’t supported yet.',
+  },
+  {
+    q: 'Can small creators get paid brand deals?',
+    a: 'Yes. Brands pay only when you sell, so there’s no follower minimum: Comarket works with creators from about 1,000 followers, and every renewal pays you again for 12 months.',
+  },
+];
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://comarket.si/#organization',
+      name: 'Comarket',
+      url: 'https://comarket.si/',
+      logo: 'https://comarket.si/favicon.svg',
+      description:
+        'Pay-per-sale creator marketing. Brands pay only for completed sales from new customers, and each creator gets a co-branded storefront in the brand’s look.',
+    },
+    { '@type': 'WebSite', '@id': 'https://comarket.si/#website', name: 'Comarket', url: 'https://comarket.si/', inLanguage: 'en', publisher: { '@id': 'https://comarket.si/#organization' } },
+    {
+      '@type': 'FAQPage',
+      mainEntity: QA.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+    },
+  ],
+};
+
+/* Each side of the fork is one real person, edge to edge, the two halves meeting in the middle (a diagonal on phones).
+   `?brands=<id>` tries another Brands photo (owner review). FACE is where the face is in each photo (0 to 1 across and
+   down); the CSS sizes and places the photo so that face lands on its spot in each layout, at any screen size. */
+const FACE: Record<string, [number, number]> = {
+  'founder-desk': [0.6, 0.32],
+  'founder-screen': [0.62, 0.38],
+  'candle-maker': [0.405, 0.31],
+  cook: [0.46, 0.355],
+};
+const ask = Astro.url.searchParams.get('brands') ?? '';
+const brandsPhoto = (['founder-desk', 'founder-screen', 'candle-maker'].includes(ask) ? ask : 'founder-desk') as PersonId;
+const frame = (id: PersonId) => {
+  const p = person(id);
+  const [x, y] = FACE[id];
+  return `--ar:${(p.w / p.h).toFixed(4)};--px:${x};--py:${y}`;
+};
 ---
 
 <Base
-  title="Comarket · More sales for brands, more money for creators"
-  description="One co-branded storefront: brands get more sales from creators and pay only when one completes, and creators earn more on every sale they send."
-  stage="fork"
+  title="Comarket · Pay-per-sale creator marketing and brand deals"
+  description="Brands pay only for completed sales from new customers. Creators from 1,000 followers get brand deals, a co-branded storefront and recurring commission."
+  stage="none"
   og="/og/og-fork.jpg"
 >
   <main class="fork" data-fork>
-    <header class="bar">
-      <a class="wm" href="/?fork=1">Comarket</a>
-    </header>
-
-    <h1 class="display-l head" data-reveal>
-      <span class="l1"><span>More sales for brands.</span> <span>More money for creators.</span></span>
-      <span class="l2"><mark class="hl">One co-branded storefront.</mark></span>
-    </h1>
-
-    <div class="stagewrap" data-reveal style="--d:.12s">
-      <PhoneSlot
-        class="phone"
-        poster="/assets/stage/poster-fork.webp"
-        label="Example: one completed sale of a $49 product, split between the brand, the creator who sold it, and Comarket. Nobody paid anything before it."
-      />
+    <!-- the two halves: a person each, side by side; on phones split on a diagonal -->
+    <div class="pane brands" style={frame(brandsPhoto)}>
+      <Person id={brandsPhoto} decorative eager sizes="(max-width: 860px) 300vw, 115vw" />
+    </div>
+    <div class="pane creators" style={frame('cook')}>
+      <Person id="cook" decorative eager sizes="(max-width: 860px) 300vw, 115vw" />
     </div>
 
-    <a class="side brands" href="/brands" data-side="brands" data-astro-prefetch="load" data-reveal style="--d:.2s">
-      <span class="who">Brands</span>
-      <span class="what">Creators sell for you. You pay only when they make a sale.</span>
-      <span class="go">Get creator sales <Icon name="arrow-right" class="arr" /></span>
-    </a>
-    <a class="side creators" href="/creators" data-side="creators" data-astro-prefetch="load" data-reveal style="--d:.26s">
-      <span class="who">Creators</span>
-      <span class="what">Get paid on every sale you send, every month it renews.</span>
-      <span class="go">Start earning <Icon name="arrow-right" class="arr" /></span>
-    </a>
+    <div class="ui">
+      <header class="bar" data-paper>
+        <a class="wm" href="/?fork=1">Comarket</a>
+      </header>
+
+      <h1 class="display-l head" data-reveal>
+        <span class="l1"><span>More sales for brands.</span> <span>More money for creators.</span></span>
+        <span class="l2"><mark class="hl">One co-branded storefront.</mark></span>
+      </h1>
+
+      <a class="side brands" href="/brands" data-side="brands" data-astro-prefetch="load" data-reveal style="--d:.2s">
+        <span class="who">Brands</span>
+        <span class="what">Creators sell for you. You pay only when they make a sale.</span>
+        <span class="go convert">Get creator sales <Icon name="arrow-right" class="arr" /></span>
+      </a>
+      <a class="side creators" href="/creators" data-side="creators" data-astro-prefetch="load" data-reveal style="--d:.26s">
+        <span class="who">Creators</span>
+        <span class="what">Get paid on every sale you send, every month it renews.</span>
+        <span class="go convert">Start earning <Icon name="arrow-right" class="arr" /></span>
+      </a>
+    </div>
   </main>
+
+  <!-- for anyone who scrolls, and for search: what each side gets, in plain text (design/seo/fork-section.md) -->
+  <section class="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <h2 class="about-h" id="about-h">Creator marketing that pays per sale, not per post.</h2>
+      <div class="cols">
+        <div class="col">
+          <h3 class="who-s">Brands: performance-based influencer marketing for SaaS and subscriptions</h3>
+          <div class="pt">
+            <h4>Pay only when a new customer pays.</h4>
+            <p>No retainer, no fee per post, no monthly plan. On each sale you pay the creator rate you set plus {arm.first}% of the first payment and {arm.after}% of renewals, for 12 months.</p>
+          </div>
+          <div class="pt">
+            <h4>Micro-influencers your buyers already follow.</h4>
+            <p>We find creators with 1,000 to 100,000 followers who already post about the problem you solve, and pitch them your offer. You approve each one before they go live.</p>
+          </div>
+          <div class="pt">
+            <h4>A co-branded landing page for every creator.</h4>
+            <p>Each creator gets a storefront in your logo, colors and type, with their name and your offer on top. Nothing to design or build.</p>
+          </div>
+          <div class="pt">
+            <h4>Built on your Stripe checkout.</h4>
+            <p>Buyers still pay through your own Stripe, and each sale is checked against your existing customers before it counts. Shopify stores are next.</p>
+          </div>
+          <a class="more" href="/brands">Get creator sales for my brand <Icon name="arrow-right" class="arr" /></a>
+        </div>
+        <div class="col">
+          <h3 class="who-s">Creators: brand deals from 1,000 followers</h3>
+          <div class="pt">
+            <h4>Brands that fit, with the rate up front.</h4>
+            <p>We match you with brands your audience already wants, and every pitch shows your commission before you say yes. Turn down any brand you like.</p>
+          </div>
+          <div class="pt">
+            <h4>Recurring commission, not a one-off fee.</h4>
+            <p>When a buyer subscribes, every renewal pays you again for 12 months. Payouts land monthly through Stripe, after the brand’s refund window.</p>
+          </div>
+          <div class="pt">
+            <h4>A storefront with your name on it.</h4>
+            <p>Claim comarket.si/yourname: the brand’s page, in its look, with you on top. Keep your link in bio and add it inside.</p>
+          </div>
+          <div class="pt">
+            <h4>Your rate stays yours.</h4>
+            <p>Brands pay our fee on top of the rate they offer you. You never pay Comarket anything.</p>
+          </div>
+          <a class="more" href="/creators">Claim my page <Icon name="arrow-right" class="arr" /></a>
+        </div>
+      </div>
+      <div class="qa">
+        {
+          QA.map(({ q, a }) => (
+            <div class="qa-item">
+              <h3>{q}</h3>
+              <p>{a}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
+  </section>
+  <Footer />
 </Base>
 
 <style>
+  /* --s: where the seam sits, in percent across (side by side) or down (stacked). It stays in the middle; pointing at a
+     side zooms its photo, and choosing one opens the page out of a circle (src/scripts/forktrip.ts). */
+  @property --s {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 50;
+  }
   .fork {
+    --s: 50;
     position: relative;
     z-index: 2;
-    min-height: 100vh;
-    min-height: 100svh;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, 1fr);
-    grid-template-areas:
-      'bar bar bar'
-      'head head head'
-      'brands phone creators';
-    column-gap: clamp(24px, 4vw, 72px);
-    padding: 0 var(--gr) calc(28px + env(safe-area-inset-bottom, 0px)) var(--gl);
-    /* the poster overhangs the phone sideways; never clip anything vertically */
-    overflow-x: clip;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    color: var(--paper);
+    background: var(--ink);
+  }
+
+  /* the wordmark's bar stays paper, as on every page; the halves start under it */
+  .fork {
+    --bar: calc(64px + env(safe-area-inset-top, 0px));
+  }
+  .pane {
+    position: absolute;
+    top: var(--bar);
+    bottom: 0;
+    overflow: hidden;
+  }
+  .pane.brands {
+    left: 0;
+    width: calc(var(--s) * 1%);
+  }
+  .pane.creators {
+    right: 0;
+    width: calc((100 - var(--s)) * 1%);
+  }
+  /* Each photo is sized to cover its half (times --z) and placed so its face (--px, --py) lands on the half's spot
+     (--tx, --ty), never leaving a gap at an edge. Container units are the half's own size, so this holds as the half
+     resizes, including while a choice opens it across the screen. */
+  .pane {
+    container-type: size;
+    --tx: 0.5;
+    --ty: 0.44;
+    --z: 1.38;
+  }
+  .pane.creators {
+    --z: 1.12;
+  }
+  .fork .pane :global(.photo) {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+  .fork .pane :global(.photo img) {
+    --iw: calc(max(100cqw, 100cqh * var(--ar)) * var(--z));
+    --ih: calc(max(100cqw / var(--ar), 100cqh) * var(--z));
+    position: absolute;
+    max-width: none;
+    width: var(--iw);
+    height: var(--ih);
+    object-fit: fill;
+    left: clamp(calc(100cqw - var(--iw)), calc(var(--tx) * 100cqw - var(--px) * var(--iw)), 0px);
+    top: clamp(calc(100cqh - var(--ih)), calc(var(--ty) * 100cqh - var(--py) * var(--ih)), var(--top-max, 0px));
+    transform-origin: calc(var(--px) * 100%) calc(var(--py) * 100%);
+    transition: transform 1.2s var(--ease);
+  }
+  /* very wide screens: each half is wide enough already */
+  @media (min-aspect-ratio: 2/1) {
+    .pane {
+      --z: 1.15;
+      --ty: 0.46;
+    }
+    .pane.creators {
+      --z: 1;
+    }
+  }
+  .fork.on-brands .pane.brands :global(.photo img),
+  .fork.on-creators .pane.creators :global(.photo img) {
+    transform: scale(1.07);
+  }
+  /* ink under the words: the headline's at the top, each side's at its foot */
+  .fork::before,
+  .pane::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .fork::before {
+    top: var(--bar);
+    height: 46%;
+    z-index: 2;
+    background: linear-gradient(to bottom, rgb(20 9 44 / 0.5), rgb(20 9 44 / 0.2) 55%, rgb(20 9 44 / 0));
+  }
+  .pane::after {
+    bottom: 0;
+    height: 52%;
+    background: linear-gradient(to top, rgb(20 9 44 / 0.74), rgb(20 9 44 / 0.42) 36%, rgb(20 9 44 / 0));
+  }
+  /* the seam: a hairline of paper where the halves meet */
+  .pane.creators {
+    box-shadow: inset 1px 0 0 rgb(255 247 236 / 0.22);
+  }
+
+  .ui {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ui > * {
+    pointer-events: auto;
   }
   .bar {
-    grid-area: bar;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--bar);
     display: flex;
     align-items: center;
-    padding-top: calc(18px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) var(--gr) 0 var(--gl);
+    background: var(--paper);
+    background-image: var(--grain);
+    background-position: var(--paper-x, 0px) var(--paper-y, 0px);
   }
   .wm {
     font-weight: 700;
     font-size: 21px;
     letter-spacing: -0.04em;
     text-decoration: none;
+    color: var(--ink);
   }
   .head {
-    grid-area: head;
-    justify-self: center;
+    position: absolute;
+    top: calc(var(--bar) + clamp(20px, 6vh, 88px));
+    left: 50%;
+    width: min(24ch, calc(100% - var(--gl) - var(--gr)));
+    translate: -50% 0;
     text-align: center;
-    margin-top: clamp(16px, 3.5vh, 44px);
-    font-size: clamp(34px, 3.9vw, 62px);
+    font-size: clamp(34px, min(3.6vw, 6.6vh), 96px);
     line-height: 1.16;
-    max-width: 24ch;
+    color: var(--paper);
+    text-shadow: 0 2px 24px rgb(20 9 44 / 0.35);
+  }
+  .head mark {
+    color: var(--ink);
+    text-shadow: none;
   }
   .head > span {
     display: block;
@@ -87,221 +324,296 @@ import PhoneSlot from '../components/PhoneSlot.astro';
   .l1 span {
     display: block;
   }
-  .stagewrap {
-    grid-area: phone;
-    align-self: center;
-    display: grid;
-    place-items: center;
-    min-height: 0;
-    padding-block: clamp(20px, 4vh, 40px);
-  }
-  .stagewrap :global(.slot) {
-    height: min(60vh, 580px);
-    min-height: 300px;
-  }
-  /* A tablet, laptop or monitor (devices.ts) takes the device's shape, set before first paint by Base.astro, and
-     fills its cell: the middle column is as wide as that device can have (--devw, per device below), the row is
-     whatever height the headline leaves. There's no poster for them; the device fades up once it's drawn. */
-  :global(html:not([data-device='phone'])) .fork {
-    grid-template-columns: minmax(0, 1fr) var(--devw) minmax(0, 1fr);
-  }
-  :global(html:not([data-device='phone'])) .stagewrap {
-    align-self: stretch;
-    justify-self: stretch;
-    container-type: size;
-  }
-  :global(html:not([data-device='phone'])) .stagewrap :global(.slot) {
-    aspect-ratio: var(--device-aspect);
-    height: auto;
-    min-height: 0;
-    width: min(100cqw, calc(100cqh * var(--device-aspect)));
-  }
-  :global(html:not([data-device='phone'])) .stagewrap :global(.poster) {
-    display: none;
-  }
-  :global(html[data-device='tablet']) .fork {
-    --devw: min(46vw, 640px);
-  }
-  :global(html[data-device='laptop']) .fork {
-    --devw: min(50vw, 860px);
-  }
-  :global(html[data-device='monitor']) .fork {
-    --devw: min(54vw, 1320px);
-  }
 
+  /* each side's word, line and button, centred at the foot of its half */
   .side {
-    align-self: center;
+    position: absolute;
+    bottom: clamp(36px, 8vh, 96px);
     display: grid;
-    gap: 16px;
-    max-width: 360px;
+    justify-items: center;
+    gap: 14px;
+    padding-inline: 24px;
+    text-align: center;
+    color: var(--paper);
     text-decoration: none;
-    transition:
-      opacity 0.6s var(--ease),
-      transform 0.8s var(--ease);
+    transition: opacity 0.5s var(--ease);
   }
   .side.brands {
-    grid-area: brands;
-    justify-self: end;
-    text-align: right;
-    justify-items: end;
+    left: 0;
+    width: calc(var(--s) * 1%);
   }
   .side.creators {
-    grid-area: creators;
-    justify-self: start;
+    right: 0;
+    width: calc((100 - var(--s)) * 1%);
   }
   .who {
-    font-size: clamp(44px, 5vw, 84px);
-    line-height: 1.05;
+    font-size: clamp(44px, min(4.4vw, 8.4vh), 128px);
+    line-height: 1.02;
     letter-spacing: -0.045em;
     font-weight: 700;
+    text-shadow: 0 2px 18px rgb(20 9 44 / 0.4);
   }
   .what {
-    font-size: 18px;
+    font-size: clamp(16px, min(1.15vw, 2vh), 24px);
     line-height: 1.45;
-    min-height: 2.9em;
-    color: var(--graphite);
-    max-width: 24ch;
+    max-width: 26ch;
+    color: rgb(255 247 236 / 0.92);
+    text-shadow: 0 1px 10px rgb(20 9 44 / 0.5);
   }
   .go {
+    white-space: nowrap;
     display: inline-flex;
     align-items: center;
     gap: 10px;
     height: 52px;
     padding: 0 24px;
+    margin-top: 6px;
     width: fit-content;
     border-radius: 999px;
     background: var(--blue);
     color: var(--white);
     font-weight: 600;
     font-size: 16px;
-    transition:
-      background-color 0.35s var(--ease),
-      transform 0.45s var(--ease);
+    transition: background-color 0.35s var(--ease);
   }
   .go .arr {
     transition: transform 0.45s var(--ease);
   }
-  .side.on .go,
-  .side:focus-visible .go {
+  /* pointing anywhere on a side lights its button as if hovered: plain buttons go a shade darker, knitted ones
+     (yarn.css) switch to their hover knit rather than being painted flat */
+  :global(html:not([data-yarn])) .side.on .go,
+  :global(html:not([data-yarn])) .side:focus-visible .go {
     background: var(--blue-ink);
+  }
+  :global(html[data-yarn]) .side.on .go,
+  :global(html[data-yarn]) .side:focus-visible .go {
+    --edge: var(--edge-hover);
+    background: var(--knit-hover) 0 0 / 120px 64px;
   }
   .side.on .go .arr {
     transform: translateX(4px);
   }
-  .side.brands.on {
-    transform: translateX(-8px);
-  }
-  .side.creators.on {
-    transform: translateX(8px);
-  }
   .fork.leaning .side:not(.on) {
-    opacity: 0.3;
+    opacity: 0.6;
   }
-  /* a choice: the other card goes at once; the rest stays while the device goes to the page.
-     .leaning is in the selector so this outranks the hover rules, which would otherwise keep the other card up */
-  .fork.flying.leaning .side:not(.on) {
+  /* a choice: the words clear while the photo takes over (forktrip.ts) */
+  .fork.leaving .head,
+  .fork.leaving .side {
     opacity: 0;
-    transform: none;
-    transition: opacity 0.18s var(--ease);
+    transition: opacity 0.2s var(--ease);
   }
-
+  .fork.leaving::before {
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
   @media (hover: hover) {
     .fork {
       cursor: pointer;
     }
   }
+  @media (prefers-reduced-motion: reduce) {
+    .fork,
+    .pane :global(.photo img) {
+      transition: none;
+    }
+  }
 
-  /* phones and narrow tablets: headline, phone, then two plain choices */
+  .about {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(72px, 10vw, 140px);
+    border-top: 1px solid var(--rule);
+  }
+  .about-h {
+    font-size: var(--fs-m);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    max-width: 20ch;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 96px);
+    margin-top: clamp(32px, 4vw, 56px);
+  }
+  .col {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+    justify-items: start;
+  }
+  .who-s {
+    font-size: var(--fs-s);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    max-width: 24ch;
+  }
+  /* side by side, both headings take three lines' room so the blocks under them line up */
+  @media (min-width: 721px) {
+    .who-s {
+      min-height: 3.6em;
+    }
+  }
+  .qa {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px clamp(32px, 6vw, 96px);
+    margin-top: clamp(48px, 6vw, 88px);
+    padding-top: clamp(28px, 3vw, 40px);
+    border-top: 1px solid var(--rule);
+  }
+  .qa-item {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+  .qa-item h3 {
+    font-size: 19px;
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .qa-item p {
+    color: var(--graphite);
+    line-height: 1.55;
+    max-width: 54ch;
+  }
+  .pt {
+    display: grid;
+    gap: 6px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    width: 100%;
+  }
+  .pt h4 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .pt p {
+    color: var(--graphite);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-weight: 600;
+    color: var(--blue);
+    text-decoration: none;
+  }
+  @media (max-width: 720px) {
+    .cols,
+    .qa {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+
+
+  /* phones and narrow tablets: one screen split on a diagonal, from the right edge high to the left edge low. Brands
+     takes the top (with the headline), its face up left; Creators the bottom, its face down right. Both photos cover
+     the whole screen under the bar and are cut by clip-path (--s moves the diagonal: down for Brands, up for
+     Creators; it stays at 50). A thin line of paper runs along the cut. */
   @media (max-width: 860px), (max-aspect-ratio: 4/5) {
     .fork {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: auto auto minmax(0, 1fr) auto;
-      grid-template-areas:
-        'bar bar'
-        'head head'
-        'phone phone'
-        'brands creators';
-      column-gap: 10px;
-      row-gap: 12px;
+      min-height: 560px;
+      background: var(--paper);
+      --crn: clamp(0, 34 + (var(--s) - 50) * 1.52, 100);
+      --cr: calc(var(--crn) * 1%);
+      --cl: clamp(0%, calc(76% + (var(--s) - 50) * 1.52%), 100%);
+    }
+    .pane.brands,
+    .pane.creators {
+      top: var(--bar);
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: auto;
+      box-shadow: none;
+    }
+    .pane.brands {
+      clip-path: polygon(0 0, 100% 0, 100% var(--cr), 0 var(--cl));
+      --tx: 0.34;
+      --ty: 0.27;
+      --z: 1.16;
+    }
+    /* Creators only shows below the cut, so its photo may start lower than the top of the screen (down to where the cut
+       meets the right edge): the face sits low in its corner without zooming in */
+    .pane.creators {
+      clip-path: polygon(100% calc(var(--cr) + 3px), 100% 100%, 0 100%, 0 calc(var(--cl) + 3px));
+      --tx: 0.66;
+      --ty: 0.64;
+      --z: 1.22;
+      --top-max: calc(var(--crn) * 1cqh);
+    }
+    /* ink under the words: the headline's at the top, Brands' along the cut, Creators' at the foot */
+    .fork::before {
+      height: 30%;
+    }
+    .pane.brands::after {
+      top: 0;
+      height: auto;
+      background: linear-gradient(to bottom, rgb(20 9 44 / 0) 30%, rgb(20 9 44 / 0.55) 52%, rgb(20 9 44 / 0.8) 76%);
+    }
+    .pane.creators::after {
+      height: 34%;
+      background: linear-gradient(to top, rgb(20 9 44 / 0.82), rgb(20 9 44 / 0.5) 48%, rgb(20 9 44 / 0));
     }
     .head {
-      font-size: clamp(26px, 7.3vw, 44px);
-      margin-top: 14px;
+      top: calc(var(--bar) + 16px);
+      font-size: clamp(24px, 6.6vw, 40px);
     }
-    .stagewrap :global(.slot) {
-      height: min(44svh, 420px);
-      min-height: 240px;
+    .side {
+      gap: 4px;
+      padding: 0;
     }
-    :global(html:not([data-device='phone'])) .fork {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-    :global(html:not([data-device='phone'])) .stagewrap {
-      padding-block: clamp(16px, 2.6vh, 36px) clamp(10px, 1.6vh, 24px);
-    }
-    :global(html:not([data-device='phone'])) .stagewrap :global(.slot) {
-      width: min(88cqw, calc(100cqh * var(--device-aspect)));
-    }
-    .stagewrap {
-      padding-block: 8px;
-    }
-    .side,
     .side.brands,
     .side.creators {
-      justify-self: stretch;
+      width: auto;
+    }
+    /* Brands sits in its corner above the cut, left; Creators in its corner at the foot, right */
+    .side.brands {
+      left: var(--gl);
+      right: auto;
+      bottom: auto;
+      top: calc(var(--bar) + (100% - var(--bar)) * 0.4);
       justify-items: start;
       text-align: left;
-      align-self: end;
-      gap: 6px;
-      max-width: none;
-      padding: 16px 16px 16px;
-      border-radius: 20px;
-      background: var(--white);
-      border: 1px solid var(--rule);
     }
-    .side.brands {
-      background: var(--ink);
-      color: var(--on-ink);
-      border-color: var(--ink);
-    }
-    .side.brands .what {
-      color: var(--on-ink-muted);
+    .side.creators {
+      left: auto;
+      right: var(--gr);
+      bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      justify-items: end;
+      text-align: right;
     }
     .who {
-      font-size: 26px;
+      font-size: clamp(30px, 8.4vw, 44px);
     }
     .what {
-      font-size: 13.5px;
-      line-height: 1.35;
-      min-height: 0;
+      display: none;
     }
     .go {
-      height: auto;
-      padding: 8px 0 0;
-      background: none;
-      color: inherit;
-      font-size: 14.5px;
-    }
-    .side.on .go {
-      background: none;
-    }
-    .side.brands.on,
-    .side.creators.on {
-      transform: none;
+      height: clamp(40px, 6vw, 52px);
+      padding: 0 clamp(16px, 2.6vw, 24px);
+      font-size: clamp(14px, 2.2vw, 17px);
+      gap: 8px;
+      margin-top: 6px;
     }
     .fork.leaning .side:not(.on) {
       opacity: 1;
     }
   }
-  @media (max-width: 360px) {
-    .what {
-      display: none;
-    }
-  }
 </style>
-
 <script>
   import { navigate } from 'astro:transitions/client';
   import { track } from '../scripts/ui';
+  import { leaveFork } from '../scripts/forktrip';
 
   type Side = 'brands' | 'creators';
   let cleanup: (() => void) | null = null;
@@ -318,58 +630,52 @@ import PhoneSlot from '../components/PhoneSlot.astro';
       if (s === current || chosen) return;
       current = s;
       root.classList.toggle('leaning', !!s);
+      root.classList.toggle('on-brands', s === 'brands');
+      root.classList.toggle('on-creators', s === 'creators');
       links.forEach((l) => l.classList.toggle('on', l.dataset.side === s));
-      dispatchEvent(new CustomEvent('stage:hover', { detail: s }));
     };
 
-    /* the shared view is what most people see, so a side only previews when the pointer is at its card: over it, or
-       within a short reach of it. Everywhere else, the device itself included, shows the shared sale */
-    const REACH = 40;
-    const sideAt = (x: number, y: number): Side | null => {
-      if (stacked()) return null;
-      for (const l of links) {
-        const r = l.getBoundingClientRect();
-        if (x > r.left - REACH && x < r.right + REACH && y > r.top - REACH && y < r.bottom + REACH) return l.dataset.side as Side;
-      }
-      return null;
+    /* the whole half is the side's target: wherever the pointer is, that's the side it's on */
+    const sideAt = (x: number, y: number): Side => {
+      const r = root.getBoundingClientRect();
+      const brands = root.querySelector<HTMLElement>('.pane.brands')!.getBoundingClientRect();
+      return (stacked() ? y < brands.bottom : x < brands.right) && r.height ? 'brands' : 'creators';
     };
 
-    const choose = (s: Side) => {
+    const choose = (s: Side, x: number, y: number) => {
       if (chosen) return;
       setHover(s);
       chosen = true;
-      // the other card clears; the rest of the fork stays put while the device goes to the page
-      root.classList.add('flying');
       track('fork_choice', { side: s });
-      let gone = false;
-      const go = () => {
-        if (gone) return;
-        gone = true;
-        navigate(`/${s}`);
-      };
-      dispatchEvent(new CustomEvent('stage:choose', { detail: { side: s, done: go } }));
-      // in case the stage never answers
-      setTimeout(go, 1500);
+      leaveFork(root, s, x, y).then(() => navigate(`/${s}`));
     };
 
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType === 'mouse') setHover(sideAt(e.clientX, e.clientY));
+      if (e.pointerType === 'mouse' && !stacked()) setHover(sideAt(e.clientX, e.clientY));
     };
     const onLeave = () => setHover(null);
     const onClick = (e: MouseEvent) => {
       if ((e.target as HTMLElement).closest('.wm')) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey) return;
       const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('.side');
       const s = (link?.dataset.side as Side | undefined) ?? sideAt(e.clientX, e.clientY);
-      if (!s) return;
-      if (e.metaKey || e.ctrlKey || e.shiftKey) return;
       e.preventDefault();
-      choose(s);
+      // a keyboard press on a link has no position: start from the middle of its half
+      let { clientX: x, clientY: y } = e;
+      if (!x && !y && link) {
+        const r = link.getBoundingClientRect();
+        x = r.left + r.width / 2;
+        y = r.top + r.height / 2;
+      }
+      choose(s, x, y);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const k = e.key.toLowerCase();
-      if (k === 'b') choose('brands');
-      if (k === 'c') choose('creators');
+      if (k !== 'b' && k !== 'c') return;
+      const s: Side = k === 'b' ? 'brands' : 'creators';
+      const r = links.find((l) => l.dataset.side === s)!.getBoundingClientRect();
+      choose(s, r.left + r.width / 2, r.top + r.height / 2);
     };
     const onFocus = (e: FocusEvent) => setHover(((e.target as HTMLElement).closest<HTMLElement>('.side')?.dataset.side as Side) ?? null);
     links.forEach((l) => {
@@ -381,6 +687,35 @@ import PhoneSlot from '../components/PhoneSlot.astro';
     root.addEventListener('click', onClick);
     addEventListener('keydown', onKey);
 
+    /* On the phone's diagonal, Brands' words sit above the cut with the same clear space at every screen size: their
+       bottom right corner GAP px (square to the line) above it. The cut runs from the right edge at CR down to the left
+       edge at CL, as fractions of the screen under the bar (the CSS's --cr and --cl at rest). */
+    const GAP = 26;
+    const CR = 0.34;
+    const CL = 0.76;
+    const brandsWords = links.find((l) => l.dataset.side === 'brands')!;
+    const bar = root.querySelector<HTMLElement>('.bar')!;
+    const placeWords = () => {
+      if (!stacked()) {
+        brandsWords.style.top = '';
+        return;
+      }
+      const W = root.clientWidth;
+      const top = bar.offsetHeight;
+      const H = root.clientHeight - top;
+      const w = brandsWords.offsetWidth;
+      const h = brandsWords.offsetHeight;
+      const left = brandsWords.offsetLeft;
+      const lineY = (x: number) => top + H * (CL - ((CL - CR) * x) / W);
+      const cos = Math.cos(Math.atan(((CL - CR) * H) / W));
+      const bottom = lineY(left + w) - GAP / cos;
+      brandsWords.style.top = `${Math.max(top + 12, bottom - h)}px`;
+    };
+    const ro = new ResizeObserver(placeWords);
+    ro.observe(root);
+    document.fonts?.ready.then(placeWords);
+    placeWords();
+
     cleanup = () => {
       links.forEach((l) => {
         l.removeEventListener('focus', onFocus);
@@ -390,6 +725,7 @@ import PhoneSlot from '../components/PhoneSlot.astro';
       root.removeEventListener('pointerleave', onLeave);
       root.removeEventListener('click', onClick);
       removeEventListener('keydown', onKey);
+      ro.disconnect();
     };
   }
 

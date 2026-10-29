@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import Doc from '../components/legal/Doc.astro';
+const updated = '29 October 2026';
+// Drafts stay out of search until counsel signs off and every placeholder is filled (design/legal/README.md).
+const draft = true;
+---
+
+<Base title="Acceptable use policy · Comarket" description="What brands, creators and visitors may not do on Comarket, how sales must be earned, and how to report content." stage="none" noindex={draft}>
+  <Doc
+    title="Acceptable use policy"
+    lede="Sales on Comarket have to be earned honestly. These rules apply to everyone: brands, creators and visitors."
+    updated={updated}
+    draft={draft}
+    current="/acceptable-use"
+  >
+    <h2>1. Who this applies to</h2>
+    <p>
+      <span class="n">1.1</span>This policy is part of the <a href="/terms">Terms of use</a>, the
+      <a href="/brand-terms">Brand Agreement</a> and the <a href="/creator-terms">Creator Agreement</a>. It applies to anyone
+      who uses Comarket, its storefronts, hubs and links, and to anyone acting for them. "Comarket", "we" and "us" mean
+      [[LEGAL ENTITY NAME]].
+    </p>
+
+    <h2>2. Earning sales honestly</h2>
+    <p><span class="n">2.1</span>A sale must come from a real buyer who chose to buy after seeing honest content. You must not:</p>
+    <ul>
+      <li><b>buy through your own link,</b> or have someone in your household, an employee, or anyone acting for you do so;</li>
+      <li><b>pay, reward or pressure buyers</b> to buy, for example by sharing your commission, offering cashback, or running a giveaway or contest that needs a purchase, unless the Offer allows it and the law permits it;</li>
+      <li><b>stuff cookies or force clicks:</b> load links in hidden frames or pixels, auto-redirect, use pop-ups or pop-unders, or use browser extensions, toolbars or adware to claim sales;</li>
+      <li><b>hijack sales,</b> for example by catching people already on the way to the brand, or by typosquatting;</li>
+      <li><b>leak codes or links</b> to coupon, cashback, deal or voucher sites, unless the Offer allows it;</li>
+      <li><b>bid on a brand's name</b> or trademarks, or close misspellings of them, in paid search or social ads, or use them in domain or account names, without the brand's written permission;</li>
+      <li><b>use fake identities,</b> several accounts, stolen cards, or other tricks to get around the new-customer check or to earn on your own purchases;</li>
+      <li><b>inflate your audience</b> with bots, fake followers, bought engagement or engagement pods, or misstate your audience to brands; or</li>
+      <li><b>tamper with tracking:</b> strip, swap or fake the storefront reference on a checkout.</li>
+    </ul>
+
+    <h2>3. Honest content</h2>
+    <p><span class="n">3.1</span>Anyone promoting an Offer must:</p>
+    <ul>
+      <li><b>disclose the connection</b> clearly in every piece of content, as section 7 of the Creator Agreement describes;</li>
+      <li><b>tell the truth:</b> only real opinions and real experience, and only claims about a product, its price or its results that the Offer allows and the brand can back up;</li>
+      <li><b>not post fake reviews</b> or testimonials, or reviews you paid for or were given something for without saying so;</li>
+      <li><b>not pose</b> as the brand, its staff or an ordinary customer;</li>
+      <li><b>not use scarcity or price claims</b> that aren't true, such as a "last day" that isn't, or a "was" price that never applied; and</li>
+      <li><b>not target children,</b> or promote in content made for children.</li>
+    </ul>
+    <p>
+      <span class="n">3.2</span>Claims about health, medical results, weight loss, money, investments or earnings need particular
+      care, and may be made only where the Offer expressly allows them and the law permits them.
+    </p>
+
+    <h2>4. Messages and spam</h2>
+    <p>
+      <span class="n">4.1</span>Don't send links by unsolicited email, text, direct message or comment, or post them where a
+      community's rules forbid it. Follow the laws on electronic marketing where you and your audience are, such as CAN-SPAM and
+      the TCPA in the US, PECR in the UK, the EU ePrivacy rules and CASL in Canada. Email only people who agreed to hear from
+      you, and let them stop.
+    </p>
+
+    <h2>5. Content and products we don't allow</h2>
+    <p><span class="n">5.1</span>No one may use Comarket for content that:</p>
+    <ul>
+      <li>is illegal, or promotes illegal activity;</li>
+      <li>infringes someone's copyright, trademark, privacy, publicity or other rights;</li>
+      <li>sexually exploits or endangers children, in any form;</li>
+      <li>is sexually explicit;</li>
+      <li>harasses, threatens or incites violence against anyone, or attacks people for a protected characteristic;</li>
+      <li>is deceptive, including impersonation and manipulated media presented as real; or</li>
+      <li>contains malware, phishing or anything designed to harm devices or steal data.</li>
+    </ul>
+    <p>
+      <span class="n">5.2</span>Brands may not offer, and creators may not promote through Comarket: weapons and ammunition; drugs,
+      including cannabis, and drug paraphernalia; tobacco, vaping and nicotine products; alcohol, except where we agree in
+      writing and the law allows; gambling, lotteries and sweepstakes that need payment; prescription medicines; adult
+      products and services; investments, trading, crypto-assets, loans and other financial products that need a licence,
+      unless the brand holds it and we agree in writing; multi-level marketing and "get rich" schemes; counterfeit goods; or
+      any product or business that Stripe's restricted business list excludes.
+    </p>
+
+    <h2>6. Using the service</h2>
+    <p><span class="n">6.1</span>Don't:</p>
+    <ul>
+      <li>scrape, crawl or collect data from Comarket, its storefronts or hubs by automated means, except search engines that follow our robots rules;</li>
+      <li>try to get into accounts or systems you aren't allowed into, or test our security without our written permission (report weaknesses to [[CONTACT EMAIL]]; we welcome good-faith reports);</li>
+      <li>overload, disrupt or get around rate limits, bot checks or other protections;</li>
+      <li>copy, reverse engineer or resell Comarket, its storefront designs or its data, except as the law allows; or</li>
+      <li>use what you learn about brands, creators or buyers on Comarket for anything other than working together on Comarket.</li>
+    </ul>
+
+    <h2>7. Reporting content</h2>
+    <p>
+      <span class="n">7.1</span>Anyone can report content on Comarket that they believe is illegal or breaks this policy, by
+      writing to [[CONTACT EMAIL]] with: the address (URL) of the content; why you think it is illegal or breaks this policy;
+      your name and email address (you may leave these out if you are reporting child sexual abuse material); and a statement
+      that you believe in good faith that the report is accurate and complete.
+    </p>
+    <p>
+      <span class="n">7.2</span>We confirm receipt, review reports promptly and with care, and tell you what we decided. If a
+      decision uses automated tools, we say so.
+    </p>
+    <p>
+      <span class="n">7.3</span>That address is also our single point of contact for authorities and for users under the EU Digital
+      Services Act. We correspond in English and [[CONTACT LANGUAGES]].
+    </p>
+
+    <h2>8. What we do about breaches</h2>
+    <p>
+      <span class="n">8.1</span>We may investigate any suspected breach, and we may use automated tools to help find fraud. Our
+      response is proportionate to how serious the breach is, how often it has happened and whether it was intentional. We may:
+    </p>
+    <ul>
+      <li>warn you, or ask you to fix a post or a storefront;</li>
+      <li>remove or hide content, or take a storefront down;</li>
+      <li>refuse to count sales, and withhold or reverse earnings or fees on the sales affected;</li>
+      <li>suspend or end an account under the relevant agreement; and</li>
+      <li>report illegal activity to the authorities.</li>
+    </ul>
+    <p>
+      <span class="n">8.2</span>When we restrict content or an account, we tell the person affected what we did, why, which rule
+      or law it rests on, whether it was detected or decided with automated tools, and how to challenge it. You can challenge a
+      decision for 6 months through the complaints process in <a href="/terms#part-b-general-terms">Part B of the Terms of
+      use</a>, and a person will review it. We may stop handling reports from people who often send reports that are clearly
+      unfounded, after warning them.
+    </p>
+  </Doc>
+  <Footer />
+</Base>

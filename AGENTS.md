@@ -7,7 +7,7 @@ finish a piece of work or the owner decides something, update "Where things stan
 ## What this is
 
 The marketing site and waitlist for Comarket (comarket.si). Comarket matches brands with micro-creators (about 1,000
-to 50,000 followers) and gives each creator a co-branded storefront in the brand's look. Brands pay nothing upfront:
+to 100,000 followers) and gives each creator a co-branded storefront in the brand's look. Brands pay nothing upfront:
 only when a sale completes, the creator rate they set plus 15% of a new customer's first payment and 10% of renewals,
 for 12 months. Creators never pay. A sale only counts if the buyer is new to the brand.
 
@@ -45,25 +45,58 @@ These come from the owner's direct feedback. Breaking one gets the work sent bac
 
 **Working with the owner**
 - Show visual and motion work live and early. They judge motion by feel, not stills or descriptions.
-- Never commit or push unless asked. Nothing is committed past the first "v1" commit.
+- Never commit or push unless asked. This copy is on the `a-grade` branch; it's pushed when the owner says so.
 - The `COMFY_API_KEY` in `.dev.vars` (gitignored) was shared in chat; never print it. Comfy Cloud's free tier
   blocks its API, so it's unused (`scripts/comfy.py`). Suggest the owner rotates it.
 
-## Where things stand (2026-10-24)
+## Where things stand (2026-10-29)
+
+**This is the A-grade copy**, the `a-grade` branch of comarket-dev/site: a trial of the UX-law audit fixes and the
+people and warmth rounds, on its own database (`comarket_agrade`), dev server on :4322. `A-GRADE.md` has how to run and remove it, the copy deck and a log of every change.
+Owner decisions on it (2026-10-26): keep the original hero titles and subs on both pages; /brands runs Hero,
+examples, "Pay for sales, not posts", the agent replay, then the rest; no fit line under the claim fields; the fork
+keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
+tap-to-skip, feels right.
+
+**Round 10 (2026-10-29, saved mid-round):** creator range 1,000 to 100,000; waitlist risk line removed; a stronger commission FAQ answer; real photos in the posts and a creator photo on every storefront. What's left is listed in A-GRADE.md round 10, "Next".
+
+**Round 9 (2026-10-29):** the fork's only trip is the iris, a touch slower (1150ms); expand and doors are gone. The legal drafts are linked in the footer and build. The 8 example creators move to real
+people from iStock (Pexels forbids implying endorsement): one shoot each is shortlisted in
+`design/content/real-creators.json`, waiting on the owner to buy. Until then the site still shows the Pexels crops; don't
+deploy them. See A-GRADE.md round 9.
+
+**Round 7 (2026-10-29, not pushed):** the fork has no device: two photos edge to edge (a SaaS founder for Brands, the cook for Creators), a diagonal on phones, three trips tried (iris kept in round 9, `src/scripts/forktrip.ts`). Wide-screen hero copy rises into the band; wide-screen waitlist text sits by her head. See A-GRADE.md round 7.
+
+**People and warmth (2026-10-27, pushed, in review):** both heroes open with a short florists banner, the copy high in the
+first screen and the phone standing right of the second florist's head. Both waitlists use B: the form sits between
+their faces at every size, the heading and preview left of her head. The fork's sides are full-height photos (a candle
+maker for Brands, the cook for Creators) with the text on them; hovering zooms a side and the device stays on the shared
+sale. Switching Brands and Creators animates the hero text. Every surface has a light grain and small creases that run
+across sections ("warm stock", `design/texture/README.md`). Conversion buttons are knitted yarn, on trial: `const YARN
+= false` in Base.astro rolls it back. Details in A-GRADE.md, rounds 3 to 6. Next: the example posts and storefronts
+sections.
 
 **Pages:** `/` (the fork), `/brands`, `/creators`, `/privacy`, 404. Built, tested, not deployed. `npm run build` and
 `npm test` (10 tests) pass.
 
 **The fork** (`src/pages/index.astro`): headline "More sales for brands. More money for creators. One co-branded
 storefront." over a 3D device chosen to match the visitor's own (phone, tablet, laptop, monitor), resting on a
-completed $49 sale. Pointing at a side's card (within 40px) previews that side's view; everywhere else shows the
-shared sale. Picking a side is one continuous move: the device squares up and eases in while its browser loads the
+completed $49 sale. On desktop each side is a full-height photo (candle maker, cook) with its word, line and button on
+it; hovering zooms that photo, and the device keeps showing the one shared sale (no hover preview or tilt,
+`FORK_HOVER_PREVIEW` in stage.ts). On phones the florists and the cook flank the device over two plain cards. Picking a side is one continuous move: the device squares up and eases in while its browser loads the
 page (address, load bar, near-cut paint), then flies through its screen into the real page. Going back runs it in
-reverse. Code: `src/scripts/stage/` (`stage.ts` the trip, `devices.ts` the device models, `browser.ts` the screens
+reverse. Any tap, key or scroll during either trip lands at once. Under the fold: a short plain-text section per side
+and the footer. Code: `src/scripts/stage/` (`stage.ts` the trip, `devices.ts` the device models, `browser.ts` the screens
 and browser chrome, `screens.ts` the phone app screens), `src/components/Stage.astro` (view-transition layers),
 and the inline device pick in `src/layouts/Base.astro`.
 
-**Heroes:** a claim field (brand website or creator handle) that re-dresses the 3D phone. Highlight boxes
+**Heroes:** the florists as a short banner across the top (`Scene.astro` places a photo so its people look at an
+object; spots in `design/people/people.json`), the copy high in the first screen, the phone right of the second
+florist's head. Switching Brands and Creators holds the photo, nav and phone still and animates the text
+(`src/scripts/switch.ts`). A claim field (brand website or creator handle) that re-dresses the 3D phone, then opens an email step in
+place that signs up through the same code as the bottom form (`waitlist.ts`); the claim button turns ghost ("Try
+another") so one primary is on screen. After signup: the pass, a referral link (`?ref=`), three optional questions
+(`/api/profile`). Phones get a docked CTA (`Nav.astro`). Highlight boxes
 (`mark.hl`) are measured to sit evenly around their letters (`src/lib/hl.ts`).
 
 **Examples spotlight** (`src/components/examples/Showcase.astro`): eight example posts, each beside the storefront
@@ -108,6 +141,21 @@ Google Chrome (`channel="chrome"`; the bundled Chromium isn't installed).
 | `scripts/qa/highlights.py` | Highlight box spacing around its text |
 | `scripts/qa/spotlight.py` | Every spotlight slide at a given width |
 
+In a cloud session (no Mac, no Chrome) the Python Playwright isn't installed; use Playwright for Node with its bundled
+Chromium (`NODE_PATH=$(npm root -g) node script.js`, `require('playwright')`), and run the dev server on :4322. The 3D
+stage draws there with `--use-gl=angle --use-angle=swiftshader`, slowly; give it a few seconds before a screenshot.
+Check the owner's likely screens too: MacBook Pro 14 (1512x982 full, 1512x860 with browser chrome), Surface Pro 10
+landscape (1440x960), 1920x1080 and an iPhone (390x844).
+
+Asset scripts from the people and warmth rounds (run from the repo root, need numpy and Pillow):
+
+| Script | What it builds |
+|---|---|
+| `python3 scripts/people.py` | `public/assets/people/` from `design/people/originals/`, graded warm, 480 to 3200 wide |
+| `python3 scripts/texture.py` | Paper grain and crease tiles in `public/assets/texture/` |
+| `python3 scripts/yarn.py` | Knit tiles for the yarn buttons in `public/assets/yarn/`, printing each tile's mean vs its token |
+| `python3 scripts/render-texture-board.py` | `design/texture/board.png` (needs Playwright for Python and Chrome) |
+
 Before calling UI done: check desktop (1440x900) and phone (390x844), run `shadows.py`, look at your own
 screenshots at full size, and grep for em dashes.
 
@@ -117,14 +165,17 @@ overwrite unless you pass ids or `--force`). `scripts/cutout.py` lifts a person 
 
 ## Next
 
-1. **Owner review** of the seven new storefronts (Tallyhawk, Pagewell, Orbitly, Kindred, Hollow, Pingfield, Quietly)
-   and of Fernwood's new hero phone story (trial at checkout, sale on the first payment).
+1. **Next up (owner, 2026-10-27):** the example posts and storefronts sections. Also waiting on the owner: their review
+   of the round 6 push (heroes, waitlists, fork, switch, paper) and a verdict on the yarn buttons trial.
 2. Smaller placeholders left: the creators waitlist preview ("@yourname", a gradient initial: it's the visitor's own
    page, so a portrait doesn't fit) and the stage hub's rate chips, which a public page wouldn't show.
 3. Not yet checked: the trip in and back on a 3440-wide monitor, and the plain fallback where a browser has no view
    transitions.
-4. Offered, not answered: a crawlable section under the fork for SEO, keyworded titles, JSON-LD.
-5. Before deploy: run migration 0002 on Neon; KV and Hyperdrive ids in `wrangler.jsonc`; Turnstile and Resend keys;
+4. Done in this copy: the crawlable section under the fork and keyworded titles. Still offered: JSON-LD.
+5. Before deploy: buy the iStock creators in `design/content/real-creators.json` and replace the Pexels crops; run migrations 0002 and 0003 on Neon (0003 also on any local database with signups); replace the
+   placeholder founder address hello@comarket.si in `Waitlist.astro`; KV and Hyperdrive ids in `wrangler.jsonc`; Turnstile and Resend keys;
    a legal review of the privacy page and a real contact address.
-6. Owner policy calls still open (the site already states the first three): our cut stops after 12 months; brands
+6. Owner calls held back from the copy: the founding-brand line ("Join before launch and keep today's rate for
+   good.") and the referral promise ("When they join, you both move up."), which needs spots opened by referral.
+7. Owner policy calls still open (the site already states the first three): our cut stops after 12 months; brands
    approve creators; monthly payouts after the refund window; the refund window's length.

@@ -11,9 +11,10 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
   const body = await readJson(request, 2_000);
   const type = typeof body?.type === 'string' ? body.type : '';
   if (!TYPES.has(type)) return json({ error: 'unknown event' }, 400);
-  const props = body?.props && typeof body.props === 'object' ? JSON.stringify(body.props).slice(0, 800) : null;
+  // kept whole or not at all: a cut would leave broken JSON
+  const props = body?.props && typeof body.props === 'object' && JSON.stringify(body.props).length <= 800 ? body.props : null;
   await withDb(locals as App.Locals & { cfContext?: ExecutionContext }, (sql) =>
-    sql`insert into events (visitor_id, type, props) values (${locals.visitorId!}, ${type}, ${props}::jsonb)`,
+    sql`insert into events (visitor_id, type, props) values (${locals.visitorId!}, ${type}, ${props ? sql.json(props as Parameters<typeof sql.json>[0]) : null})`,
   ).catch(() => null);
   return json({ ok: true });
 };

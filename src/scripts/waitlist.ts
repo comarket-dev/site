@@ -43,6 +43,7 @@ export function mountWaitlist(root: HTMLElement): () => void {
     if (e) e.textContent = msg;
   };
   let preview: Preview | null = null;
+  let lastEmail = '';
   let disposePass: (() => void) | null = null;
   const cleanups: Array<() => void> = [];
 
@@ -91,6 +92,15 @@ export function mountWaitlist(root: HTMLElement): () => void {
         btn.textContent = 'Preview';
       }
     };
+    // once the hero's phone has read the logo's palette, the preview card wears it too
+    const onPalette = (e: Event) => {
+      const pal = (e as CustomEvent<{ primary: string; paper: string; ink: string }>).detail;
+      mini.style.setProperty('--brand', pal.primary);
+      mini.style.setProperty('--brand-paper', pal.paper);
+      mini.style.setProperty('--brand-ink', pal.ink);
+    };
+    addEventListener('brand:palette', onPalette);
+    cleanups.push(() => removeEventListener('brand:palette', onPalette));
     btn.addEventListener('click', run);
     site.addEventListener('change', run);
     site.addEventListener('keydown', (e) => {
@@ -106,7 +116,8 @@ export function mountWaitlist(root: HTMLElement): () => void {
     const handle = form.querySelector<HTMLInputElement>('[name="handle"]')!;
     const update = () => {
       const h = handle.value.replace(/^@+/, '').trim() || 'yourname';
-      const slug = slugOf(h);
+      // the page's address keeps dots and underscores, as the handle does
+      const slug = h.toLowerCase().replace(/[^a-z0-9._]/g, '').slice(0, 24) || 'yourname';
       root.querySelector('[data-hub-handle]')!.textContent = slug;
       root.querySelector('[data-hub-name]')!.textContent = `@${h}`;
       root.querySelector('[data-hub-ava]')!.textContent = h[0].toUpperCase();
@@ -116,43 +127,50 @@ export function mountWaitlist(root: HTMLElement): () => void {
   }
 
   /* ---------- submit ---------- */
+  type Result = { ok: true; passNo: number } | { ok: false; error: string };
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-  const onSubmit = async (e: SubmitEvent) => {
-    e.preventDefault();
+  const fail = (k: string, error: string): Result => {
+    setErr(k, error);
+    return { ok: false, error };
+  };
+  /** One signup, from this form or from the hero's email step (which passes the email and skips the scroll). */
+  const send = async (opts: { email?: string; scroll?: boolean } = {}): Promise<Result> => {
     ['site', 'handle', 'email', 'form'].forEach((k) => setErr(k));
+    if (opts.email) form.querySelector<HTMLInputElement>('[name="email"]')!.value = opts.email;
     const fd = new FormData(form);
     const email = String(fd.get('email') || '').trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-      setErr('email', 'Enter a valid email address.');
-      return;
-    }
+    lastEmail = email;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail('email', 'Enter a valid email address.');
+    const params = new URLSearchParams(location.search);
+    const utm = Object.fromEntries([...params].filter(([k]) => k.startsWith('utm_')));
+    // who sent them: the pass number in a member's shared link
+    const ref = params.get('ref');
+    if (ref && /^\d{1,7}$/.test(ref)) utm.ref = ref;
     const body: Record<string, unknown> = {
       side,
       email,
       turnstile: fd.get('cf-turnstile-response') || undefined,
       referrer: document.referrer || undefined,
-      utm: Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith('utm_'))),
+      utm,
     };
     if (side === 'brand') {
       const site = String(fd.get('site') || '').trim();
-      if (!site) {
-        setErr('site', 'Enter your website, like yourapp.com.');
-        return;
-      }
+      if (!site) return fail('site', 'Enter your website, like yourapp.com.');
       body.site = site;
       if (preview) body.name = preview.name;
     } else {
       const handle = String(fd.get('handle') || '').trim();
-      if (!handle) {
-        setErr('handle', 'Enter the handle your audience knows you by.');
-        return;
-      }
+      if (!handle) return fail('handle', 'Enter the handle your audience knows you by.');
       body.handle = handle;
-      body.platform = fd.get('platform');
+      body.platform = fd.get('platform') || 'other';
     }
     submit.disabled = true;
     const label = submit.innerHTML;
     submit.textContent = 'Joining…';
+    const restore = () => {
+      submit.disabled = false;
+      submit.innerHTML = label;
+    };
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
@@ -161,27 +179,39 @@ export function mountWaitlist(root: HTMLElement): () => void {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErr(data.field === 'handle' ? 'handle' : 'form', data.error || 'Something went wrong. Try again.');
-        submit.disabled = false;
-        submit.innerHTML = label;
-        return;
+        restore();
+        return fail(data.field === 'handle' ? 'handle' : 'form', data.error || 'Something went wrong. Try again.');
       }
-      await showPass(data);
+      await showPass(data, opts.scroll ?? true);
+      return { ok: true, passNo: data.passNo };
     } catch {
-      setErr('form', 'We couldn’t reach the server. Check your connection and try again.');
-      submit.disabled = false;
-      submit.innerHTML = label;
+      restore();
+      return fail('form', 'We couldn’t reach the server. Check your connection and try again.');
     }
   };
+  const onSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    send();
+  };
   form.addEventListener('submit', onSubmit);
+  const onJoin = (e: Event) => {
+    const { email, done } = (e as CustomEvent<{ email: string; done: (r: Result) => void }>).detail;
+    if (form.hidden) return done({ ok: false, error: 'You’re already on the list. Your pass is below.' });
+    send({ email, scroll: false }).then(done);
+  };
+  addEventListener('waitlist:join', onJoin);
+  cleanups.push(() => removeEventListener('waitlist:join', onJoin));
 
-  async function showPass(d: { passNo: number; side: 'brand' | 'creator'; label: string; issued: string; returning?: boolean }) {
+  async function showPass(d: { passNo: number; side: 'brand' | 'creator'; label: string; issued: string; returning?: boolean }, scroll = true) {
     const no = String(d.passNo).padStart(4, '0');
     form.hidden = true;
     issued.hidden = false;
     root.querySelector('[data-issued-h]')!.textContent = d.returning ? `Welcome back. You’re No. ${no}.` : `You’re No. ${no}.`;
     root.querySelector('[data-issued-p]')!.textContent =
-      d.side === 'brand' ? 'Your spot is held. Drag the pass to turn it over.' : `comarket.si/${d.label.replace(/^@/, '')} is yours. Drag the pass to turn it over.`;
+      d.side === 'brand'
+        ? 'We’ll email you once, when your spot opens. Drag the pass to turn it over.'
+        : `comarket.si/${d.label.replace(/^@/, '')} is yours. We’ll email you once, when your spot opens.`;
+    mountAfter(d);
     const canvas = root.querySelector<HTMLCanvasElement>('[data-pass-canvas]')!;
     const still = root.querySelector<HTMLImageElement>('[data-pass-still]')!;
     let snapshot: () => string;
@@ -215,7 +245,61 @@ export function mountWaitlist(root: HTMLElement): () => void {
     const text = d.side === 'brand' ? `I’m No. ${no} on the Comarket waitlist. Creators sell for us, and we pay only when they do.` : `I’m No. ${no} on the Comarket waitlist. Paid on every sale I send.`;
     share.href = `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(`${location.origin}/${d.side === 'brand' ? 'brands' : 'creators'}`)}`;
     share.onclick = () => track('pass_shared', { side: d.side });
-    issued.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    if (scroll) issued.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  /* After the pass: a link to send a creator (it carries the pass number, recorded on their signup) and the optional
+     questions, saved against the pass. */
+  function mountAfter(d: { passNo: number; side: 'brand' | 'creator' }) {
+    const link = `${location.origin}/creators?ref=${d.passNo}`;
+    const url = root.querySelector<HTMLElement>('[data-ref-url]');
+    if (url) url.textContent = link.replace(/^https?:\/\//, '');
+    const copy = root.querySelector<HTMLButtonElement>('[data-ref-copy]');
+    if (copy)
+      copy.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(link);
+          copy.textContent = 'Copied';
+        } catch {
+          copy.textContent = 'Select and copy';
+          if (url) getSelection()?.selectAllChildren(url);
+        }
+        setTimeout(() => (copy.textContent = 'Copy my link'), 2200);
+        track('pass_shared', { side: d.side, via: 'link' });
+      };
+    const profile = root.querySelector<HTMLFormElement>('[data-profile]');
+    const saved = root.querySelector<HTMLElement>('[data-profile-saved]');
+    if (!profile || !saved) return;
+    const close = (msg: string | null) => {
+      profile.hidden = true;
+      if (msg) {
+        saved.textContent = msg;
+        saved.hidden = false;
+      }
+    };
+    // nothing to save until something's picked
+    const save = profile.querySelector<HTMLButtonElement>('[data-profile-save]');
+    profile.onchange = () => {
+      if (save) save.disabled = !new FormData(profile).entries().next().value;
+    };
+    profile.onsubmit = async (e) => {
+      e.preventDefault();
+      const answers = Object.fromEntries(new FormData(profile).entries());
+      if (!Object.keys(answers).length) return close(null);
+      const btn = profile.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ side: d.side, passNo: d.passNo, email: lastEmail, answers }),
+        });
+        close(res.ok ? 'Saved. That helps us match you.' : 'We couldn’t save that. Your spot is still held.');
+      } catch {
+        close('We couldn’t save that. Your spot is still held.');
+      }
+    };
+    root.querySelector<HTMLButtonElement>('[data-profile-skip]')!.onclick = () => close(null);
   }
 
   return () => {

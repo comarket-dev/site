@@ -33,7 +33,17 @@
 
   function load(): Promise<StageApi | null> {
     if (!loading) {
-      loading = import('../scripts/stage/stage')
+      /* On a phone the poster already covers first paint, so three.js waits for the page to finish painting and the
+         main thread to go quiet; a tap before then just goes to the page without the trip. */
+      const idle = matchMedia('(pointer: coarse)').matches
+        ? new Promise<void>((r) => {
+            const go = () => ('requestIdleCallback' in window ? requestIdleCallback(() => r(), { timeout: 1500 }) : setTimeout(r, 300));
+            if (document.readyState === 'complete') go();
+            else addEventListener('load', go, { once: true });
+          })
+        : Promise.resolve();
+      loading = idle
+        .then(() => import('../scripts/stage/stage'))
         .then(({ stage }) => {
           const canvas = document.querySelector<HTMLCanvasElement>('#stage canvas');
           if (!canvas || !stage.init(canvas)) {
@@ -52,6 +62,9 @@
     return loading;
   }
 
+  /* The fork used to show the device and fly through its screen into a page (and back). Since 2026-10-29 the fork is
+     two photos and its trips live in src/scripts/forktrip.ts; true brings the device trip back with a device fork. */
+  const FORK_DEVICE = false;
   const motion = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const onHero = () => document.body.dataset.stage === 'brands' || document.body.dataset.stage === 'creators';
   let returning = false;
@@ -60,7 +73,7 @@
   // itself (the poster) rather than only in the live canvas, or the page would shrink back into the screen without it
   document.addEventListener('astro:before-preparation', (e) => {
     const to = (e as Event & { to: URL }).to;
-    returning = !!api && motion() && onHero() && to.pathname === '/' && 'startViewTransition' in document;
+    returning = FORK_DEVICE && !!api && motion() && onHero() && to.pathname === '/' && 'startViewTransition' in document;
     if (returning) document.documentElement.classList.add('leaving');
   });
 
@@ -110,9 +123,26 @@
     const { old, neu } = layers();
     const grow = html.animate(plan.keyframes, { ...neu, duration: plan.ms });
     // page colour in the hair between the page and the screen's page area, cut to that area
-    html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: paper }, { ...neu, duration: plan.ms });
-    html.animate({ opacity: [1, 1] }, { ...old, duration: plan.ms });
+    const hair = html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: paper }, { ...neu, duration: plan.ms });
+    const hold = html.animate({ opacity: [1, 1] }, { ...old, duration: plan.ms });
     api?.syncTrip(grow);
+    skippable([grow, hair, hold]);
+  }
+
+  /* Any tap, key or scroll during a trip lands at once: the stage reads its clock from these, so it lands too. */
+  function skippable(anims: Animation[]) {
+    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'] as const;
+    const skip = () => {
+      off();
+      anims.forEach((a) => {
+        try {
+          a.finish();
+        } catch {}
+      });
+    };
+    const off = () => events.forEach((t) => removeEventListener(t, skip, true));
+    events.forEach((t) => addEventListener(t, skip, { capture: true, passive: true }));
+    anims[0].finished.then(off, off);
   }
 
   /* Out: the page we're leaving shrinks back into the device's screen over the fork, then gives way to the demo. */
@@ -125,9 +155,10 @@
     }
     const { old, neu } = layers();
     const shrink = html.animate(plan.keyframes, { ...old, duration: plan.ms });
-    html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: paper }, { ...old, duration: plan.ms });
-    html.animate({ opacity: [1, 1] }, { ...neu, duration: plan.ms });
+    const hair = html.animate({ clipPath: [plan.clip, plan.clip], boxShadow: paper }, { ...old, duration: plan.ms });
+    const hold = html.animate({ opacity: [1, 1] }, { ...neu, duration: plan.ms });
     api?.syncTrip(shrink);
+    skippable([shrink, hair, hold]);
   }
 
   async function apply() {
@@ -135,6 +166,11 @@
     const anchor = document.querySelector<HTMLElement>('[data-stage-anchor]');
     if (mode === 'none') {
       api?.setMode('none', null);
+      // on the fork, fetch the 3D code while the visitor decides, so the side they pick draws its phone sooner
+      if (location.pathname === '/' && !matchMedia('(pointer: coarse)').matches) {
+        const warm = () => import('../scripts/stage/stage').catch(() => {});
+        'requestIdleCallback' in window ? requestIdleCallback(warm, { timeout: 3000 }) : setTimeout(warm, 1500);
+      }
       return;
     }
     const s = await load();

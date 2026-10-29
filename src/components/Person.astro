@@ -1,0 +1,81 @@
+---
+/* One licensed photo of a person (src/lib/people.ts). `face` is the square crop around their focal point, for small
+   round uses. Otherwise it's the whole photo, filling the box the caller gives `.photo` (object-fit: cover, cropped
+   at the person's focal point), with the page's paper grain on top so it reads as printed on the same stock
+   (design/texture/README.md). */
+import { FACE_WIDTHS, PHOTO_WIDTHS, person, type PersonId } from '../lib/people';
+
+interface Props {
+  id: PersonId;
+  face?: boolean;
+  /** the img sizes attribute: how wide it shows */
+  sizes?: string;
+  class?: string;
+  eager?: boolean;
+  /** alt="" when the person is decoration next to copy that already says it */
+  decorative?: boolean;
+  /** where to crop, 0 to 1 across and down, when the layout needs other than the person's focal point */
+  focal?: [number, number];
+}
+const { id, face = false, sizes = '100vw', class: cls, eager = false, decorative = false, focal } = Astro.props;
+const p = person(id);
+const base = `/assets/people/${id}${face ? '-face' : ''}`;
+const widths = face ? FACE_WIDTHS : PHOTO_WIDTHS.filter((w) => w <= p.w);
+const srcset = widths.map((w) => `${base}-${w}.webp ${w}w`).join(', ');
+const [w, h] = face ? [1, 1] : [p.w, p.h];
+const [fx, fy] = focal ?? p.focal;
+---
+
+{
+  face ? (
+    <img
+      class:list={['person', cls]}
+      src={`${base}-${widths[1]}.webp`}
+      srcset={srcset}
+      sizes={sizes}
+      width={w}
+      height={h}
+      alt={decorative ? '' : p.alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  ) : (
+    <div class:list={['photo', cls]}>
+      <img
+        src={`${base}-${widths[Math.min(2, widths.length - 1)]}.webp`}
+        srcset={srcset}
+        sizes={sizes}
+        width={w}
+        height={h}
+        alt={decorative ? '' : p.alt}
+        loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : undefined}
+        decoding="async"
+        style={`object-position: ${fx * 100}% ${fy * 100}%`}
+      />
+    </div>
+  )
+}
+
+<style>
+  .photo {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper-3);
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+  /* the page's paper over the photo, at the page's own scale */
+  .photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--tooth);
+    pointer-events: none;
+  }
+</style>

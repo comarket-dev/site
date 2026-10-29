@@ -4,15 +4,20 @@ The marketing site and waitlist for Comarket: brands pay only when a creator's s
 
 New here (person or agent)? Start with [AGENTS.md](AGENTS.md): the owner's rules, where things stand, how to check your work, and what's next.
 
-- **Fork** (`/`): "More sales for brands. More money for creators. One co-branded storefront." A 3D device shaped like the visitor's own (phone, tablet, laptop or monitor) rests on a completed sale. Hover Brands or Creators to turn it to that side's view. Choosing one types that page's address into the device's browser, shows the real page in its screen for a beat, then flies through the screen into it.
-- **Brands** (`/brands`): hero with a live claim field that re-dresses the phone, example posts and storefronts, agent replay, "Pay for sales, not posts" (a sponsored post billed upfront next to a storefront billed per sale on a 30-day payment timeline, scroll-driven, with the price underneath), split calculator, FAQ, waitlist.
-- **Creators** (`/creators`): hero with a live handle check (`/api/handle`), the deal in plain words, example posts and storefronts, a brand offer, hub and embedded link, protected credit, earnings estimator, FAQ, waitlist. Handles are unique (migration 0002), so a claimed page is really claimed.
+**This is the A-grade copy** (the `a-grade` branch), a trial of the UX-law audit fixes and the people and warmth rounds. [A-GRADE.md](A-GRADE.md) says why it exists, how to run it on its own database, and logs every change; its HANDOFF section is the quickest way in.
+
+- **Fork** (`/`): "More sales for brands. More money for creators. One co-branded storefront." A 3D device shaped like the visitor's own (phone, tablet, laptop or monitor) rests on a completed sale. On desktop each side is a full-height photo (a candle maker for Brands, a cook for Creators) with its word, line and button on it; hovering zooms that photo while the device keeps showing the one shared sale. Choosing one types that page's address into the device's browser, shows the real page in its screen for a beat, then flies through the screen into it; any tap, key or scroll during the trip lands at once. Below the fold, a short plain-text section says what each side gets (for anyone who scrolls, and for search), then the footer.
+- **Brands** (`/brands`): hero under a short photo banner of two florists, the phone standing right of the second one's head, with a live claim field that re-dresses the phone and then opens an email step in place; example posts and storefronts; "Pay for sales, not posts" (a sponsored post billed upfront next to a storefront billed per sale over an example month, shown finished, with "Replay the month", then the one price panel: $0, 15%, 10%); the agent replay; split calculator with a CTA at its result; FAQ; waitlist.
+- **Creators** (`/creators`): the same florist hero, with a live handle check (`/api/handle`) and the same email step; the deal in three cards; example posts and storefronts; a brand offer whose Accept and Pass work (with Undo); hub and embedded link; protected credit; earnings estimator with a CTA at its result; FAQ; waitlist. Handles are unique (migration 0002), so a claimed page is really claimed.
+- **Switching** Brands and Creators in the nav keeps the photo, nav and phone still and animates the hero text in (`src/scripts/switch.ts`, `src/styles/switch.css`).
+- **Waitlist** on both pages: a photo of a shop owner and a creator, the form card floating between their faces, the heading and preview to the left of hers.
+- **Phones** get a docked CTA ("Get early access" or "Claim my page") once the hero's form scrolls away. It steps aside for fields, controls and any other waitlist CTA on screen.
 - **Examples section** (`src/components/examples/Showcase.astro`): shared by both pages. One example post and the storefront it opens sit in a spotlight at a time. Each storefront is that brand's own mobile page (`examples/stores/`), built from the brand style guide in `design/brands/README.md`. Hovering slows the spotlight to a quarter speed rather than stopping it. Shadows spill past the slides: the edge-fade mask's box reaches past them top and bottom. Every third slide is a "Your turn" card whose button jumps to the hero's claim field.
-- Joining the waitlist issues a numbered 3D pass, modeled in Blender and printed at runtime.
+- Joining the waitlist (from the hero's email step or the form at the bottom, one code path in `waitlist.ts`) issues a numbered 3D pass, modeled in Blender and printed at runtime. Under it: a link to send a creator (`/creators?ref=<pass no.>`, recorded in the new signup's `utm`) and three optional questions per side, saved against the pass by `/api/profile`. The form card carries a risk line and a founder's note (the address in it is a placeholder).
 
 ## Stack
 
-Astro 7 on Cloudflare Workers, Neon Postgres through Hyperdrive, three.js for the stage phone, coin and pass (loaded only when needed), Blender for 3D assets. Satoshi for type, Fragment Mono for labels and numbers.
+Astro 7 on Cloudflare Workers, Neon Postgres through Hyperdrive, three.js for the stage phone, coin and pass (loaded only when needed), Blender for 3D assets, Python (numpy, Pillow) for the photo grade, paper and yarn textures. Satoshi for type, Fragment Mono for labels and numbers.
 
 ## Run it locally
 
@@ -43,6 +48,10 @@ Copy `.dev.vars.example` to `.dev.vars` for local secrets.
 | `~/.venvs/mflux/bin/python scripts/print-labels.py` | Prints brand labels onto products in Priya's and Ama's shots, in each brand's typeface |
 | `sh scripts/subset-brand-fonts.sh` | Web fonts for the example brands, from `design/brands/fonts` into `public/fonts/brands` |
 | `python3 scripts/render-brand-board.py` | The example brands' board, `design/brands/board.png` |
+| `python3 scripts/people.py` | Licensed photos of people (`design/people/people.json`) into `public/assets/people`, graded warm, 480 to 3200 wide |
+| `python3 scripts/texture.py` | The paper: grain and crease tiles in `public/assets/texture` |
+| `python3 scripts/yarn.py` | Knit tiles for the yarn buttons in `public/assets/yarn` |
+| `python3 scripts/render-texture-board.py` | The texture and warmth board, `design/texture/board.png` |
 | `python3 scripts/qa/*.py` | Browser checks: transitions, viewports, clipped shadows, highlights, spotlight (see AGENTS.md) |
 
 ## Deploy to Cloudflare
@@ -64,11 +73,19 @@ The adapter also provisions a `SESSION` KV namespace on first deploy. The site d
 
 **Routing** (`src/middleware.ts`). Ads link to `/?aud=brands` or `/?aud=creators` (or straight to the page). Returning visitors skip the fork; the wordmark links to `/?fork=1`.
 
-**API** (`src/pages/api/`). `waitlist` (idempotent per side and email), `preview` (reads a brand's public homepage for name, color and icon; blocks private hosts; cached a day in KV), `event`, `consent`.
+**API** (`src/pages/api/`). `waitlist` (idempotent per side and email), `preview` (reads a brand's public homepage for name, color and icon; blocks private hosts; cached a day in KV), `profile` (the optional answers under a pass, checked against its email and number, stored as a `profile` event), `event`, `consent`. JSON columns get objects through `sql.json()`: passing a string with `::jsonb` makes postgres.js encode it twice (migration 0003 unwraps rows stored that way).
+
+## People and warmth
+
+**People** (`design/people/people.json`, `src/lib/people.ts`, `Person.astro`, `Scene.astro`). Real people come from licensed Pexels photos, credited in `people.json`. They illustrate a side of the market and are never named, quoted, given results or shown using the product (the license forbids implying endorsement); the named example creators stay fictional. `Scene.astro` draws a photo edge to edge, zoomed and shifted so a spot its people are looking at (a `spots` entry, as fractions of the photo, with `m` for phones) lands where the phone or the sign-up card sits.
+
+**Warm stock** (`design/texture/README.md`). Every surface carries one paper grain and small creases (`scripts/texture.py`), anchored to the page by `src/scripts/paper.ts` so a crease runs on across sections. Every photo gets one warm grade (`scripts/people.py`) and the grain on top. Cream Yellow appears only as soft light; bright yellow stays with the sale.
+
+**Yarn buttons** (on trial). Conversion buttons carry `.convert`; `src/styles/yarn.css` knits them from `scripts/yarn.py` tiles calibrated to the palette. `const YARN = false` in `src/layouts/Base.astro` turns them back into plain buttons.
 
 ## The stage
 
-One phone lives across page changes (`src/components/Stage.astro`, `src/scripts/stage/`). It plays an example sale on its screen: a creator's post, the storefront, the brand's own checkout, the moment the payment is confirmed (a drawn check, the amount, and a small haptic dip of the phone), and what each side sees afterwards. The split on screen uses the visitor's pricing arm. The screens are drawn to a canvas in `screens.ts` and uploaded only while something on them moves. The phone follows whichever `[data-stage-anchor]` element the page has (`PhoneSlot.astro`), so layout decides where it sits; between pages it springs from where it was. Without WebGL2, or on slow devices, the poster image in the slot stays. The hero claim fields re-dress the phone with the visitor's site (logo via `/api/icon`, which only serves icons of sites we've previewed) or handle.
+One phone lives across page changes (`src/components/Stage.astro`, `src/scripts/stage/`). It plays an example sale on its screen: a creator's post, the storefront, the brand's own checkout, the moment the payment is confirmed (a drawn check, the amount, and a small haptic dip of the phone), and what each side sees afterwards. The split on screen uses the visitor's pricing arm. The screens are drawn to a canvas in `screens.ts` and uploaded only while something on them moves. The phone follows whichever `[data-stage-anchor]` element the page has (`PhoneSlot.astro`), so layout decides where it sits; between pages it springs from where it was. Without WebGL2, or on slow devices, the poster image in the slot stays. On touch devices three.js loads only after the page's load event and an idle moment, since the poster already covers first paint. The hero claim fields re-dress the phone with the visitor's site (logo via `/api/icon`, which only serves icons of sites we've previewed) or handle.
 
 **The fork's device** (`src/scripts/stage/devices.ts`, `browser.ts`). Base.astro's inline script picks the device and its slot's shape before first paint (phones by width under 600px, tablets by touch or a squarish window, monitors from 1800px wide); `devices.ts` mirrors its rules, and Stage.astro carries the pick across client-side page changes. The tablet, laptop and monitor are built at load with a screen cut to the visitor's window plus browser chrome, so a page fits it exactly; each gets its own column width on the fork. A device without a poster fades up with the page's reveal.
 
@@ -85,7 +102,9 @@ The posts in the examples spotlight (`src/components/examples/posts/`) are real 
 ## Before launch
 
 - Have the privacy page reviewed, and add a real contact address.
-- Run migration 0002 on Neon (`npm run db:migrate`).
+- Run migrations 0002 and 0003 on Neon (`npm run db:migrate`), and 0003 on any local database that has signups.
+- Replace the placeholder founder address (hello@comarket.si) in `Waitlist.astro` with a live inbox.
+- Decide the founding-brand rate lock and the referral promise ("you both move up") before either is shown; see A-GRADE.md.
 - Real domain in `astro.config.mjs` (`site`) and `public/robots.txt`.
 - Turnstile and Resend keys.
 - Earnings estimates use placeholder funnel rates (`src/lib/estimate.ts`); replace them with real creator data when it exists.

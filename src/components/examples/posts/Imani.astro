@@ -1,0 +1,82 @@
+---
+/* Instagram post by the example creator imani, composed in design/posts (see scripts/render-posts.py for its media).
+   Drawn at 360x752 design pixels; Post.astro scales it to fit. Fictional, labeled as an example where it's shown. */
+---
+
+<div class="root" aria-hidden="true">
+<div class="sb light"><span>8:31</span><span class="r"><span class="bars"><i></i><i></i><i></i><i class="off"></i></span><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.4 6.8a6.5 6.5 0 0 1 9.2 0l-1.4 1.4a4.5 4.5 0 0 0-6.4 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z"/></svg><span class="batt"><b style="width:86%"></b></span></span></div>
+  <div class="top"><svg class="back" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><div><small>IMANIMAKES</small><b>Posts</b></div></div>
+  <div class="head">
+    <span class="ring"><i></i></span>
+    <span><b>imanimakes</b><small>Paid partnership with <strong>kindredskin</strong></small></span>
+    <span class="sp"></span><span style="font-size:18px;letter-spacing:1px">···</span>
+  </div>
+  <div class="media"></div>
+  <span class="count">1/5</span>
+  <div class="acts">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.9"><path d="M12 20.5s-8-4.9-9.8-9.6C.9 7.6 3.1 4 6.8 4c2.2 0 3.8 1.2 5.2 3.1C13.4 5.2 15 4 17.2 4c3.7 0 5.9 3.6 4.6 6.9C20 15.6 12 20.5 12 20.5z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.9" stroke-linejoin="round"><path d="M20.7 16.5A9 9 0 1 0 17 20l4 1z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.9" stroke-linejoin="round"><path d="M22 3 9.2 10.4M22 3l-7 18-3.4-8.2L3 9.6z"/></svg>
+    <span class="sp"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.9" stroke-linejoin="round"><path d="M5 3h14v18l-7-5-7 5z"/></svg>
+  </div>
+  <div class="dots"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="txt">
+    <b>4,812 likes</b><br>
+    <b>imanimakes</b> my skin was SO angry all winter 😭 these three fixed it. comment <b>RESET</b> and i'll send you the routine + a free travel kit 🤍 <span class="g">more</span><br>
+    <span class="g">View all 238 comments</span><br>
+    <b>nadia.reads</b> RESET 🙏 &nbsp;<b>jules.skin</b> RESET
+  </div>
+</div>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root {
+  position: relative;
+  width: 360px;
+  height: 752px;
+ font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+svg { display: block; }
+
+/* iOS status bar, light or dark */
+.sb { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 -apple-system, system-ui; z-index: 50; }
+.sb.dark { color: #fff; }
+.sb.light { color: #000; }
+.sb .r { display: flex; align-items: center; gap: 5px; }
+.sb .bars { display: flex; align-items: flex-end; gap: 1.5px; height: 11px; }
+.sb .bars i { width: 3px; border-radius: 1px; background: currentColor; }
+.sb .bars i:nth-child(1) { height: 4px; } .sb .bars i:nth-child(2) { height: 6px; } .sb .bars i:nth-child(3) { height: 8.5px; } .sb .bars i:nth-child(4) { height: 11px; }
+.sb .bars i.off { opacity: 0.35; }
+.sb .batt { position: relative; width: 25px; height: 12px; border-radius: 4px; border: 1px solid currentColor; opacity: 0.9; padding: 1.5px; }
+.sb .batt::after { content: ''; position: absolute; right: -3.5px; top: 3.5px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; opacity: 0.5; }
+.sb .batt b { display: block; height: 100%; border-radius: 2px; background: currentColor; }
+.sb .batt.low b { background: #ffd60a; }
+
+
+  /* An Instagram carousel post, opened from her profile. Platform-styled, no logos. */
+  .root { width: 360px; height: 752px; background: #fff; color: #0c0c0c; }
+  .top { position: absolute; top: 46px; left: 0; right: 0; height: 44px; display: flex; align-items: center; justify-content: center; }
+  .top .back { position: absolute; left: 12px; width: 22px; height: 22px; }
+  .top div { text-align: center; line-height: 1.15; }
+  .top small { display: block; font-size: 11px; color: #737373; font-weight: 600; letter-spacing: .01em; }
+  .top b { font-size: 15px; font-weight: 700; }
+  .head { position: absolute; top: 92px; left: 0; right: 0; height: 52px; display: flex; align-items: center; gap: 9px; padding: 0 12px; }
+  .ring { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: conic-gradient(#f9ce34, #ee2a7b, #6228d7, #f9ce34); }
+  .ring i { display: block; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fff; background: url(/assets/posts/avatars/imani.jpg) center / cover; }
+  .head b { display: block; font-size: 13.5px; font-weight: 600; }
+  .head small { font-size: 11.5px; color: #3a3a3a; }
+  .head small strong { font-weight: 600; }
+  .head .sp { flex: 1; }
+  .media { position: absolute; top: 144px; left: 0; width: 360px; height: 450px; background: url(/assets/posts/imani.jpg) center / cover; }
+  .count { position: absolute; top: 156px; right: 12px; font-size: 12px; font-weight: 600; color: #fff; background: rgba(18,18,18,.72); padding: 4px 8px; border-radius: 999px; }
+  .acts { position: absolute; top: 598px; left: 0; right: 0; height: 40px; display: flex; align-items: center; gap: 15px; padding: 0 12px; }
+  .acts svg { width: 25px; height: 25px; }
+  .acts .sp { flex: 1; }
+  .dots { position: absolute; top: 614px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: #c8c8c8; }
+  .dots i:first-child { background: #0095f6; }
+  .txt { position: absolute; top: 638px; left: 12px; right: 12px; font-size: 13px; line-height: 1.36; }
+  .txt b { font-weight: 600; }
+  .txt .g { color: #737373; }
+  .txt .tag { color: #00376b; }
+</style>

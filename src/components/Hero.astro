@@ -2,7 +2,10 @@
 import Icon from './Icon.astro';
 import PhoneSlot from './PhoneSlot.astro';
 import Steps from './Steps.astro';
+import Person from './Person.astro';
+import Scene from './Scene.astro';
 import { hlClasses } from '../lib/hl';
+import { person, type PersonId } from '../lib/people';
 
 interface Props {
   side: 'brands' | 'creators';
@@ -14,14 +17,37 @@ interface Props {
   button: string;
   last: string;
   label: string;
+  /** the email step that opens once the phone shows the visitor's own page */
+  join?: { button: string; fine?: string };
+  /** the people in this side's world, large, to an edge, with the phone standing across the photo's edge */
+  photo: PersonId;
+  /** band: the photo is a banner across the top of the hero (heads to shoulders), its foot fading into the paper
+      under the copy; the phone stands right of the people (clear of the spot's `clear` line), whole in the first
+      screen. Stacked, the copy comes first, then the photo with the phone where its people are looking. split: the photo bleeds off the top, right and bottom, the
+      phone on its left edge. */
+  look?: 'split' | 'band';
 }
-const { side, title, mark, sub, placeholder, prefix, button, last, label } = Astro.props;
+const { side, title, mark, sub, placeholder, prefix, button, last, label, join, photo, look = 'band' } = Astro.props;
 const at = title.lastIndexOf(mark);
 const [before, after] = at >= 0 ? [title.slice(0, at), title.slice(at + mark.length)] : [title, ''];
 const brand = side === 'brands';
+// desktop band: the line across the photo (a share of its width) right of the people; the phone stands right of it
+// and the copy stops short of it
+const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.clear ?? 0.6;
 ---
 
-<section class="hero" data-hero data-side={side}>
+<section class:list={['hero', look]} data-hero data-side={side} style={`--clear:${clear}`}>
+  {look === 'split' && <Person id={photo} class="backdrop" eager sizes="(max-width: 960px) 100vw, 46vw" />}
+  {
+    look === 'band' && (
+      <Scene photo={photo} spot="phone" class="bandscene" eager fit>
+        <div class="show" data-reveal style="--d:.1s">
+          <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
+          <Steps last={last} class="steps compact" />
+        </div>
+      </Scene>
+    )
+  }
   <div class="wrap inner">
     <div class="copy">
       <h1 class="title" data-reveal style="--d:.06s">
@@ -44,32 +70,70 @@ const brand = side === 'brands';
             maxlength={brand ? 120 : 24}
             required
           />
-          <button class="btn" type="submit" data-claim-btn>
+          <button class="btn convert" type="submit" data-claim-btn>
             <span>{button}</span><Icon name="arrow-right" class="arr" />
           </button>
         </div>
         <p class="result" data-result aria-live="polite"></p>
       </form>
 
+      <form class="claim join" data-join novalidate hidden>
+        <label class="sr-only" for={`join-${side}`}>{brand ? 'Work email' : 'Email'}</label>
+        <div class="box">
+          <input
+            id={`join-${side}`}
+            name="email"
+            type="email"
+            autocomplete="email"
+            inputmode="email"
+            placeholder={brand ? 'you@company.com' : 'you@email.com'}
+            required
+          />
+          <button class="btn convert" type="submit" data-join-btn>
+            <span>{join?.button ?? (brand ? 'Hold my spot' : 'Claim my page')}</span><Icon name="arrow-right" class="arr" />
+          </button>
+        </div>
+        {join?.fine && <p class="fine">{join.fine}</p>}
+      </form>
+
     </div>
 
-    <div class="show" data-reveal style="--d:.1s">
-      <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
-      <Steps last={last} class="steps compact" />
-    </div>
+    {
+      look === 'split' && (
+        <div class="show" data-reveal style="--d:.1s">
+          <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
+          <Steps last={last} class="steps compact" />
+        </div>
+      )
+    }
   </div>
 </section>
 
 <style>
+  /* The stage's canvas (z-index 1) draws the phone. The photo sits under it (z-index 0), the copy and the tracker
+     over it (2), so the phone stands across the photo's edge: half on the people, half on the paper. The photo's
+     light spills onto the paper beside it (--sun, design/texture/README.md). */
   .hero {
     position: relative;
-    z-index: 2;
     min-height: 100vh;
     min-height: 100svh;
     display: grid;
     align-items: center;
     /* clip sideways only (the poster overhangs); shadows may spill into the next section */
     overflow-x: clip;
+    --ph: max(380px, min(68vh, 640px));
+    /* the phone's width, from the slot's 0.72 : 1.52 */
+    --pw: calc(var(--ph) * 0.4737);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero > :global(.backdrop) {
+    position: absolute;
+    z-index: 0;
   }
   .inner {
     display: grid;
@@ -168,18 +232,191 @@ const brand = side === 'brands';
     color: var(--ink);
     font-weight: 600;
   }
+  .result:empty {
+    display: none;
+  }
+  /* the email step slides in right under the line that offered it */
+  .join {
+    margin-top: -14px;
+    animation: join-in 0.35s var(--ease) both;
+  }
+  .join[hidden] {
+    display: none;
+  }
+  @keyframes join-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  .fine {
+    padding-left: 20px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--graphite);
+    max-width: 52ch;
+  }
 
+  .copy,
+  .show :global(.steps) {
+    position: relative;
+    z-index: 2;
+  }
+  /* the phone, the step tracker under it */
   .show {
     display: grid;
+    grid-template-areas:
+      'phone'
+      'steps';
     justify-items: center;
-    gap: 14px;
+    row-gap: 14px;
   }
   .show :global(.slot) {
-    height: min(68vh, 640px);
-    min-height: 380px;
+    grid-area: phone;
+    height: var(--ph);
+    z-index: 1;
   }
   .show :global(.steps) {
+    grid-area: steps;
+    justify-self: center;
     max-width: 380px;
+  }
+
+  /* split: the photo takes the right of the screen, top to bottom, and the phone's centre sits on its left edge.
+     --bw is the photo's width; the margin puts the phone there from inside the centred wrap. */
+  .split {
+    --bw: clamp(420px, 46vw, 940px);
+  }
+  .split > :global(.backdrop) {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--bw);
+  }
+  .split .inner {
+    gap: clamp(24px, 4vw, 64px);
+  }
+  .split .show {
+    margin-right: calc((min(100vw, var(--max)) - 100vw) / 2 - var(--gr) + var(--bw) - var(--pw) / 2);
+  }
+  .split::before {
+    background: radial-gradient(34% 62% at calc(100% - var(--bw)) 34%, rgb(253 191 104 / 0.22), transparent 72%);
+  }
+
+  /* band: the photo is a banner across the top (under the transparent nav), heads to shoulders, its foot fading into
+     the paper from --f0 to --f1 of the photo's height. The copy starts where the fade is about three quarters done,
+     on the left; the phone stands right of the people (right of --clear, a share of the photo's width), from just
+     under the nav, as tall as the first screen allows with its tracker under it (Scene.astro, fit, overridden here).
+     Everything scales with the screen's width and height, so it holds from 961px to 2560px wide. */
+  .band {
+    display: flex;
+    flex-direction: column;
+    /* full width: the scene sizes everything from its own width (container query units) */
+    align-items: stretch;
+    --f0: 0.385;
+    --f1: 0.46;
+  }
+  .band .inner {
+    order: 1;
+    display: block;
+    position: relative;
+    z-index: 2;
+    /* up into the fade: 0.019 of the photo's height (the photo is the screen wide, 2:3) */
+    margin-top: calc(-0.019 * 66.7vw);
+    padding-top: 0;
+    padding-bottom: clamp(32px, 5vh, 56px);
+  }
+  .band > :global(.bandscene) {
+    order: 0;
+  }
+  .band > :global(.bandscene .frame > .shot) {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--f0) * var(--IH)), transparent calc(var(--f1) * var(--IH)));
+    mask-image: linear-gradient(to bottom, #000 calc(var(--f0) * var(--IH)), transparent calc(var(--f1) * var(--IH)));
+  }
+  /* the copy stops 12px short of the clear line (the phone starts 28px past it); it starts at the centred wrap's
+     left edge */
+  .band .copy {
+    max-width: min(720px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+  }
+  .band .title {
+    font-size: clamp(34px, 3.9vw, 60px);
+  }
+  .band .claim {
+    max-width: min(560px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .band .show :global(.slot) {
+    height: var(--oh);
+  }
+  /* as wide as the tracker needs, not just the phone, so its five steps stay on one row */
+  .band .show {
+    width: min(400px, calc(100vw - var(--gl) - var(--gr)));
+  }
+  /* desktop: the phone right of the people. --t its top (under the nav, or level with her hair, whichever is lower),
+     --oh its height (what the first screen leaves under --t for it and its tracker, at most 74% of the screen's
+     height, and narrow enough to fit between the clear line and the right gutter), --cx its centre. The tracker
+     narrows if it would run past the right gutter. */
+  @media (min-width: 961px) {
+    .hero.band > :global(.bandscene.fit .frame > .at) {
+      --t: max(88px, calc((var(--top) - var(--y0)) * var(--IH)));
+      --room: calc((1 - var(--clear)) * 100cqw - 28px - var(--gr));
+      --oh: max(300px, min(calc(100svh - var(--t) - 104px), 74svh, 820px, calc(var(--room) / 0.4737)));
+      --pw: calc(var(--oh) * 0.4737);
+      --cx: calc(var(--clear) * 100cqw + 28px + var(--pw) / 2);
+      top: var(--t);
+      left: var(--cx);
+    }
+    .hero.band .show {
+      width: min(400px, calc(2 * (100cqw - var(--gr) - var(--cx))));
+    }
+  }
+
+  /* The band keeps one share of the screen: it ends at --hb, (y1 - y0) of the photo's height, which follows the
+     screen's width, capped at 46% of its height so very wide screens don't get a taller band (laptops and 16:9 screens
+     land between 41% and 46%). The fade is its last --fade. */
+  @media (min-width: 961px) {
+    .band {
+      --hb: min(calc(0.385 * 66.7vw), 46svh);
+      --fade: calc(0.075 * 66.7vw);
+    }
+    .hero.band > :global(.bandscene.fit .frame) {
+      height: var(--hb);
+    }
+    .band > :global(.bandscene .frame > .shot) {
+      clip-path: inset(calc(var(--y0) * var(--IH)) 0 calc(var(--IH) - var(--y0) * var(--IH) - var(--hb)) 0);
+      -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--y0) * var(--IH) + var(--hb) - var(--fade)), transparent calc(var(--y0) * var(--IH) + var(--hb)));
+      mask-image: linear-gradient(to bottom, #000 calc(var(--y0) * var(--IH) + var(--hb) - var(--fade)), transparent calc(var(--y0) * var(--IH) + var(--hb)));
+    }
+  }
+  /* Large screens: the copy rises into the band, the title starting about where the fade begins, so the block sits
+     beside the phone instead of hanging below it. A soft paper glow behind the copy keeps the ink clear of the photo.
+     The type grows with the screen. Laptops are untouched. */
+  @media (min-width: 1800px) {
+    .band .inner {
+      margin-top: calc(-1 * var(--fade));
+    }
+    .band .copy {
+      isolation: isolate;
+      max-width: min(920px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    }
+    .band .copy::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -6% -14% 40% -18%;
+      background: radial-gradient(closest-side, rgb(255 247 236 / 0.78), rgb(255 247 236 / 0.5) 55%, rgb(255 247 236 / 0));
+      pointer-events: none;
+    }
+    .band .title {
+      font-size: min(3.3vw, 5.4svh);
+      max-width: 19ch;
+    }
+    .band .sub {
+      font-size: min(1.1vw, 1.8svh);
+    }
+    .band .claim {
+      max-width: min(700px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    }
   }
 
   @media (max-width: 960px) {
@@ -191,9 +428,77 @@ const brand = side === 'brands';
     .title {
       font-size: clamp(34px, 9vw, 60px);
     }
-    .show :global(.slot) {
-      height: min(62svh, 560px);
-      min-height: 340px;
+    .hero {
+      --ph: max(340px, min(62svh, 560px));
+    }
+    /* split, stacked: the copy, then the photo to both edges, then the phone hanging off the photo's foot, so it
+       covers hands and counter and never a face. The wrap steps aside (display: contents) so the three can be
+       ordered. */
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      min-height: 0;
+    }
+    .split .inner {
+      display: contents;
+    }
+    .split .copy {
+      order: 0;
+      padding: 92px var(--gr) 0 var(--gl);
+    }
+    .hero > :global(.backdrop) {
+      order: 1;
+      position: relative;
+      inset: auto;
+      width: auto;
+      height: clamp(260px, 74vw, 460px);
+      margin-top: 40px;
+    }
+    .split .show {
+      order: 2;
+      margin: calc(var(--ph) * -0.3) 0 0;
+      padding: 0 var(--gr) clamp(40px, 7vh, 88px) var(--gl);
+    }
+    .split::before {
+      display: none;
+    }
+    /* band, stacked: the copy first, then the photo to both edges with the phone at the basket; no fade, and the
+       photo's warm light spills up onto the paper above it */
+    .band .inner {
+      order: 0;
+      margin-top: 0;
+      padding-top: 92px;
+      padding-bottom: 0;
+    }
+    .band > :global(.bandscene) {
+      order: 1;
+      margin-top: 40px;
+    }
+    .band > :global(.bandscene .frame > .shot) {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .band .copy {
+      max-width: 720px;
+    }
+    .band .claim {
+      max-width: 560px;
+    }
+    .band .title {
+      font-size: clamp(34px, 9vw, 60px);
+    }
+    .band .show {
+      padding-bottom: clamp(40px, 7vh, 88px);
+    }
+    .band > :global(.bandscene)::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -200px;
+      height: 200px;
+      pointer-events: none;
+      background: radial-gradient(70% 100% at 55% 100%, rgb(253 191 104 / 0.22), transparent 72%);
     }
   }
   @media (max-width: 520px) {
@@ -220,6 +525,9 @@ const brand = side === 'brands';
     .result {
       padding-left: 4px;
     }
+    .hero {
+      --ph: min(58svh, 440px);
+    }
   }
 </style>
 
@@ -233,6 +541,7 @@ const brand = side === 'brands';
     color: string | null;
     icon: string | null;
   }
+  type JoinResult = { ok: true; passNo: number } | { ok: false; error: string };
 
   onPage(() => {
     const form = document.querySelector<HTMLFormElement>('[data-claim]');
@@ -242,21 +551,57 @@ const brand = side === 'brands';
     const btn = form.querySelector<HTMLButtonElement>('[data-claim-btn]')!;
     const out = form.querySelector<HTMLElement>('[data-result]')!;
     const phone = document.querySelector<HTMLElement>('[data-hero] [data-stage-anchor]');
+    const COPY = {
+      brand: 'That’s {name} on Sarah’s storefront. Hold your spot and we’ll build the real one.',
+      free: '{page} is free. Claim it before someone else does.',
+      unknown: 'That’s {page} on the phone. Claim it now.',
+      done: side === 'brands' ? 'You’re No. {no}. We’ll email you once, when your spot opens.' : '{page} is yours. You’re No. {no}.',
+      pass: 'See my pass',
+    };
 
     const say = (html: string, err = false) => {
       out.innerHTML = html;
       out.classList.toggle('err', err);
     };
     const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+    const join = document.querySelector<HTMLFormElement>('[data-join]');
+    const joinInput = join?.querySelector<HTMLInputElement>('input') ?? null;
+    const joinBtn = join?.querySelector<HTMLButtonElement>('[data-join-btn]') ?? null;
+    const narrow = () => matchMedia('(max-width: 960px)').matches;
+    const smooth = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+    /* Show the visitor their page. Side by side, that's the phone; stacked, the line and the email step go just under
+       the nav with the phone right below them, so the offer, the field and the page they're for all stay in view. */
     const reveal = () => {
+      if (narrow()) {
+        const nav = document.querySelector<HTMLElement>('[data-nav]');
+        const top = out.getBoundingClientRect().top + scrollY - (nav?.offsetHeight ?? 64) - 14;
+        if (Math.abs(top - scrollY) > 8) scrollTo({ top, behavior: smooth() });
+        return;
+      }
       if (!phone) return;
       const r = phone.getBoundingClientRect();
-      if (r.top < 60 || r.bottom > innerHeight) phone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (r.top < 60 || r.bottom > innerHeight) phone.scrollIntoView({ behavior: smooth(), block: 'center' });
     };
-    /* hand the value to the waitlist form further down so nobody types it twice */
+    /* one primary button on screen at a time: while the email step is open, the field above steps back and says
+       what it does now */
+    const btnLabel = btn.querySelector('span')!;
+    const label0 = btnLabel.textContent;
+    const openJoin = () => {
+      if (!join) return;
+      join.hidden = false;
+      btn.classList.add('ghost');
+      btnLabel.textContent = side === 'brands' ? 'Try another site' : 'Try another';
+      if (!narrow()) joinInput?.focus({ preventScroll: true });
+    };
+    const closeJoin = () => {
+      if (join) join.hidden = true;
+      btn.classList.remove('ghost');
+      btnLabel.textContent = label0;
+    };
+    /* hand the value to the waitlist form further down so nobody types it twice; the latest one typed here wins */
     const prefill = (name: string, value: string) => {
       const f = document.querySelector<HTMLInputElement>(`[data-waitlist] [name="${name}"]`);
-      if (!f || f.value) return;
+      if (!f) return;
       f.value = value;
       f.dispatchEvent(new Event('input', { bubbles: true }));
       f.dispatchEvent(new Event('change', { bubbles: true }));
@@ -267,10 +612,12 @@ const brand = side === 'brands';
       const q = input.value.trim();
       if (side === 'creators') {
         const h = q.replace(/^@+/, '').toLowerCase().replace(/[^a-z0-9._]/g, '').replace(/^[._]+|[._]+$/g, '').slice(0, 24);
-        if (h.length < 2) return say('Use at least two letters or numbers.', true);
+        if (h.length < 2) {
+          closeJoin();
+          return say('Use at least two letters or numbers.', true);
+        }
         input.value = h;
         dispatchEvent(new CustomEvent('stage:creator', { detail: h }));
-        reveal();
         btn.disabled = true;
         let free: boolean | null = null;
         try {
@@ -282,16 +629,22 @@ const brand = side === 'brands';
           btn.disabled = false;
         }
         track('hero_claim', { side: 'creator', free });
-        if (free === false) return say(`<b>comarket.si/${esc(h)}</b> is taken. Try another.`, true);
+        if (free === false) {
+          closeJoin();
+          say(`<b>comarket.si/${esc(h)}</b> is taken. Try another.`, true);
+          reveal();
+          return;
+        }
         prefill('handle', h);
-        say(
-          free
-            ? `<b>comarket.si/${esc(h)}</b> is free. <a href="#waitlist">Claim it before someone else does ${iconHtml('arrow-right')}</a>`
-            : `That’s <b>comarket.si/${esc(h)}</b> on the phone. <a href="#waitlist">Claim it ${iconHtml('arrow-right')}</a>`,
-        );
+        say(free ? COPY.free.replace('{page}', `<b>comarket.si/${esc(h)}</b>`) : COPY.unknown.replace('{page}', `<b>comarket.si/${esc(h)}</b>`));
+        openJoin();
+        reveal();
         return;
       }
-      if (!q) return say('Enter your website, like yourapp.com.', true);
+      if (!q) {
+        closeJoin();
+        return say('Enter your website, like yourapp.com.', true);
+      }
       btn.disabled = true;
       say('Reading your site…');
       try {
@@ -311,8 +664,9 @@ const brand = side === 'brands';
           }),
         );
         prefill('site', q);
-        say(`That’s <b>${esc(data.name)}</b> on a creator’s storefront. <a href="#waitlist">Get early access to make it real ${iconHtml('arrow-right')}</a>`);
+        say(COPY.brand.replace('{name}', `<b>${esc(data.name)}</b>`));
         track('hero_claim', { side: 'brand', host: data.host });
+        openJoin();
         reveal();
       } catch {
         say('We couldn’t reach that site. Check the address.', true);
@@ -320,7 +674,35 @@ const brand = side === 'brands';
         btn.disabled = false;
       }
     };
+
+    /* The email step: the same signup as the form at the bottom (waitlist.ts does the work), without the trip there. */
+    const onJoin = async (e: SubmitEvent) => {
+      e.preventDefault();
+      if (!joinInput || !joinBtn) return;
+      const email = joinInput.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return say('Enter a valid email address.', true);
+      if (!document.querySelector('[data-waitlist]')) {
+        location.hash = 'waitlist';
+        return;
+      }
+      joinBtn.disabled = true;
+      const label = joinBtn.innerHTML;
+      joinBtn.textContent = 'Joining…';
+      const r = await new Promise<JoinResult>((done) => dispatchEvent(new CustomEvent('waitlist:join', { detail: { email, done } })));
+      joinBtn.disabled = false;
+      joinBtn.innerHTML = label;
+      if (!r.ok) return say(esc(r.error), true);
+      if (join) join.hidden = true;
+      const no = String(r.passNo).padStart(4, '0');
+      const page = `<b>comarket.si/${esc(input.value.trim())}</b>`;
+      say(`${COPY.done.replace('{no}', no).replace('{page}', page)} <a href="#waitlist">${COPY.pass} ${iconHtml('arrow-right')}</a>`);
+    };
+
     form.addEventListener('submit', onSubmit);
-    return [() => form.removeEventListener('submit', onSubmit)];
+    join?.addEventListener('submit', onJoin);
+    return [
+      () => form.removeEventListener('submit', onSubmit),
+      () => join?.removeEventListener('submit', onJoin),
+    ];
   });
 </script>

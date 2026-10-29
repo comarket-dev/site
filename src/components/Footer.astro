@@ -13,12 +13,13 @@ const year = new Date().getFullYear();
       <div>
         <a href="/brands" aria-current={side === 'brands' ? 'page' : undefined}>For brands</a>
         <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>For creators</a>
-        <a href="/?fork=1">Start page</a>
+        <a href="/?fork=1">Home</a>
       </div>
-      <div>
-        <a href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'}</a>
-        <a href="/privacy">Privacy</a>
-      </div>
+      {side && (
+        <div>
+          <a href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'}</a>
+        </div>
+      )}
     </nav>
   </div>
   <div class="mark">
@@ -28,6 +29,15 @@ const year = new Date().getFullYear();
   <div class="wrap bottom">
     <div class="legal label">
       <span>© {year} Comarket</span>
+      <nav class="docs" aria-label="Legal">
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/brand-terms">Brand agreement</a>
+        <a href="/creator-terms">Creator agreement</a>
+        <a href="/dpa">DPA</a>
+        <a href="/acceptable-use">Acceptable use</a>
+      </nav>
     </div>
   </div>
 </footer>
@@ -95,6 +105,17 @@ const year = new Date().getFullYear();
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+  }
+  .docs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .docs a {
+    text-decoration: none;
+  }
+  .docs a:hover {
+    text-decoration: underline;
   }
   @media (max-width: 760px) {
     .top {

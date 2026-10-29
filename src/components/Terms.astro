@@ -10,7 +10,7 @@ const { title, items } = Astro.props;
 <section class="section terms" aria-labelledby="terms-h">
   <div class="wrap">
     <div class="head">
-      <h2 class="display-m" id="terms-h" data-reveal>{title}</h2>
+      <h2 class="display-l" id="terms-h" data-reveal>{title}</h2>
     </div>
     <ol class="cards">
       {
@@ -27,7 +27,7 @@ const { title, items } = Astro.props;
 
 <style>
   .terms {
-    padding-block: clamp(56px, 7vw, 112px);
+    padding-block: clamp(72px, 9vw, 144px);
     background: var(--white);
     border-block: 1px solid var(--rule);
   }
@@ -37,49 +37,49 @@ const { title, items } = Astro.props;
     margin-bottom: clamp(28px, 4vw, 48px);
   }
   .head h2 {
-    max-width: 22ch;
+    max-width: 16ch;
   }
   .cards {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
     gap: 14px;
   }
   .cards li {
     display: grid;
     align-content: start;
     gap: 8px;
-    padding: 22px 20px 24px;
+    padding: 26px 24px 28px;
     border-radius: 22px;
     background: var(--paper);
     border: 1px solid var(--rule);
   }
   .cards b {
-    font-size: clamp(19px, 1.5vw, 22px);
+    font-size: clamp(21px, 1.8vw, 26px);
     line-height: 1.2;
     letter-spacing: -0.02em;
   }
+  /* the lead term stands apart by contrast, not yellow (yellow is for the sale itself) */
   .cards li:first-child {
-    background: var(--yellow);
+    background: var(--ink);
     border-color: var(--ink);
+    color: var(--on-ink);
   }
   .cards li:first-child p {
-    color: var(--ink);
+    color: var(--on-ink-muted);
   }
   .cards p {
     font-size: 15.5px;
     line-height: 1.5;
     color: var(--graphite);
   }
-  @media (max-width: 1080px) {
+  /* one row across, however many terms there are; one column on phones, so no card ever sits alone */
+  @media (max-width: 760px) {
     .cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 560px) {
-    .cards {
+      grid-auto-flow: row;
       grid-template-columns: minmax(0, 1fr);
     }
   }

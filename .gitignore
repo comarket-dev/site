@@ -22,3 +22,5 @@ dist/
 
 # rendered post media intermediates (scripts/render-posts.py)
 design/posts/build/
+# texture board before/after crops (scripts/render-texture-board.py)
+design/texture/build/

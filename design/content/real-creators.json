@@ -1,0 +1,238 @@
+{
+ "_note": "Sources for the real people who play the 8 example creators (src/lib/examples.ts). Each creator uses one shoot: a profile photo, a storefront photo and, where the post shows them, a content photo. Files live in design/content/real as <creator>-<source id>.jpg, ungraded (no warm filter). scripts/render-posts.py crops them.",
+ "checked": "2026-10-29",
+ "license": {
+  "pexels": {
+   "verdict": "not allowed",
+   "why": "Pexels license, 'What is not allowed': \"Don't imply endorsement of your product by people or brands on the imagery.\" A named creator with a handle and a post promoting a product implies endorsement, fictional product or not.",
+   "source": "https://www.pexels.com/license/"
+  },
+  "unsplash_free": {
+   "verdict": "not allowed",
+   "why": "Terms section 5: the license excludes \"People's images if they are recognizable in the Images\"; you may need the person's permission.",
+   "source": "https://unsplash.com/terms"
+  },
+  "pixabay": {
+   "verdict": "not allowed",
+   "why": "No releases; bars misleading or deceptive use and leaves third-party consent to the user.",
+   "source": "https://pixabay.com/service/license-summary/"
+  },
+  "kaboompics": {
+   "verdict": "not allowed",
+   "why": "Terms bar use suggesting a depicted person endorses or is involved with something.",
+   "source": "https://kaboompics.com/page/license-and-faq"
+  },
+  "canva_free": {
+   "verdict": "not allowed",
+   "why": "Free Media License bars implying people in an image endorse your product.",
+   "source": "https://www.canva.com/policies/free-media"
+  },
+  "istock": {
+   "verdict": "allowed (creative, non-editorial images)",
+   "why": "Content license 3.2 bars commercial and endorsement use only for 'editorial use only' content, which is not model released. Creative images are model and property released and 9.1 warrants the releases for use as the agreement allows. 3.5: sensitive uses need 'Stock photo. Posed by model.'; endorsement is not on that list, but the examples are already labeled as examples, and a 'posed by models' line costs nothing. iStock's library is Non-AI. Standard license covers web use.",
+   "source": "https://www.istockphoto.com/legal/license-agreement",
+   "price": "$12 an image (1 credit), or 10 images a month for $70, as shown on the image pages 2026-10-29"
+  },
+  "also_ok_not_checked_in_depth": "Getty creative RF (same terms as iStock), Unsplash+ (warrants publicity rights; only sensitive topics need a 'posed by model' note)."
+ },
+ "status": "shortlisted on iStock, not purchased. Buy the photos below (Standard license), save full size into design/content/real as <creator>-<istock id>.jpg, delete that creator's Pexels files, then update AVATARS and STORES in scripts/render-posts.py and the cutout keys, and re-render. Zoom into hands, faces and any product labels before using.",
+ "creators": {
+  "sarah": {
+   "contributor": "istockphoto.com (search: woman writer home office laptop coffee)",
+   "shoot": "striped shirt, white brick loft, coffee and notebook",
+   "photos": [
+    {
+     "istock": "1579445837",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1579445837"
+    },
+    {
+     "istock": "1460644410",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1460644410"
+    },
+    {
+     "istock": "1411713614",
+     "role": "spare",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1411713614"
+    }
+   ],
+   "content": "none: her post is a chart screenshot"
+  },
+  "theo": {
+   "contributor": "miniseries",
+   "shoot": "coworking loft, green overshirt, mustard tee",
+   "photos": [
+    {
+     "istock": "2094338761",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2094338761",
+     "note": "crop to the face; he looks just past the camera"
+    },
+    {
+     "istock": "2094339326",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2094339326"
+    }
+   ],
+   "content": "none: his post is a screenshot"
+  },
+  "lena": {
+   "contributor": "Deagreez",
+   "shoot": "desk with code monitors, olive jacket, glasses",
+   "photos": [
+    {
+     "istock": "2217848723",
+     "role": "profile and content",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2217848723",
+     "note": "front-camera selfie"
+    },
+    {
+     "istock": "2217849817",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2217849817"
+    }
+   ],
+   "content": "the TikTok frame",
+   "weak": "Only two frames of this woman exist in the series (2170631641 and 2233146469 look alike but are other models). Heavily retouched. Re-search before buying if the owner wants a third frame or a less polished look."
+  },
+  "mika": {
+   "contributor": "istockphoto.com (search: asian man laptop cafe)",
+   "shoot": "cafe, brick wall, black cap and glasses",
+   "photos": [
+    {
+     "istock": "1489160720",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1489160720"
+    },
+    {
+     "istock": "1489159660",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1489159660"
+    },
+    {
+     "istock": "1489160162",
+     "role": "spare",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1489160162"
+    }
+   ],
+   "content": "none: his post is a screenshot"
+  },
+  "imani": {
+   "contributor": "Aja Koska (Pangea8)",
+   "shoot": "home vanity, pink headband, 30+ frames",
+   "photos": [
+    {
+     "istock": "1404379912",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1404379912"
+    },
+    {
+     "istock": "1371922270",
+     "role": "content",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1371922270",
+     "note": "Instagram slide"
+    },
+    {
+     "istock": "1383965690",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=1383965690"
+    }
+   ]
+  },
+  "devon": {
+   "contributor": "Miljan Živković (Miljan)",
+   "shoot": "home studio, podcast mic, plaid shirt",
+   "photos": [
+    {
+     "istock": "2184233625",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2184233625"
+    },
+    {
+     "istock": "2184232815",
+     "role": "content",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2184232815",
+     "note": "YouTube thumbnail, holding a gadget"
+    },
+    {
+     "istock": "2184233764",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2184233764"
+    }
+   ]
+  },
+  "jonah": {
+   "contributor": "Jose Luis Carrascosa (JLCarras)",
+   "shoot": "desk setup, grey cap, sage overshirt",
+   "photos": [
+    {
+     "istock": "2242617286",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2242617286"
+    },
+    {
+     "istock": "2242617157",
+     "role": "content",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2242617157",
+     "note": "YouTube thumbnail, holding his phone"
+    },
+    {
+     "istock": "2242616562",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2242616562",
+     "note": "top-down desk"
+    }
+   ]
+  },
+  "alma": {
+   "contributor": "Dobrila Vignjevic (Bobajles)",
+   "shoot": "bright kitchen, olive tee, glass teapot, 18+ frames",
+   "photos": [
+    {
+     "istock": "2234899190",
+     "role": "profile",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2234899190"
+    },
+    {
+     "istock": "2234899193",
+     "role": "content",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2234899193",
+     "note": "TikTok pour"
+    },
+    {
+     "istock": "2234899241",
+     "role": "storefront",
+     "url": "https://www.istockphoto.com/search/2/image?phrase=2234899241"
+    }
+   ]
+  }
+ },
+ "pexels_files_to_replace": {
+  "files": [
+   "alma-6634928.jpg",
+   "alma-6634961.jpg",
+   "alma-6634975.jpg",
+   "devon-8370427.jpg",
+   "devon-8370781.jpg",
+   "devon-8370788.jpg",
+   "imani-5938590.jpg",
+   "imani-5938600.jpg",
+   "imani-5938601.jpg",
+   "jonah-18935826.jpg",
+   "jonah-18935828.jpg",
+   "jonah-18935832.jpg",
+   "jonah-18935833.jpg",
+   "lena-6347880.jpg",
+   "lena-6347883.jpg",
+   "lena-6347901.jpg",
+   "mika-9553905.jpg",
+   "mika-9553911.jpg",
+   "sarah-6763899.jpg",
+   "sarah-6764188.jpg",
+   "theo-4339952.jpg",
+   "theo-4339953.jpg"
+  ],
+  "why": "Downloaded from Pexels by the previous session (the number is the Pexels photo id, https://www.pexels.com/photo/<id>/). Not cleared for this use; the site's avatars, portraits and post keys are currently cut from them. Do not deploy with them."
+ }
+}

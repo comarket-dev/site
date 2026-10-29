@@ -1,0 +1,319 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import Doc from '../components/legal/Doc.astro';
+const updated = '29 October 2026';
+// Drafts stay out of search until counsel signs off and every placeholder is filled (design/legal/README.md).
+const draft = true;
+---
+
+<Base title="Creator agreement · Comarket" description="The agreement for creators on Comarket: how sales count, when you get paid, taxes, disclosure rules, your content and your right to turn brands down." stage="none" noindex={draft}>
+  <Doc
+    title="Creator agreement"
+    lede="Comarket is free for creators. You get paid on every sale you send. This is the agreement behind that, in full."
+    updated={updated}
+    draft={draft}
+    current="/creator-terms"
+  >
+    <div class="short">
+      <b>The short version</b>
+      <ul>
+        <li>You never pay Comarket. Brands pay us.</li>
+        <li>You earn the rate you accepted on each completed sale from a buyer new to the brand, and on their renewals for 12 months.</li>
+        <li>We pay you monthly through Stripe, once the brand's refund window has closed and the brand has paid us.</li>
+        <li>Say clearly, in every post, that you earn from the link. Never buy through your own link or pay people to buy.</li>
+        <li>You can turn down any brand or offer, and stop promoting one, whenever you like.</li>
+      </ul>
+    </div>
+
+    <h2>1. About this agreement</h2>
+    <p>
+      <span class="n">1.1</span>This Creator Agreement is between [[LEGAL ENTITY NAME]] ("Comarket", "we", "us") and you, the
+      person or business that accepts it when opening a creator account. It includes the general terms in
+      <a href="/terms#part-b-general-terms">Part B of the Terms of use</a> and the <a href="/acceptable-use">acceptable use
+      policy</a>. If they conflict, this agreement applies first, then the acceptable use policy, then Part B.
+    </p>
+    <p>
+      <span class="n">1.2</span>To join you must be at least 18, publish content under your own name or brand, and be able to
+      receive payouts through Stripe in your country. You join for your creator work, as an independent business, not as a
+      consumer. If you accept for a company, you confirm that you can bind it. Capitalised words not defined here,
+      such as Qualifying Sale, Commission Period, Net Amount, Refund Window and Offer, have the meanings in section 2 of the
+      <a href="/brand-terms">Brand Agreement</a>.
+    </p>
+
+    <h2>2. Your page and storefronts</h2>
+    <p>
+      <span class="n">2.1</span>You get a Hub at comarket.si/your-handle and, for each Offer you accept and the brand approves, a
+      Storefront in that brand's look with your name on it. You may keep using other link pages and add your Comarket links to
+      them.
+    </p>
+    <p>
+      <span class="n">2.2</span>Your handle is yours to use while your account is open. We may refuse or withdraw a handle that
+      impersonates someone, uses a name or trademark you have no right to, or is offensive or misleading, and we will offer you
+      another. When an account closes, we keep its handle unused for 90 days before anyone else can claim it.
+    </p>
+    <p>
+      <span class="n">2.3</span>Comarket is free for you. We don't charge creators any fee, and we pay Stripe's standard fees for
+      sending your payouts. If you are paid in a currency other than [[BILLING CURRENCY]], Stripe or your bank may charge for
+      the conversion.
+    </p>
+
+    <h2>3. Offers and your right to say no</h2>
+    <p>
+      <span class="n">3.1</span>Brands send you Offers through Comarket. Each Offer shows the product, what buyers get, your rate,
+      the Refund Window, where you may promote it, and the claims you may make about it.
+    </p>
+    <p>
+      <span class="n">3.2</span>You may accept or decline any Offer, without a reason. Declining never counts against you in
+      matching. A Storefront goes live only after you accept and the brand approves you.
+    </p>
+    <p>
+      <span class="n">3.3</span>You may stop promoting an Offer at any time and ask us to take its Storefront down. We do so within
+      2 business days. A brand may also withdraw its approval, and we will tell you. Sales from checkouts started before a
+      Storefront came down still count.
+    </p>
+    <p>
+      <span class="n">3.4</span><b>How we match.</b> We suggest Offers to you, and you to brands, mainly on: how closely your topic
+      and audience fit the brand's product; where your audience is; your platforms and formats; your past results on
+      Comarket, such as completed sales and refund rates; whether your rate fits the Offer; your preferences; and our checks
+      for quality, compliance and fraud. No one can pay for a higher place in matching.
+    </p>
+
+    <h2>4. What counts as a sale</h2>
+    <p>
+      <span class="n">4.1</span>You earn on a Qualifying Sale: a completed payment by a buyer who is new to the brand and who
+      started the checkout from your Storefront, within the attribution window, that isn't refunded within its Refund Window
+      and isn't excluded. Section 6 of the <a href="/brand-terms">Brand Agreement</a> sets out the test in full; it applies to
+      you as written there.
+    </p>
+    <p>
+      <span class="n">4.2</span>We check whether a buyer is new by comparing their email, phone number and card fingerprint with
+      the brand's existing Stripe customers. If any of them matches, the sale doesn't count.
+    </p>
+    <p>
+      <span class="n">4.3</span>Your dashboard shows every sale and, when one doesn't count, why. It never shows who the buyer
+      was. You can ask for a person to review any decision (section 8).
+    </p>
+
+    <h2>5. Your earnings</h2>
+    <p>
+      <span class="n">5.1</span>For each Qualifying Sale you earn the rate in the Offer you accepted, on the First Payment and on
+      each Renewal during the Commission Period (12 months from the First Payment), unless the Offer says it pays on the First
+      Payment only.
+    </p>
+    <p>
+      <span class="n">5.2</span>Earnings on a payment are confirmed when its Refund Window closes without a full refund. A partial
+      refund reduces them in proportion.
+    </p>
+    <p>
+      <span class="n">5.3</span><b>Who pays you.</b> The brand owes you your earnings. You appoint Comarket as your limited agent to
+      collect them from the brand and pay them to you. When the brand pays us, the brand's debt to you for that amount is
+      settled, and we owe it to you instead.
+    </p>
+    <p>
+      <span class="n">5.4</span><b>When.</b> On or about day [[PAYOUT DAY]] of each month, we pay all your confirmed earnings that
+      the brand has paid us, if they total at least [[MINIMUM PAYOUT]]. Smaller amounts carry over to the next month. If you
+      close your account, we pay any balance at the next payout date, whatever its size.
+    </p>
+    <p>
+      <span class="n">5.5</span><b>If a brand pays late.</b> We pay you at the first payout date after the brand pays us. We chase
+      late brands and tell you when your earnings are waiting on one. If a brand doesn't pay, we are not obliged to pay you
+      amounts we haven't received, but we will take reasonable steps to recover them, and we will pass on anything we recover.
+    </p>
+    <p>
+      <span class="n">5.6</span><b>Stripe.</b> Payouts go to your bank through a Stripe connected account. You need to accept
+      Stripe's Connected Account Agreement, give Stripe the identity details it asks for, and keep the account in good
+      standing. We can't pay you while Stripe has restricted your account.
+    </p>
+    <p>
+      <span class="n">5.7</span><b>Reversals after payout.</b> If, after we have paid you, the buyer wins a chargeback within
+      [[CHARGEBACK PERIOD]] days of the payment, or we find that the sale should be excluded (for example as fraud), we deduct
+      the amount from your future earnings. We ask you to repay it directly only if the sale came from your own breach of this
+      agreement, or if no further earnings are due within 6 months.
+    </p>
+    <p>
+      <span class="n">5.8</span><b>Mistakes.</b> If we pay you too much or too little by mistake, we correct it at the next payout
+      and show the correction.
+    </p>
+
+    <h2>6. Taxes</h2>
+    <p>
+      <span class="n">6.1</span>You are responsible for the income tax, social contributions, VAT, GST and other taxes on your
+      earnings, and for registering where the law requires.
+    </p>
+    <p>
+      <span class="n">6.2</span>Before your first payout, you give us, through Stripe or Comarket, the tax information we
+      request: in the US, a Form W-9 if you are a US person, or a Form W-8BEN or W-8BEN-E if you are not. We, or Stripe for us,
+      may issue the information returns US law requires, such as Form 1099-NEC or 1099-K.
+    </p>
+    <p>
+      <span class="n">6.3</span>Laws such as the EU's DAC7 rules may require us to collect your name, address, date of birth, tax
+      identification number, VAT number and bank details, and to report your earnings to tax authorities. We will do that only
+      as the law requires, and we will tell you what we reported.
+    </p>
+    <p>
+      <span class="n">6.4</span><b>Invoices.</b> If you are registered for VAT or GST, give us your number and tell us if it
+      changes. You authorise us to issue invoices or statements for your earnings on your behalf, in the form the law allows,
+      and you agree not to issue your own invoices for the same amounts. If tax law treats these as self-billed invoices, you
+      accept them as such, and you may object to any one within 30 days.
+    </p>
+    <p>
+      <span class="n">6.5</span>We may withhold tax from payouts where the law requires it, and we will show what we withheld. We
+      don't give tax advice.
+    </p>
+
+    <h2>7. Disclosing that you earn</h2>
+    <p>
+      <span class="n">7.1</span>Every time you promote an Offer, in a post, story, video, livestream, newsletter, podcast,
+      comment or message, disclose your connection to the brand in a way your audience can't miss: that the link is paid,
+      that you earn a commission, or that it's an ad.
+    </p>
+    <p><span class="n">7.2</span>That means:</p>
+    <ul>
+      <li>put the disclosure at the start, in the same language as the post, not hidden in hashtags, behind "more" or only in your bio;</li>
+      <li>in video and audio, say it out loud as well as on screen, near the start;</li>
+      <li>use the platform's paid-partnership tools where they exist, as well as your own words, not instead of them;</li>
+      <li>use plain words such as "Ad", "Paid link" or "I earn a commission if you buy". Words like "sp", "collab" or "thanks to" on their own are not enough.</li>
+    </ul>
+    <p>
+      <span class="n">7.3</span>These duties come from, among others: in the US, the FTC's Guides Concerning the Use of Endorsements
+      and Testimonials in Advertising (16 CFR Part 255) and its rule on consumer reviews and testimonials (16 CFR Part 465);
+      in the UK, the CAP Code (including its rule that ads must be obviously identifiable) and the consumer protection law the
+      CMA enforces; and in the EU, the Unfair Commercial Practices Directive and the national laws and advertising codes that
+      implement it. Follow the rules of the country your audience is in, and the platform's own rules.
+    </p>
+    <p>
+      <span class="n">7.4</span><b>Be honest.</b> Only say what you really think. Don't say you use a product unless you do. Make
+      only the claims the Offer allows about what the product does, its price and its results, and never claims about health,
+      money or results that the Offer doesn't include.
+    </p>
+    <p>
+      <span class="n">7.5</span>Every Storefront also shows that you earn a commission. Don't hide or cover it.
+    </p>
+
+    <h2>8. Questioning a payout or a decision</h2>
+    <p>
+      <span class="n">8.1</span>You may question any sale, earning or payout within 60 days of it appearing in your dashboard, by
+      writing to [[CONTACT EMAIL]]. A person at Comarket reviews it, may ask you and the brand for information, and tells you
+      the decision and the reasons within 30 days.
+    </p>
+    <p>
+      <span class="n">8.2</span>If you still disagree, the complaints and mediation process in Part B applies.
+    </p>
+
+    <h2>9. What you must not do</h2>
+    <p>
+      <span class="n">9.1</span>The <a href="/acceptable-use">acceptable use policy</a> sets out the rules in full. In particular,
+      you must not:
+    </p>
+    <ul>
+      <li><b>buy through your own link,</b> or have someone in your household, or anyone acting for you, do so;</li>
+      <li><b>pay or reward buyers</b> to buy, for example by sharing your commission, offering cashback or running a giveaway that requires a purchase, unless the Offer allows it;</li>
+      <li><b>stuff cookies or force clicks,</b> for example with hidden frames, pop-unders, auto-redirects, browser extensions or adware;</li>
+      <li><b>leak codes or links</b> to coupon, cashback or deal sites, unless the Offer allows it;</li>
+      <li><b>spam:</b> send unsolicited email, texts or direct messages, or post links in places that forbid them, in breach of laws such as CAN-SPAM, the UK's PECR or the EU ePrivacy rules;</li>
+      <li><b>bid on a brand's name</b> or trademarks in paid search, or use them in a domain or account name, without the brand's written permission;</li>
+      <li><b>pose as the brand,</b> its staff or its official account, or as an ordinary customer;</li>
+      <li><b>make misleading claims</b> or post fake or paid-for reviews;</li>
+      <li><b>use bots,</b> fake followers or bought engagement, or misstate your audience;</li>
+      <li><b>target children,</b> or promote an Offer in content made for children; or</li>
+      <li><b>get around the new-customer check,</b> for example with made-up identities or several accounts.</li>
+    </ul>
+    <p>
+      <span class="n">9.2</span>If a sale comes from any of these, it doesn't count, and we may withhold or reverse your earnings on
+      the sales affected. For a serious or repeated breach, we may also suspend or end your account under section 12.
+    </p>
+
+    <h2>10. Your content</h2>
+    <p>
+      <span class="n">10.1</span>You own the content you create, and your name, likeness and handle remain yours.
+    </p>
+    <p>
+      <span class="n">10.2</span>You give Comarket a non-exclusive, worldwide, royalty-free licence, while your account is open and
+      for the time needed to take things down after, to host, copy, display and adapt for layout (such as resizing, cropping or
+      reformatting) your name, handle, photo, bio, public profile statistics and the content you add or link, in order to run
+      your Hub and Storefronts, show your profile and results to brands you are matched with, and run Comarket. We may
+      sublicense this only to the brand for its Storefronts with you, and to our service providers.
+    </p>
+    <p>
+      <span class="n">10.3</span>We feature you or your content in Comarket's own marketing only if you agree to it separately.
+      A brand may use your content outside its Storefronts, for example in its own ads, only if you agree through an Offer or
+      in writing.
+    </p>
+    <p>
+      <span class="n">10.4</span>You confirm that you have the rights to the content you add, that anyone shown in it has agreed,
+      and that it doesn't infringe anyone's rights or break the law. To the extent the law allows, you agree not to assert
+      moral rights against formatting changes we make for layout.
+    </p>
+    <p>
+      <span class="n">10.5</span>You may use a brand's names, logos and materials only to promote its Offer, as the Offer allows,
+      while you are approved, and in line with any brand guidelines in the Offer.
+    </p>
+
+    <h2>11. Data</h2>
+    <p>
+      <span class="n">11.1</span>Our <a href="/privacy">privacy policy</a> explains how we handle your information, including what
+      brands see about you.
+    </p>
+    <p>
+      <span class="n">11.2</span>We never give you buyers' identities or contact details. If a buyer contacts you directly, you are
+      responsible for handling their information lawfully. Don't send buyers' personal information to Comarket.
+    </p>
+
+    <h2>12. Suspension and ending</h2>
+    <p>
+      <span class="n">12.1</span>You may close your account at any time from your settings or by writing to [[CONTACT EMAIL]]. We
+      take your Hub and Storefronts down within 2 business days.
+    </p>
+    <p>
+      <span class="n">12.2</span>We may end this agreement by giving you 30 days' notice, with our reasons. We may suspend your
+      account, or end the agreement sooner, with our reasons, for a serious or repeated breach of this agreement or the
+      acceptable use policy, for fraud, or if the law or a regulator requires it. We will tell you the reasons when the
+      suspension or ending starts, unless the law or the risk of fraud prevents that, and you can respond through the
+      complaints process in Part B.
+    </p>
+    <p>
+      <span class="n">12.3</span><b>Earnings after you leave.</b> If the agreement ends for any reason other than your fraud or
+      serious breach, you keep earning on Qualifying Sales made before it ended, including their Renewals until each Commission
+      Period ends, and we keep paying you monthly under section 5. If it ends for your fraud or serious breach, we pay only the
+      confirmed earnings that the breach didn't affect.
+    </p>
+    <p>
+      <span class="n">12.4</span>You don't have to delete posts you published before the end, but you must remove or stop sharing
+      Comarket links that no longer work if we ask, and you may no longer use brands' materials.
+    </p>
+    <p>
+      <span class="n">12.5</span>Sections 5 to 8, 9.2, 10.4, 12.3 to 12.5, 13 and 14, and Part B, survive the end of this agreement.
+    </p>
+
+    <h2>13. Liability</h2>
+    <p>
+      <span class="n">13.1</span>You will compensate Comarket for losses, including fines and reasonable legal costs, caused by
+      third-party claims to the extent they arise from your content, your missing or unclear disclosures, your breach of
+      section 9 or the acceptable use policy, or your taxes.
+    </p>
+    <p>
+      <span class="n">13.2</span>Neither party is liable for lost profits, revenue, business or goodwill, or for indirect or
+      consequential loss, arising from this agreement. Our total liability to you arising from this agreement in any
+      12-month period is limited to the greater of the amounts paid and payable to you in the 12 months before the event
+      giving rise to the claim, and [[CREATOR LIABILITY FLOOR]].
+    </p>
+    <p>
+      <span class="n">13.3</span>No limit in this section applies to our duty to pay you earnings we have received for you, to
+      fraud, gross negligence or wilful misconduct, to death or personal injury caused by negligence, or to any liability that
+      can't be limited by law.
+    </p>
+
+    <h2>14. Other terms</h2>
+    <p>
+      <span class="n">14.1</span>You are an independent business, not our employee, worker or agent, and you decide how and when you
+      create. Nothing here stops you working with other brands or platforms, unless you accept an Offer that asks for
+      exclusivity in a category for a stated time.
+    </p>
+    <p>
+      <span class="n">14.2</span>We may change this agreement under section 13 of Part B: at least 15 days' notice, and you may
+      leave before a change applies.
+    </p>
+  </Doc>
+  <Footer />
+</Base>

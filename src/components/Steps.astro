@@ -11,7 +11,7 @@ const steps = ['Creator posts', 'Buyer clicks', 'Buyer checks out', 'Sale confir
 <ol class:list={['steps', cls]} data-steps aria-label="How a sale goes through Comarket">
   {
     steps.map((s, i) => (
-      <li data-i={i} class:list={[{ on: i === 1, done: i === 0 }]}>
+      <li data-i={i} class:list={[{ on: i === 1, done: i === 0, sale: i === 3 }]}>
         <span class="n num">{String(i + 1).padStart(2, '0')}</span>
         <span class="t" data-t={s} data-alt={i === 3 ? 'Not a new customer' : undefined}>
           {s}
@@ -67,8 +67,12 @@ const steps = ['Creator posts', 'Buyer clicks', 'Buyer checks out', 'Sale confir
     color: var(--on-ink);
   }
   li.on .n {
-    background: var(--yellow);
+    background: var(--paper);
     color: var(--ink);
+  }
+  /* yellow is the sale landing, so only the "Sale confirmed" beat gets it */
+  li.sale.on:not(.no) .n {
+    background: var(--yellow);
   }
   li.done {
     color: var(--ink);

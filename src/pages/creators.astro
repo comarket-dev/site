@@ -9,11 +9,12 @@ import Hub from '../components/creators/Hub.astro';
 import Credit from '../components/creators/Credit.astro';
 import Earnings from '../components/creators/Earnings.astro';
 import Faq from '../components/Faq.astro';
+import { heroPreview } from '../lib/people';
 import Waitlist from '../components/Waitlist.astro';
 import Footer from '../components/Footer.astro';
 
+const hero = heroPreview(Astro.url, 'florists');
 const faq = [
-  { q: 'Does it cost me anything?', a: 'No. Brands pay Comarket. Your rate is never cut to pay us.' },
   {
     q: 'When do I get paid?',
     a: 'Once a month, to your bank through Stripe, after the brand’s refund window closes. Every renewal pays you again for 12 months.',
@@ -39,8 +40,8 @@ const faq = [
 ---
 
 <Base
-  title="Comarket for creators · Get matched with brands your audience wants"
-  description="Get matched with brands your audience wants and earn more from every one: a co-branded storefront that resonates with your followers, and every offer’s rate up front."
+  title="Brand deals for small creators, paid per sale · Comarket"
+  description="Brand deals from about 1,000 followers. Claim a storefront with your name on it, see the rate before you say yes, and earn again on every renewal."
   stage="creators"
   og="/og/og-creators.jpg"
 >
@@ -56,12 +57,13 @@ const faq = [
       button="Claim my page"
       last="You get paid"
       label="Example: Sarah K.'s newsletter links to a storefront. A reader buys, the sale is confirmed, and Sarah's payout grows every month the customer stays."
+      photo={hero.photo}
+      look={hero.look}
     />
     <Terms
       title="You earn on sales. You never pay us."
       items={[
-        { h: 'Paid on every sale.', p: 'Each sale pays your rate, and every renewal pays it again for 12 months.' },
-        { h: 'Your rate, up front.', p: 'Each brand shows its rate before you say yes, like 20% for 12 months.' },
+        { h: 'Paid on every sale.', p: 'Each sale pays the rate you accepted, like 20%, and every renewal pays it again for 12 months.' },
         { h: 'Free, always.', p: 'Brands pay Comarket. Your rate is never cut to pay us.' },
         { h: 'Monthly, to your bank.', p: 'Through Stripe, after the brand’s refund window.' },
       ]}
@@ -72,7 +74,7 @@ const faq = [
     <Credit />
     <Earnings />
     <Faq items={faq} />
-    <Waitlist side="creator" />
+    <Waitlist side="creator" photo="shop-plan" />
   </main>
   <Footer side="creators" />
 </Base>

@@ -48,7 +48,7 @@ const copy = isBrand
             <div class="turn">
               <b>Your turn.</b>
               <p>{copy.turn}</p>
-              <a class="cta-btn big" href="#top" data-claim-jump>
+              <a class="cta-btn big convert" href="#top" data-claim-jump>
                 {copy.turnBtn} <Icon name="arrow-up" />
               </a>
             </div>
@@ -279,6 +279,12 @@ const copy = isBrand
       let last = performance.now();
       let speed = 1; // hovering slows the spotlight to a crawl instead of stopping it
       let raf = 0;
+      /* the clock only runs while the deck is at least half on screen: until someone reaches it, it holds on the first
+         example (never a "Your turn" card), and it waits again whenever they scroll away */
+      let seen = false;
+      const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.5 });
+      io.observe(deck);
+      cleanups.push(() => io.disconnect());
 
       const layout = () => {
         slides.forEach((s, i) => {
@@ -302,7 +308,7 @@ const copy = isBrand
         raf = requestAnimationFrame(tick);
         const dt = Math.min(100, now - last);
         last = now;
-        if (reduceMotion()) return;
+        if (reduceMotion() || !seen) return;
         elapsed += dt * speed;
         const hold = Number(slides[at]?.dataset.hold) || 3800;
         const k = elapsed / hold;

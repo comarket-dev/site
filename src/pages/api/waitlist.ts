@@ -43,7 +43,16 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
   const armFromCookie = cookies.get(`cm_x_${PRICING.id}`)?.value;
   const shown = side === 'brand' ? (PRICING.arms.find((a) => a.id === armFromCookie) ?? arm) : null;
 
-  const utm = typeof body.utm === 'object' && body.utm ? JSON.stringify(body.utm).slice(0, 1000) : null;
+  // campaign tags and the sharer's pass number: short strings only, and dropped whole rather than cut mid-JSON
+  const tags =
+    typeof body.utm === 'object' && body.utm
+      ? Object.fromEntries(
+          Object.entries(body.utm as Record<string, unknown>)
+            .filter(([k, v]) => /^(utm_[a-z]{1,20}|ref)$/.test(k) && typeof v === 'string')
+            .map(([k, v]) => [k, String(v).slice(0, 120)]),
+        )
+      : {};
+  const utm = Object.keys(tags).length && JSON.stringify(tags).length <= 1000 ? tags : null;
   const referrer = clip(body.referrer, 300);
 
   type Row = { pass_no: number; label: string; created_at: Date; existing: boolean };
@@ -62,7 +71,7 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
                             visitor_id, country, utm, referrer)
       values (${side}, ${email}, ${label}, ${siteUrl}, ${handle}, ${platform},
               ${shown?.id ?? null}, ${shown?.first ?? null}, ${shown?.after ?? null},
-              ${locals.visitorId ?? null}, ${locals.country ?? null}, ${utm}::jsonb, ${referrer})
+              ${locals.visitorId ?? null}, ${locals.country ?? null}, ${utm ? sql.json(utm) : null}, ${referrer})
       on conflict (side, email) do nothing
       returning pass_no, label, created_at, false as existing`;
     const r = inserted ?? (await find())[0];
@@ -70,7 +79,7 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
       await sql`
         insert into events (visitor_id, type, experiment, arm, props)
         values (${locals.visitorId}, ${side === 'brand' ? 'waitlist_brand' : 'waitlist_creator'},
-                ${shown ? PRICING.id : null}, ${shown?.id ?? null}, ${JSON.stringify({ platform })}::jsonb)`;
+                ${shown ? PRICING.id : null}, ${shown?.id ?? null}, ${sql.json({ platform })})`;
     }
     return r;
   }).catch((e) => {

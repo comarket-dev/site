@@ -10,21 +10,27 @@ const { arm } = Astro.props;
 const PRICE = 49;
 const RATE = 20;
 const FLAT = 400;
-const VIEWS = 12000;
-const CLICKS = 360;
-/** days of the month the example sales land on */
-const DAYS = [2, 3, 5, 8, 9, 12, 15, 17, 20, 23, 26, 29];
-const SALES = DAYS.length;
+const VIEWS = 18000;
+const CLICKS = 540;
+/* Example month, labelled as one. The same post and the same clicks: sent to the brand's homepage they make 11 sales;
+   sent to a storefront built for the creator's audience, 38. Sales per day across the 30 days, a spike after the
+   post and a long tail (the post keeps getting found). */
+const PER_DAY = [4, 5, 4, 3, 2, 2, 2, 1, 2, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0];
+const SALES = PER_DAY.reduce((a, b) => a + b, 0);
+const OLD_SALES = 11;
+const MAX_DAY = Math.max(...PER_DAY);
+/* every sale in order, with its day and its place in that day's stack */
+let k = 0;
+const PIPS = PER_DAY.flatMap((n, d) => Array.from({ length: n }, (_, j) => ({ d, j, k: k++ })));
 const fee = (PRICE * (RATE + arm.first)) / 100;
 const usd = (v: number) => `$${v.toFixed(2)}`;
 ---
 
 <section class="outcome" id="outcome" aria-labelledby="out-h">
-  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-views={VIEWS} data-clicks={CLICKS}>
-    <div class="pin">
+  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-old-sales={OLD_SALES} data-views={VIEWS} data-clicks={CLICKS}>
+    <div class="scene">
       <div class="wrap">
         <h2 class="display-l" id="out-h">Pay for sales, not posts.</h2>
-
         <div class="cols">
           <article class="card old" aria-label="A sponsored post">
             <header><b>A sponsored post</b></header>
@@ -35,13 +41,13 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
             <ul class="funnel num" aria-hidden="true">
               <li><span>Views</span><b data-v>{VIEWS.toLocaleString('en-US')}</b></li>
               <li><span>Clicks</span><b data-c>{CLICKS}</b></li>
-              <li><span>Sales</span><b data-s>{SALES}</b></li>
+              <li><span>Sales</span><b data-os>{OLD_SALES}</b></li>
             </ul>
             <div class="when-paid" aria-hidden="true">
               <div class="line"><i class="pay lump" style="--x:0"><span class="num">${FLAT}</span></i></div>
               <div class="days num"><span>Day 1</span><span>Day 30</span></div>
             </div>
-            <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / SALES)}</b></p>
+            <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / OLD_SALES)}</b></p>
           </article>
 
           <article class="card new" aria-label="A Comarket storefront">
@@ -56,7 +62,9 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
               <li><span>Sales</span><b data-s>{SALES}</b></li>
             </ul>
             <div class="when-paid" aria-hidden="true">
-              <div class="line">{DAYS.map((d, i) => <i class="pay" data-tick style={`--x:${(d - 1) / 29};--i:${i}`} />)}</div>
+              <div class="line days30" style={`--max:${MAX_DAY}`}>
+                {PIPS.map((p) => <i class="pip" data-tick style={`--d:${p.d};--j:${p.j}`} />)}
+              </div>
               <div class="days num"><span>Day 1</span><span>Day 30</span></div>
             </div>
             <p class="per"><span>Cost per sale</span><b class="num">{usd(fee)}</b></p>
@@ -66,21 +74,23 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
         <div class="end">
           <p class="verdict">If the post flops, one costs you ${FLAT}. The other costs <mark class="hl">nothing.</mark></p>
         </div>
+        <p class="ex" id="out-ex">Example month: one post, 18,000 views, a ${PRICE}/mo product, a {RATE}% creator rate. The storefront converts the same clicks better than a homepage.</p>
       </div>
     </div>
   </div>
 
   <div class="wrap terms">
-    <ul class="nums">
+    <div class="panel">
+    <ul class="nums" aria-label="What Comarket costs">
       <li><b class="num">$0</b><span>until a creator makes a sale</span></li>
       <li><b class="num">{arm.first}%</b><span>of each sale’s first payment</span></li>
       <li><b class="num">{arm.after}%</b><span>of renewals, for 12 months</span></li>
     </ul>
     <div class="under">
       <p>Plus the creator’s rate, which you set. Buyers who were already your customers are free.</p>
-      <a class="btn big" href="#waitlist">Get early access <Icon name="arrow-right" class="arr" /></a>
+      <a class="btn convert big" href="#waitlist">Get early access <Icon name="arrow-right" class="arr" /></a>
     </div>
-    <p class="fine">Example: one post, a ${PRICE}/mo product, a {RATE}% creator rate.</p>
+    </div>
   </div>
 </section>
 
@@ -88,26 +98,35 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
   .outcome {
     position: relative;
     z-index: 2;
-    background: var(--paper-2);
-    padding-bottom: var(--section);
+    background: var(--grain), var(--paper-2);
+    background-position: var(--paper-x, 0px) var(--paper-y, 0px);
+    padding-bottom: clamp(64px, 8vw, 128px);
   }
+  /* The month plays out as you scroll: the scene pins under the nav while the track scrolls past it (the script maps
+     the track's progress to the month). Short screens, phones and reduced motion don't pin; there the month plays as
+     the cards pass through the screen, or shows finished. */
   .track {
-    height: 210vh;
+    position: relative;
   }
-  .pin {
-    position: sticky;
-    top: 0;
-    min-height: 100vh;
-    min-height: 100svh;
-    display: grid;
-    align-items: center;
-    padding-block: clamp(84px, 11vh, 120px) clamp(28px, 5vh, 56px);
+  @media (min-width: 721px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+    .track {
+      height: 190vh;
+    }
+    .scene {
+      position: sticky;
+      top: 64px;
+    }
+  }
+  /* it follows the hero directly, which already leaves room below itself */
+  .scene {
+    padding-block: clamp(48px, 7vw, 120px) 0;
   }
   h2 {
     max-width: 14ch;
     margin-bottom: clamp(24px, 4vh, 44px);
   }
   .cols {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(14px, 2vw, 28px);
@@ -195,9 +214,29 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     transform: scaleY(var(--on, 1));
     transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .new .pay {
+  /* the storefront's month: a column per day, a stacked pill per sale, so busy days stand tall and the month reads
+     as a run of sales, not a few lonely ticks */
+  .days30 {
+    --gap: 3px;
+    --col: calc((100% - 29 * var(--gap)) / 30);
+    --pip: min(12px, calc((64px - (var(--max) - 1) * 2px) / var(--max)));
+    height: 64px;
+  }
+  .pip {
+    position: absolute;
+    left: calc(var(--d) * (var(--col) + var(--gap)));
+    bottom: calc(var(--j) * (var(--pip) + 2px));
+    width: var(--col);
+    height: var(--pip);
+    border-radius: 3px;
     background: var(--yellow);
     box-shadow: inset 0 0 0 1.5px var(--ink);
+    transform-origin: bottom;
+    transform: scaleY(var(--on, 1));
+    opacity: var(--on, 1);
+    transition:
+      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.2s ease;
   }
   .pay.lump {
     width: 34%;
@@ -230,12 +269,17 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     font-weight: 400;
   }
   .end {
-    margin-top: clamp(22px, 4vh, 40px);
-    opacity: var(--end, 1);
-    transform: translateY(calc((1 - var(--end, 1)) * 16px));
-    transition:
-      opacity 0.6s var(--ease),
-      transform 0.8s var(--ease);
+    margin-top: clamp(28px, 4vh, 44px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+  }
+  .ex {
+    margin-top: 14px;
+    font-size: 13.5px;
+    color: var(--graphite);
   }
   .verdict {
     font-size: clamp(26px, 2.8vw, 44px);
@@ -247,9 +291,17 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
 
   /* the price, which is the same idea in numbers */
   .terms {
+    padding-top: clamp(48px, 7vw, 104px);
+  }
+  /* the canonical price: the page's biggest numbers, on their own white panel ringed in ink */
+  .panel {
     display: grid;
     gap: 28px;
-    padding-top: clamp(24px, 4vw, 56px);
+    padding: clamp(24px, 3.4vw, 48px);
+    border-radius: 32px;
+    background: var(--white);
+    border: 1.5px solid var(--ink);
+    box-shadow: 0 40px 80px -56px rgb(30 14 63 / 0.5);
   }
   .nums {
     list-style: none;
@@ -257,13 +309,12 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid var(--ink);
   }
   .nums li {
     display: grid;
     align-content: start;
     gap: 12px;
-    padding: 22px 20px 0 0;
+    padding: 0 20px 0 0;
   }
   .nums li + li {
     padding-left: 20px;
@@ -271,7 +322,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
   }
   .nums b {
     font-family: var(--sans);
-    font-size: clamp(56px, 7vw, 112px);
+    font-size: clamp(64px, 8.4vw, 136px);
     line-height: 1.04;
     letter-spacing: -0.055em;
     font-weight: 700;
@@ -282,6 +333,8 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     color: var(--graphite);
   }
   .under {
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -303,17 +356,6 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     color: var(--graphite);
   }
 
-  /* pinned only where the whole scene fits on screen */
-  @media (max-width: 900px), (max-height: 820px) {
-    .track {
-      height: auto;
-    }
-    .pin {
-      position: static;
-      min-height: 0;
-      padding-block: var(--section) 0;
-    }
-  }
   @media (max-width: 720px) {
     .cols,
     .nums {
@@ -321,17 +363,16 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     }
     .nums li,
     .nums li + li {
-      padding: 20px 0;
+      padding: 18px 0;
       border-left: 0;
-      border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+      border-bottom: 1px solid var(--rule);
     }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .track {
-      height: auto;
+    .nums li:first-child {
+      padding-top: 0;
     }
-    .pin {
-      position: static;
+    .end {
+      align-items: flex-start;
+      flex-direction: column;
     }
   }
 </style>
@@ -345,81 +386,59 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     const fee = Number(el.dataset.fee);
     const flat = Number(el.dataset.flat);
     const SALES = Number(el.dataset.sales);
+    const OLD = Number(el.dataset.oldSales);
     const $$ = (s: string) => Array.from(el.querySelectorAll<HTMLElement>(s));
     const VIEWS = Number(el.dataset.views);
     const CLICKS = Number(el.dataset.clicks);
     const views = $$('[data-v]');
     const clicks = $$('[data-c]');
     const sold = $$('[data-s]');
+    const oldSold = $$('[data-os]');
     const ticks = $$('[data-tick]');
     const bill = el.querySelector<HTMLElement>('[data-bill]')!;
     const when = el.querySelector<HTMLElement>('[data-when]')!;
     const oldPer = el.querySelector<HTMLElement>('[data-old-per]')!;
+    const cols = el.querySelector<HTMLElement>('.cols')!;
     const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
     const ramp = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
 
-    /** One frame of the story at progress p: people see the post, click, buy; only one bill follows the buying. */
+    /** One frame of the month at progress p: people see the post, click, buy; only one bill follows the buying. */
+    let shown = -1;
     const draw = (p: number) => {
       const v = ramp(p, 0.02, 0.3);
       const c = ramp(p, 0.14, 0.42);
-      const n = Math.floor(ramp(p, 0.34, 0.68) * SALES + 0.001);
+      const s = ramp(p, 0.3, 0.97);
+      const n = Math.floor(s * SALES + 0.001);
+      const o = Math.floor(s * OLD + 0.001);
       views.forEach((e) => (e.textContent = fmt(VIEWS * v)));
       clicks.forEach((e) => (e.textContent = fmt(CLICKS * c)));
+      if (n === shown && s > 0 && s < 1) return;
+      shown = n;
       sold.forEach((e) => (e.textContent = String(n)));
+      oldSold.forEach((e) => (e.textContent = String(o)));
       ticks.forEach((t, k) => t.style.setProperty('--on', k < n ? '1' : '0'));
       bill.textContent = `$${(fee * n).toFixed(2)}`;
-      when.textContent = n ? 'paid only as each sale lands' : 'nothing before it goes live';
-      oldPer.textContent = n ? `$${(flat / n).toFixed(2)}` : 'no sales yet';
-      el.style.setProperty('--end', String(ramp(p, 0.72, 0.8)));
+      when.textContent = n ? 'paid only as each sale lands' : 'nothing before a sale';
+      oldPer.textContent = o ? `$${(flat / o).toFixed(2)}` : 'no sales yet';
     };
 
-    const pinned = () => !matchMedia('(max-width: 900px), (max-height: 820px)').matches;
-    let raf = 0;
-    let started = 0;
-    let io: IntersectionObserver | null = null;
-
-    if (reduceMotion()) {
-      draw(1);
-      return [];
-    }
-
-    const onScroll = () => {
-      if (raf || !pinned()) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
+    /* Progress from the scroll: pinned, it's how far the track has scrolled past the pin; unpinned, how far the
+       cards have travelled up through the screen (they finish while still fully in view). */
+    const pinned = () => getComputedStyle(el.querySelector('.scene')!).position === 'sticky';
+    const progress = () => {
+      if (pinned()) {
         const r = el.getBoundingClientRect();
-        const lead = innerHeight * 0.25;
-        // starts as the cards come fully into view, finishes with a third of the pin left to sit on the result
-        draw(Math.min(1, Math.max(0, (lead - r.top) / (r.height - innerHeight + lead))));
-      });
+        return ramp(-r.top, 0, Math.max(1, r.height - innerHeight + 64));
+      }
+      const r = cols.getBoundingClientRect();
+      return ramp(innerHeight - r.top, r.height * 0.25, r.height * 0.25 + innerHeight * 0.6);
     };
-
-    // where it isn't pinned, play it once when the cards are in view
-    const play = () => {
-      const t0 = performance.now();
-      const step = (now: number) => {
-        const p = Math.min(1, (now - t0) / 3200);
-        draw(p);
-        if (p < 1) started = requestAnimationFrame(step);
-      };
-      started = requestAnimationFrame(step);
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => draw(reduceMotion() ? 1 : progress()));
     };
-    if (pinned()) {
-      draw(0);
-      onScroll();
-    } else {
-      draw(0);
-      io = new IntersectionObserver(
-        (es) => {
-          if (es.some((e) => e.isIntersecting)) {
-            io?.disconnect();
-            play();
-          }
-        },
-        { threshold: 0.45 },
-      );
-      io.observe(el.querySelector('.cols')!);
-    }
+    onScroll();
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onScroll);
     return [
@@ -427,8 +446,6 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
         removeEventListener('scroll', onScroll);
         removeEventListener('resize', onScroll);
         cancelAnimationFrame(raf);
-        cancelAnimationFrame(started);
-        io?.disconnect();
       },
     ];
   });

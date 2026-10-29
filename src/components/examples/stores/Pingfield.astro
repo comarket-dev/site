@@ -211,9 +211,12 @@ const BARS = Array.from({ length: 45 }, (_, i) => i === 31);
     gap: 12px;
     margin: 20px 0 0;
   }
+  /* the creator's own photo beside their note (scripts/render-posts.py SHOTS), larger than the lockup's avatar */
   .av.big {
-    width: 42px;
-    height: 42px;
+    width: 64px;
+    height: 80px;
+    border-radius: 4px;
+    background-image: url(/assets/stores/creators/mika.jpg);
   }
   blockquote {
     margin: 0;

@@ -1,0 +1,87 @@
+{
+ "shop-plan": {
+  "w": 3200,
+  "h": 2133,
+  "original": true
+ },
+ "shop-film": {
+  "w": 3200,
+  "h": 4800,
+  "original": true
+ },
+ "florists": {
+  "w": 3200,
+  "h": 2133,
+  "original": true
+ },
+ "cook": {
+  "w": 3200,
+  "h": 4800,
+  "original": true
+ },
+ "founder-desk": {
+  "w": 3200,
+  "h": 2133,
+  "original": true
+ },
+ "founder-screen": {
+  "w": 3200,
+  "h": 2133,
+  "original": true
+ },
+ "founder-board": {
+  "w": 3200,
+  "h": 2134,
+  "original": true
+ },
+ "candle-maker": {
+  "w": 3200,
+  "h": 4800,
+  "original": true
+ },
+ "owner-hero": {
+  "w": 200,
+  "h": 133,
+  "original": false
+ },
+ "owner-pack": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "owner-call": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "creator-mic": {
+  "w": 600,
+  "h": 900,
+  "original": false
+ },
+ "creator-desk": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "creator-work": {
+  "w": 600,
+  "h": 900,
+  "original": false
+ },
+ "creator-record": {
+  "w": 600,
+  "h": 400,
+  "original": false
+ },
+ "camera-man": {
+  "w": 600,
+  "h": 900,
+  "original": false
+ },
+ "makeup": {
+  "w": 200,
+  "h": 133,
+  "original": false
+ }
+}

@@ -2,11 +2,12 @@
 import BrandMark from '../examples/BrandMark.astro';
 import type { BrandId } from '../../lib/marks';
 
-// each storefront as Sarah's page lists it: the brand's mark on its own page color, her readers' offer, her rate
-const stores: Array<{ id: BrandId; brand: string; offer: string; rate: string; tile: string }> = [
-  { id: 'fernwood', brand: 'Fernwood', offer: '30 days free', rate: '20% for 12 months', tile: '#F3F0E8' },
-  { id: 'pagewell', brand: 'Pagewell', offer: 'first page free', rate: '18% for 6 months', tile: '#F1ECFF' },
-  { id: 'tallyhawk', brand: 'Tallyhawk', offer: '2 months free', rate: '25% for 12 months', tile: '#F2EEE7' },
+// each storefront as Sarah's readers see it on her page: the brand's mark on its own page color, what it is, her offer
+// (her rate is hers to see, not her readers', so the public page doesn't show it)
+const stores: Array<{ id: BrandId; brand: string; offer: string; what: string; tile: string }> = [
+  { id: 'fernwood', brand: 'Fernwood', offer: '30 days free', what: 'Onboarding analytics for SaaS teams', tile: '#F3F0E8' },
+  { id: 'pagewell', brand: 'Pagewell', offer: 'first page free', what: 'Landing page builder', tile: '#F1ECFF' },
+  { id: 'tallyhawk', brand: 'Tallyhawk', offer: '2 months free', what: 'Invoicing for freelancers', tile: '#F2EEE7' },
 ];
 const links = ['My newsletter', 'Latest video', 'Book a call'];
 ---
@@ -34,7 +35,7 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
                     <b>
                       {s.brand}, {s.offer}
                     </b>
-                    <span>Your rate: {s.rate}</span>
+                    <span>{s.what}</span>
                   </span>
                 </div>
               ))
@@ -65,6 +66,9 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
 </section>
 
 <style>
+  .hub {
+    padding-top: clamp(48px, 6vw, 96px);
+  }
   .phones {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
