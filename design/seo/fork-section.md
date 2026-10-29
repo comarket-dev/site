@@ -73,7 +73,7 @@ as `brands.astro` does.
 first payment and 10% of renewals, for 12 months.
 
 **h4:** Micro-influencers your buyers already follow.
-**p:** We find creators with 1,000 to 50,000 followers who already post about the problem you solve, and pitch them your
+**p:** We find creators with 1,000 to 100,000 followers who already post about the problem you solve, and pitch them your
 offer. You approve each one before they go live.
 
 **h4:** A co-branded landing page for every creator.
@@ -119,9 +119,11 @@ You pay creators a commission on completed sales instead of a fee per post. On C
 someone new to your brand completes a payment, and nothing is due upfront.
 
 **How do I find micro-influencers who work on commission?**
-Creators often ignore commission-only offers from brands they don’t know. Comarket finds creators who already post
-about your problem, pitches your offer with their rate up front, and gives each one a storefront in your brand that’s
-worth sharing.
+Most creators turn down commission-only offers because a plain affiliate link rarely pays: the clicks land on a homepage
+that wasn’t made for their audience, and a sale pays once. Comarket fixes both. Each creator gets a storefront in your
+brand with their name and their offer on it, so more of their clicks become sales, and every renewal pays them again for
+12 months. We find creators who already post about the problem you solve and pitch your offer with their rate up front,
+so the ones who say yes want to sell it.
 
 **Does it work for SaaS and subscription businesses?**
 Yes. Comarket tracks sales through Stripe web checkouts today, and renewals keep paying the creator for 12 months.
@@ -149,7 +151,7 @@ a clean question-and-answer version of the page. Add it only if the text matches
     {
       "@type": "Question",
       "name": "How do I find micro-influencers who work on commission?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Creators often ignore commission-only offers from brands they don’t know. Comarket finds creators who already post about your problem, pitches your offer with their rate up front, and gives each one a storefront in your brand that’s worth sharing." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Most creators turn down commission-only offers because a plain affiliate link rarely pays: the clicks land on a homepage that wasn’t made for their audience, and a sale pays once. Comarket fixes both. Each creator gets a storefront in your brand with their name and their offer on it, so more of their clicks become sales, and every renewal pays them again for 12 months. We find creators who already post about the problem you solve and pitch your offer with their rate up front, so the ones who say yes want to sell it." }
     },
     {
       "@type": "Question",

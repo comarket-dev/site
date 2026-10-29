@@ -122,7 +122,6 @@ const brand = side === 'brand';
         </div>
         {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
         <button class="btn convert submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <Icon name="arrow-right" class="arr" /></button>
-        <p class="risk">{brand ? 'No card needed. You pay nothing until a new customer pays.' : 'Free, always. Brands pay Comarket, never you.'}</p>
         <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
         <!-- PLACEHOLDER: hello@comarket.si is not a live inbox yet; confirm the address before deploy -->
         <p class="founder">
@@ -168,7 +167,7 @@ const brand = side === 'brand';
                 ]
               : [
                   ['platform', 'Where’s your audience?', ['YouTube', 'TikTok', 'Instagram', 'Substack or a newsletter', 'Reddit', 'X', 'A podcast', 'A blog', 'Somewhere else']],
-                  ['followers', 'How many followers there?', ['Under 1,000', '1,000 to 5,000', '5,000 to 20,000', '20,000 to 50,000', 'Over 50,000']],
+                  ['followers', 'How many followers there?', ['Under 1,000', '1,000 to 10,000', '10,000 to 50,000', '50,000 to 100,000', 'Over 100,000']],
                   ['topic', 'What does your audience ask you about?', ['Software and apps', 'Money and work', 'Beauty and skincare', 'Food and drink', 'Health and fitness', 'Something else']],
                 ]
             ).map(([name, q, opts]) => (
@@ -548,13 +547,6 @@ const brand = side === 'brand';
     padding-left: 134px;
     font-family: var(--mono);
     font-size: 15px;
-  }
-  .risk {
-    margin-top: -6px;
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--on-ink);
-    text-align: center;
   }
   .fine {
     margin-top: -10px;

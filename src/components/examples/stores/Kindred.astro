@@ -102,7 +102,7 @@ const STEPS = [
     flex: none;
   }
   .photo {
-    height: 214px;
+    height: 190px;
     background: url(/assets/stores/kindred.jpg) 50% 50% / cover;
   }
   h1 {
@@ -154,9 +154,12 @@ const STEPS = [
     gap: 10px;
     margin: 16px 22px 0;
   }
+  /* the creator's own photo beside their note (scripts/render-posts.py SHOTS), larger than the lockup's avatar */
   .av.big {
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 80px;
+    border-radius: 16px;
+    background-image: url(/assets/stores/creators/imani.jpg);
   }
   blockquote {
     margin: 0;

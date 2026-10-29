@@ -215,13 +215,16 @@ import StoreFoot from '../StoreFoot.astro';
 
   .note {
     display: grid;
-    grid-template-columns: 46px 1fr;
+    grid-template-columns: 64px 1fr;
     column-gap: 12px;
     margin: 20px 0 0;
   }
+  /* the creator's own photo beside their note (scripts/render-posts.py SHOTS), larger than the lockup's avatar */
   .av.big {
-    width: 46px;
-    height: 46px;
+    width: 64px;
+    height: 80px;
+    border-radius: 2px;
+    background-image: url(/assets/stores/creators/theo.jpg);
     grid-row: span 2;
   }
   blockquote {

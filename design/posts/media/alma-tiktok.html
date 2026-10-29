@@ -1,17 +1,16 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
 <style>
-  /* A frame of Ama's slow-morning video: the pour, Hollow Tea's paper label on the tin, her captions burned in.
-     The photo is framed a touch tighter and to the right (118% wide, so photo pixels x 0.5531, minus 64.8 px on x and
-     51.7 on y), which keeps the tin clear of TikTok's right rail. The tin's label is printed into the photo by scripts/print-labels.py. */
+  /* A frame of Alma's slow-morning video: her pour, captions burned in. The photo is design/content/real
+     (design/content/real-creators.json); the box she's talking about is in the captions, not on camera. */
   body { width: 360px; height: 640px; background: #2a2118; }
-  .photo { position: absolute; inset: 0; background: url(../../content/posts/ama-pour2-a.labeled.png) right center / 118% auto no-repeat; }
-  .cap { position: absolute; left: 0; right: 0; text-align: center; font: 700 18px/1.2 'TikTok Sans', -apple-system, sans-serif; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
-  .c1 { top: 128px; }
-  .c2 { top: 154px; font-size: 14px; }
+  .photo { position: absolute; inset: 0; background: url(../../content/real/alma-6634961.jpg) 50% 40% / cover no-repeat; }
+  /* TikTok's dark text box: her wall is pale, so plain white captions wouldn't read */
+  .caps { position: absolute; left: 0; right: 0; top: 92px; display: grid; justify-items: center; gap: 3px; }
+  .cap { font: 700 17px/1.18 'TikTok Sans', -apple-system, sans-serif; color: #fff; background: rgba(0, 0, 0, 0.72); padding: 4px 9px 5px; border-radius: 7px; }
+  .c2 { font-size: 14px; }
 </style></head>
 <body>
   <div class="photo"></div>
-  <div class="cap c1">slow morning, week 32</div>
-  <div class="cap c2">this month's box: smoky oolong</div>
+  <div class="caps"><span class="cap c1">slow morning, week 32</span><span class="cap c2">this month's box: smoky oolong</span></div>
 </body></html>

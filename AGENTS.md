@@ -7,7 +7,7 @@ finish a piece of work or the owner decides something, update "Where things stan
 ## What this is
 
 The marketing site and waitlist for Comarket (comarket.si). Comarket matches brands with micro-creators (about 1,000
-to 50,000 followers) and gives each creator a co-branded storefront in the brand's look. Brands pay nothing upfront:
+to 100,000 followers) and gives each creator a co-branded storefront in the brand's look. Brands pay nothing upfront:
 only when a sale completes, the creator rate they set plus 15% of a new customer's first payment and 10% of renewals,
 for 12 months. Creators never pay. A sale only counts if the buyer is new to the brand.
 
@@ -57,6 +57,8 @@ Owner decisions on it (2026-10-26): keep the original hero titles and subs on bo
 examples, "Pay for sales, not posts", the agent replay, then the rest; no fit line under the claim fields; the fork
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
 tap-to-skip, feels right.
+
+**Round 10 (2026-10-29, saved mid-round):** creator range 1,000 to 100,000; waitlist risk line removed; a stronger commission FAQ answer; real photos in the posts and a creator photo on every storefront. What's left is listed in A-GRADE.md round 10, "Next".
 
 **Round 9 (2026-10-29):** the fork's only trip is the iris, a touch slower (1150ms); expand and doors are gone. The legal drafts are linked in the footer and build. The 8 example creators move to real
 people from iStock (Pexels forbids implying endorsement): one shoot each is shortlisted in

@@ -216,14 +216,17 @@ const STEPS = [
   }
   .note {
     display: grid;
-    grid-template-columns: 52px 1fr;
+    grid-template-columns: 64px 1fr;
     column-gap: 14px;
     align-items: start;
     margin: 22px 0 0;
   }
+  /* the creator's own photo beside their note (scripts/render-posts.py SHOTS), larger than the lockup's avatar */
   .av.big {
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 80px;
+    border-radius: 12px;
+    background-image: url(/assets/stores/creators/sarah.jpg);
     grid-row: span 2;
   }
   blockquote {

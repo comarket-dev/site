@@ -275,6 +275,22 @@ answer, not a card.
 - lead, legal/Doc.astro: numbered headings showed twice in the contents list ("1. 1. About this agreement") and "10." hung into the margin on phones. The list now shows the heading's own number in a fixed column; unnumbered pages keep list numbers with room for two digits.
 - lead, real creators: Pexels does not allow this use ("Don't imply endorsement of your product by people or brands on the imagery"), and neither do free Unsplash, Pixabay, Kaboompics or Canva. iStock creative images do (model released; only editorial images are barred from endorsement). One iStock shoot per creator is shortlisted in `design/content/real-creators.json` (profile, storefront, content). Not bought yet: the owner buys them. Until then the avatars, portraits and post keys are still cut from the Pexels photos in `design/content/real/` and must not ship.
 
+### Round 10 (2026-10-29, owner feedback; in progress, saved mid-round)
+Done:
+- Copy: creators are 1,000 to 100,000 followers (brands.astro FAQ, the fork's brand block, AGENTS.md, design/seo/fork-section.md); the waitlist's follower question is now Under 1,000 / 1,000 to 10,000 / 10,000 to 50,000 / 50,000 to 100,000 / Over 100,000.
+- Waitlist.astro: removed the risk line under the submit ("No card needed. You pay nothing until a new customer pays." and "Free, always. Brands pay Comarket, never you.") and its `.risk` style.
+- index.astro QA (and the FAQPage JSON-LD built from it, and fork-section.md): "How do I find micro-influencers who work on commission?" now argues why plain affiliate links fail creators (homepage clicks, one payout) and how Comarket fixes both (a storefront in the brand with their name and offer, renewals for 12 months, creators who already post about the problem, rate up front).
+- Post media now use the real photos (design/content/real, still the Pexels stand-ins; see real-creators.json): Devon's and Jonah's thumbnails and Lena's TikTok re-rendered with the cutouts from last round; Jonah's thumbnail background is his own desk (jonah-18935828); Alma's TikTok frame is her pour (alma-6634961) with TikTok's dark caption boxes; Imani's slide 1 is her mid-routine (imani-5938600) with paper-colored cover text, so the post no longer repeats the storefront's product photo.
+- Storefronts: the note beside each creator's quote is now their own photo (64x80, `SHOTS` in scripts/render-posts.py writes public/assets/stores/creators/<id>.jpg), a different shot from the avatar where the shoot has one. Kindred's product photo is 190px tall (was 214) to make room.
+- scripts/render-posts.py: Playwright is imported only when rendering; `--from-raw <names>` degrades and exports design/posts/build/<name>.raw.png made some other way (in a cloud session: Node Playwright, same sizes and device scale as MEDIA).
+
+Next (not done yet):
+1. Check every storefront at full size (scripts/qa/spotlight.py, or the Node version of it): Kindred's note clears "The Reset Routine" after the photo change; Hollow's note sits close to the offer line; no clipped text anywhere.
+2. Alma's TikTok: captions moved up to 92px to clear her hair; confirm in the post frame (the app's top bar overlays the frame).
+3. The hero phone's Fernwood storefront (src/scripts/stage/screens.ts) still draws Sarah's note with her round portrait; match it to the storefront's photo tile (assets/stores/creators/sarah.jpg).
+4. The stand-in photos are Pexels: buy the iStock shortlist (real-creators.json) and swap filenames in AVATARS, SHOTS and the media pages, recut the keys, re-render.
+5. Ask the owner whether the creators page card "Free, always. Brands pay Comarket. Your rate is never cut to pay us." should go too (only the waitlist line was asked for).
+
 ## HANDOFF (2026-10-29): start here
 
 **State.** Pushed to `a-grade` through round 6 (commit 5b74c7e). Builds, 10 tests pass, no page errors and no sideways

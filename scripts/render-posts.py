@@ -10,6 +10,9 @@ another (STORES).
     python3 scripts/render-posts.py           everything
     python3 scripts/render-posts.py avatars   only the face crops and storefront photos
     python3 scripts/render-posts.py sarah-chart imani-slide   only those media
+    python3 scripts/render-posts.py --from-raw devon-thumb   degrade and export design/posts/build/<name>.raw.png
+                                                             screenshotted some other way (a session without
+                                                             Playwright for Python: Node Playwright works the same)
 
 Needs Playwright for Python and Google Chrome. Cutouts in design/posts/keys come from scripts/cutout.py.
 """
@@ -17,7 +20,6 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageFilter
-from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "design/posts/media"
@@ -55,6 +57,19 @@ AVATARS = {
 # pixels, web width. Shops label their products first (scripts/print-labels.py writes <photo>.labeled.jpg).
 STORES = {}
 
+# the creator's photo beside their note on the storefront (public/assets/stores/creators/<creator>.jpg), 4:5: photo,
+# crop box (x0, y0, x1, y1) in its pixels. A different shot from the avatar where the shoot has one.
+SHOTS = {
+    "sarah": ("sarah-6763899", (200, 0, 1802, 2003)),
+    "devon": ("devon-8370427", (550, 0, 2150, 2000)),
+    "lena": ("lena-6347901", (0, 0, 2000, 2500)),
+    "mika": ("mika-9553911", (0, 250, 2000, 2750)),
+    "imani": ("imani-5938601", (1650, 150, 3000, 1837)),
+    "theo": ("theo-4339953", (1400, 0, 3000, 2000)),
+    "jonah": ("jonah-18935833", (1270, 0, 2870, 2000)),
+    "alma": ("alma-6634928", (0, 150, 2000, 2650)),
+}
+
 
 def degrade(src: Path, kind: str) -> Image.Image:
     im = Image.open(src).convert("RGB")
@@ -74,27 +89,34 @@ def degrade(src: Path, kind: str) -> Image.Image:
 QUALITY = {"video": 66, "thumb": 80, "photo": 78, "shot": 86}
 
 
+def export(name):
+    """Degrade one rendered page (BUILD/<name>.raw.png) the way its platform would, and write the web copy."""
+    w, h, dpr, kind, web_w = MEDIA[name]
+    im = degrade(BUILD / f"{name}.raw.png", kind)
+    im.save(BUILD / f"{name}.jpg", quality=QUALITY[kind], subsampling=2)  # other media pages may use it
+    if web_w:
+        web = im.resize((web_w, round(web_w * im.height / im.width)), Image.LANCZOS)
+        web.save(OUT / f"{name.split('-')[0]}.jpg", quality=QUALITY[kind], subsampling=2, optimize=True, progressive=True)
+    print("rendered", name, flush=True)
+
+
 def main(only=()):
+    from playwright.sync_api import sync_playwright
+
     BUILD.mkdir(parents=True, exist_ok=True)
     (OUT / "avatars").mkdir(parents=True, exist_ok=True)
     with sync_playwright() as pw:
         b = pw.chromium.launch(channel="chrome", args=["--allow-file-access-from-files"])
         pages = {dpr: b.new_page(device_scale_factor=dpr) for dpr in (2, 3)}
-        for name, (w, h, dpr, kind, export) in MEDIA.items():
+        for name, (w, h, dpr, kind, _web) in MEDIA.items():
             if only and name not in only:
                 continue
             pg = pages[dpr]
             pg.set_viewport_size({"width": w, "height": h})
             pg.goto((SRC / f"{name}.html").as_uri())
             pg.wait_for_timeout(400)
-            raw = BUILD / f"{name}.raw.png"
-            pg.screenshot(path=str(raw), clip={"x": 0, "y": 0, "width": w, "height": h})
-            im = degrade(raw, kind)
-            im.save(BUILD / f"{name}.jpg", quality=QUALITY[kind], subsampling=2)  # other media pages may use it
-            if export:
-                web = im.resize((export, round(export * im.height / im.width)), Image.LANCZOS)
-                web.save(OUT / f"{name.split('-')[0]}.jpg", quality=QUALITY[kind], subsampling=2, optimize=True, progressive=True)
-            print("rendered", name, flush=True)
+            pg.screenshot(path=str(BUILD / f"{name}.raw.png"), clip={"x": 0, "y": 0, "width": w, "height": h})
+            export(name)
         b.close()
     if not only:
         avatars()
@@ -117,6 +139,11 @@ def avatars():
         im = im.resize((width, round(width * im.height / im.width)), Image.LANCZOS)
         im.save(STORE_OUT / f"{brand}.jpg", quality=82, optimize=True, progressive=True)
     print("storefront photos", ", ".join(STORES))
+    (STORE_OUT / "creators").mkdir(parents=True, exist_ok=True)
+    for cid, (photo, box) in SHOTS.items():
+        im = Image.open(REAL / f"{photo}.jpg").convert("RGB").crop(box).resize((256, 320), Image.LANCZOS)
+        im.save(STORE_OUT / "creators" / f"{cid}.jpg", quality=84, optimize=True, progressive=True)
+    print("creator photos", ", ".join(SHOTS))
 
 
 if __name__ == "__main__":
@@ -124,4 +151,10 @@ if __name__ == "__main__":
 
     # python3 scripts/render-posts.py avatars: only the face crops; with media names, only those media
     args = sys.argv[1:]
-    avatars() if args == ["avatars"] else main(tuple(args))
+    if args[:1] == ["--from-raw"]:
+        for name in args[1:]:
+            export(name)
+    elif args == ["avatars"]:
+        avatars()
+    else:
+        main(tuple(args))
