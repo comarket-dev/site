@@ -267,6 +267,14 @@ answer, not a card.
 - lead, Outcome.astro: the month plays as you scroll again (pinned on desktop over a 190vh track; on phones and short screens it plays as the cards pass through the screen; reduced motion shows it finished). The storefront's payments are a column per day with a stacked pill per sale: 38 sales over 30 days (a spike after the post, then a long tail). The same 540 clicks make 11 sales on a homepage, so cost per sale is $36.36 against $17.15. Replay button removed. The example line says the storefront converts the same clicks better.
 - lead, index.astro + brands.astro + creators.astro: the fork's text section rewritten from the SEO agent's research (design/seo/fork-section.md): "Creator marketing that pays per sale, not per post.", keyworded H3s and blocks per side, four long-tail questions, Organization, WebSite and FAQPage JSON-LD. New titles and meta descriptions on all three pages. Prices come from the pricing arm.
 
+### Round 9 (2026-10-29, legal pages and real creators)
+- lead, Footer.astro: all seven legal pages sit in the bottom row (Privacy moved there from the upper columns; the empty second column is gone on the fork). Every page returns 200; build passes.
+- lead, design/legal/README.md: placeholder table checked against `grep -rhoE '\[\[[^]]+\]\]' src/pages`: all 39 are listed; fixed the pages column for the entity name (not on cookies) and the data protection cap (brand terms; the DPA points to it).
+- lead, stores/Hollow.astro and Kindred.astro: still named Ama and Priya and pointed at deleted avatars; now Alma and Imani. `public/assets/posts/ama.jpg` and `priya.jpg` renamed to the paths the Alma and Imani posts load (still the old generated frames until the new photos are in).
+- lead, forktrip.ts: iris is the fork's only trip (owner's pick), slowed from 1000ms to 1150ms. Expand and doors are removed, with `?trip=`, its `cm-trip` session storage (the cookie policy no longer lists it), the doors layers in forktrip.css and the fork's back-from-a-side seam. Checked in and back at 1512x860 and 390x844 (frames at a fiftieth of normal speed, no errors).
+- lead, legal/Doc.astro: numbered headings showed twice in the contents list ("1. 1. About this agreement") and "10." hung into the margin on phones. The list now shows the heading's own number in a fixed column; unnumbered pages keep list numbers with room for two digits.
+- lead, real creators: Pexels does not allow this use ("Don't imply endorsement of your product by people or brands on the imagery"), and neither do free Unsplash, Pixabay, Kaboompics or Canva. iStock creative images do (model released; only editorial images are barred from endorsement). One iStock shoot per creator is shortlisted in `design/content/real-creators.json` (profile, storefront, content). Not bought yet: the owner buys them. Until then the avatars, portraits and post keys are still cut from the Pexels photos in `design/content/real/` and must not ship.
+
 ## HANDOFF (2026-10-29): start here
 
 **State.** Pushed to `a-grade` through round 6 (commit 5b74c7e). Builds, 10 tests pass, no page errors and no sideways
@@ -280,8 +288,8 @@ overflow at 1512x860, 1440x960, 1920x1080 and 390x844, no em dashes. Everything 
   width and place come from the faces' inner edges, `fl` and `fr` in `spots.form`); heading, lede and preview sit left
   of her head on an ink scrim. Side by side from 1280px, stacked below.
 - The fork (round 7): no device. Two photos edge to edge, the SaaS founder (10376031) for Brands and the cook
-  (12674093) for Creators, split down the middle on desktop and on a diagonal on phones; trips in `forktrip.ts`
-  (`?trip=expand|doors|iris`, expand by default). Owner to pick a trip.
+  (12674093) for Creators, split down the middle on desktop and on a diagonal on phones; the trip in `forktrip.ts`
+  (round 9: iris only).
 - Unused: shop-film (7679677) and the Kaboompics stand-ins from rounds 1 and 2.
 
 **How the pieces work:**
@@ -298,9 +306,10 @@ overflow at 1512x860, 1440x960, 1920x1080 and 390x844, no em dashes. Everything 
   animate the hero text (about 700ms; instant with reduced motion). It can stall under software WebGL in headless
   Chromium; it runs on a normal GPU.
 
-**License limits (unchanged):** Pexels collects no model releases and forbids implying endorsement, so the people in
+**License limits:** Pexels collects no model releases and forbids implying endorsement, so the people in
 these photos are never named, quoted, given a handle or result, or shown using our product. They illustrate a side of
-the market. The named example people stay the 8 fictional creators in `src/lib/examples.ts`.
+the market. The 8 named example creators need model-released photos that allow it: iStock creative, shortlisted in
+`design/content/real-creators.json` (round 9), to be bought by the owner.
 
 **Sourcing, from a cloud session:** Pexels search pages sit behind a bot check (don't try to get around it); find
 candidates with web search and download full size from `images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg`.

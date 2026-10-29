@@ -1,32 +1,9 @@
-/* The fork's doors trip (src/scripts/forktrip.ts): each half and the words get their own view-transition layer, so
-   the halves can part (or close) over the page. The script animates them; the browser's own cross-fade is off. */
-html.trip-doors .fork .pane.brands {
-  view-transition-name: fork-brands;
-}
-html.trip-doors .fork .pane.creators {
-  view-transition-name: fork-creators;
-}
-html.trip-doors .fork .ui {
-  view-transition-name: fork-ui;
-}
-::view-transition-group(fork-brands),
-::view-transition-group(fork-creators),
-::view-transition-group(fork-ui),
-::view-transition-old(fork-brands),
-::view-transition-old(fork-creators),
-::view-transition-old(fork-ui),
-::view-transition-new(fork-brands),
-::view-transition-new(fork-creators),
-::view-transition-new(fork-ui) {
-  animation: none;
-}
-
-/* iris and doors: the hero's 3D phone stays out of the trip and fades in once the page has landed  */
+/* The fork's iris trip (src/scripts/forktrip.ts): the hero's 3D phone stays out of the trip and fades in once the page
+   has landed. */
 #stage {
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-html.trip-iris #stage,
-html.trip-doors #stage {
+html.trip-iris #stage {
   opacity: 0 !important;
   transition: none;
 }

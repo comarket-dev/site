@@ -39,7 +39,7 @@ const curl = (t: string) =>
     .replace(/(^|[\s(\[])"/g, '$1“')
     .replace(/"/g, '”');
 
-const contents: { id: string; text: string }[] = [];
+const contents: { id: string; n?: string; text: string }[] = [];
 const used = new Set<string>();
 let html = await Astro.slots.render('default');
 html = html.replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, (_m, attrs = '', inner: string) => {
@@ -58,7 +58,9 @@ html = html.replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, (_m, attrs = '', inner: s
     while (used.has(id)) id = `${base}-${n++}`;
   }
   used.add(id);
-  contents.push({ id, text: curl(text) });
+  // a numbered heading ("7. Fees") keeps its own number in the contents list, so the list doesn't number it twice
+  const num = /^(\d+\.)\s*(.*)$/.exec(text);
+  contents.push(num ? { id, n: num[1], text: curl(num[2]) } : { id, text: curl(text) });
   return `<h2${own ? attrs : `${attrs} id="${id}"`}>${inner}</h2>`;
 });
 /* On phones each table row becomes a card, so every cell needs its column's name to show beside it. */
@@ -73,6 +75,7 @@ html = html.replace(/<table(\s[^>]*)?>([\s\S]*?)<\/table>/g, (whole, _a, inner: 
   });
   return whole.replace(inner, body);
 });
+const numbered = contents.some((c) => c.n);
 // text nodes only: a placeholder inside an attribute (a mailto link) stays as it is
 html = html.replace(/>([^<]+)</g, (_m, t: string) => `>${curl(t).replace(/\[\[([^\]]+)\]\]/g, '<span class="ph">[[$1]]</span>')}<`);
 ---
@@ -96,10 +99,13 @@ html = html.replace(/>([^<]+)</g, (_m, t: string) => `>${curl(t).replace(/\[\[([
     toc && contents.length > 3 && (
       <nav class="toc" aria-label="On this page">
         <span class="label">On this page</span>
-        <ol>
+        <ol class:list={{ numbered }}>
           {contents.map((c) => (
             <li>
-              <a href={`#${c.id}`}>{c.text}</a>
+              <a href={`#${c.id}`}>
+                {numbered && <span class="n">{c.n}</span>}
+                {c.text}
+              </a>
             </li>
           ))}
         </ol>
@@ -164,7 +170,7 @@ html = html.replace(/>([^<]+)</g, (_m, t: string) => `>${curl(t).replace(/\[\[([
   }
   .legal-doc .toc ol {
     margin: 0;
-    padding-left: 22px;
+    padding-left: 2.1em;
     columns: 2 260px;
     column-gap: 32px;
     font-size: 15px;
@@ -173,6 +179,16 @@ html = html.replace(/>([^<]+)</g, (_m, t: string) => `>${curl(t).replace(/\[\[([
   .legal-doc .toc li {
     break-inside: avoid;
     padding-block: 2px;
+  }
+  .legal-doc .toc ol.numbered {
+    list-style: none;
+    padding-left: 0;
+  }
+  .legal-doc .toc .n {
+    display: inline-block;
+    min-width: 2.3ch;
+    margin-right: 0.5ch;
+    font-variant-numeric: tabular-nums;
   }
   .legal-doc .toc a {
     text-decoration: none;

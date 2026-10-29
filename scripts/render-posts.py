@@ -3,8 +3,8 @@
 Each post on the site is real HTML (src/components/examples/posts) around one piece of media: a video frame, a
 thumbnail, a photo or a screenshot. That media is composed in design/posts/media/*.html from the generated source
 shots, then degraded the way its platform degrades it (a re-encoded video is soft and blocky, a thumbnail is a
-compressed JPEG). The people are real: licensed Pexels photos in design/content/real, listed in
-design/content/real-creators.json. Avatars are square crops of one photo per creator; each storefront gets a crop of
+compressed JPEG). The people are real photos in design/content/real, sources and licenses in
+design/content/real-creators.json (iStock, not Pexels: Pexels forbids implying endorsement). Avatars are square crops of one photo per creator; each storefront gets a crop of
 another (STORES).
 
     python3 scripts/render-posts.py           everything

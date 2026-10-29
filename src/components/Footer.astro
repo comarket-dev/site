@@ -15,10 +15,11 @@ const year = new Date().getFullYear();
         <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>For creators</a>
         <a href="/?fork=1">Home</a>
       </div>
-      <div>
-        {side && <a href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'}</a>}
-        <a href="/privacy">Privacy</a>
-      </div>
+      {side && (
+        <div>
+          <a href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'}</a>
+        </div>
+      )}
     </nav>
   </div>
   <div class="mark">
@@ -30,6 +31,7 @@ const year = new Date().getFullYear();
       <span>© {year} Comarket</span>
       <nav class="docs" aria-label="Legal">
         <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
         <a href="/cookies">Cookies</a>
         <a href="/brand-terms">Brand agreement</a>
         <a href="/creator-terms">Creator agreement</a>

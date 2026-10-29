@@ -58,7 +58,12 @@ examples, "Pay for sales, not posts", the agent replay, then the rest; no fit li
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
 tap-to-skip, feels right.
 
-**Round 7 (2026-10-29, not pushed):** the fork has no device: two photos edge to edge (a SaaS founder for Brands, the cook for Creators), a diagonal on phones, three trips to try (`?trip=expand|doors|iris`, `src/scripts/forktrip.ts`). Wide-screen hero copy rises into the band; wide-screen waitlist text sits by her head. See A-GRADE.md round 7.
+**Round 9 (2026-10-29):** the fork's only trip is the iris, a touch slower (1150ms); expand and doors are gone. The legal drafts are linked in the footer and build. The 8 example creators move to real
+people from iStock (Pexels forbids implying endorsement): one shoot each is shortlisted in
+`design/content/real-creators.json`, waiting on the owner to buy. Until then the site still shows the Pexels crops; don't
+deploy them. See A-GRADE.md round 9.
+
+**Round 7 (2026-10-29, not pushed):** the fork has no device: two photos edge to edge (a SaaS founder for Brands, the cook for Creators), a diagonal on phones, three trips tried (iris kept in round 9, `src/scripts/forktrip.ts`). Wide-screen hero copy rises into the band; wide-screen waitlist text sits by her head. See A-GRADE.md round 7.
 
 **People and warmth (2026-10-27, pushed, in review):** both heroes open with a short florists banner, the copy high in the
 first screen and the phone standing right of the second florist's head. Both waitlists use B: the form sits between
@@ -165,7 +170,7 @@ overwrite unless you pass ids or `--force`). `scripts/cutout.py` lifts a person 
 3. Not yet checked: the trip in and back on a 3440-wide monitor, and the plain fallback where a browser has no view
    transitions.
 4. Done in this copy: the crawlable section under the fork and keyworded titles. Still offered: JSON-LD.
-5. Before deploy: run migrations 0002 and 0003 on Neon (0003 also on any local database with signups); replace the
+5. Before deploy: buy the iStock creators in `design/content/real-creators.json` and replace the Pexels crops; run migrations 0002 and 0003 on Neon (0003 also on any local database with signups); replace the
    placeholder founder address hello@comarket.si in `Waitlist.astro`; KV and Hyperdrive ids in `wrangler.jsonc`; Turnstile and Resend keys;
    a legal review of the privacy page and a real contact address.
 6. Owner calls held back from the copy: the founding-brand line ("Join before launch and keep today's rate for

@@ -166,7 +166,7 @@ const frame = (id: PersonId) => {
 
 <style>
   /* --s: where the seam sits, in percent across (side by side) or down (stacked). It stays in the middle; pointing at a
-     side zooms its photo, and choosing one moves the seam all the way across (src/scripts/forktrip.ts). */
+     side zooms its photo, and choosing one opens the page out of a circle (src/scripts/forktrip.ts). */
   @property --s {
     syntax: '<number>';
     inherits: true;
@@ -182,14 +182,6 @@ const frame = (id: PersonId) => {
     overflow: hidden;
     color: var(--paper);
     background: var(--ink);
-    transition: --s 0.9s var(--ease);
-  }
-  /* coming back from a side: the fork arrives with that side open, then settles (forktrip.ts) */
-  :global(html.back-from-brands) .fork {
-    --s: 100;
-  }
-  :global(html.back-from-creators) .fork {
-    --s: 0;
   }
 
   /* the wordmark's bar stays paper, as on every page; the halves start under it */
@@ -414,9 +406,6 @@ const frame = (id: PersonId) => {
     opacity: 0;
     transition: opacity 0.4s var(--ease);
   }
-  .fork.leaving[data-trip='expand'] {
-    transition: --s 0.62s cubic-bezier(0.7, 0, 0.2, 1);
-  }
   @media (hover: hover) {
     .fork {
       cursor: pointer;
@@ -528,8 +517,8 @@ const frame = (id: PersonId) => {
 
   /* phones and narrow tablets: one screen split on a diagonal, from the right edge high to the left edge low. Brands
      takes the top (with the headline), its face up left; Creators the bottom, its face down right. Both photos cover
-     the whole screen under the bar and are cut by clip-path, so a choice can open either one across it (--s: the
-     diagonal moves down for Brands, up for Creators). A thin line of paper runs along the cut. */
+     the whole screen under the bar and are cut by clip-path (--s moves the diagonal: down for Brands, up for
+     Creators; it stays at 50). A thin line of paper runs along the cut. */
   @media (max-width: 860px), (max-aspect-ratio: 4/5) {
     .fork {
       min-height: 560px;

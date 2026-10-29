@@ -24,7 +24,7 @@ Find them with `grep -rhoE '\[\[[^]]+\]\]' src/pages | sort -u`. Proposed defaul
 
 | Placeholder | Pages | What to fill in | Proposed default |
 |---|---|---|---|
-| `[[LEGAL ENTITY NAME]]` | all | The operating company's full legal name | |
+| `[[LEGAL ENTITY NAME]]` | all but cookies | The operating company's full legal name | |
 | `[[ENTITY TYPE AND JURISDICTION]]` | privacy, terms | e.g. "limited liability company (d.o.o.) incorporated in Slovenia" | |
 | `[[COMPANY NUMBER]]` | privacy, terms | Company registration number | |
 | `[[REGISTERED ADDRESS]]` | privacy, terms, dpa | Registered office | |
@@ -48,7 +48,7 @@ Find them with `grep -rhoE '\[\[[^]]+\]\]' src/pages | sort -u`. Proposed defaul
 | `[[SALE DISPUTE PERIOD]]` | brand | Days a brand has to dispute a Statement line | 30 days |
 | `[[NON-CIRCUMVENTION FEE]]` | brand | What a brand pays for hiring an introduced creator off-platform | e.g. 20% of what it pays the creator in that 12 months, or delete clause 21 |
 | `[[BRAND LIABILITY FLOOR]]` | brand | Minimum liability cap | EUR 10,000 |
-| `[[DATA PROTECTION CAP]]` | brand, dpa | Separate cap for data protection | 2x the general cap, or EUR 50,000 |
+| `[[DATA PROTECTION CAP]]` | brand (dpa 9.1 points to it) | Separate cap for data protection | 2x the general cap, or EUR 50,000 |
 | `[[PAYOUT DAY]]` | creator | Day of the month payouts go out | 15 |
 | `[[MINIMUM PAYOUT]]` | creator | Smallest payout | USD/EUR 25 |
 | `[[CREATOR LIABILITY FLOOR]]` | creator | Minimum cap on Comarket's liability to creators | EUR 500 |
