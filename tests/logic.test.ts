@@ -103,3 +103,16 @@ test('handles normalize to one lowercase shape', async () => {
   assert.equal(isReserved('brands'), true);
   assert.equal(isReserved('sarah'), false);
 });
+
+test('reserved handles cover file names and look-alikes of the company', async () => {
+  // same cases as comarket_code's packages/core/test/core.test.ts, so both copies block the same handles
+  const { isReserved } = await import('../src/lib/handle.ts');
+  assert.equal(isReserved('checkout'), true);
+  assert.equal(isReserved('robots.txt'), true);
+  assert.equal(isReserved('favicon.svg'), true);
+  assert.equal(isReserved('comarket.si'), true);
+  assert.equal(isReserved('comarket_official'), true);
+  assert.equal(isReserved('thecomarket'), true);
+  assert.equal(isReserved('maya.makes'), false);
+  assert.equal(isReserved('sam.jsx'), false);
+});
