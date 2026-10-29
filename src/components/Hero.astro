@@ -371,6 +371,54 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     }
   }
 
+  /* The band keeps one share of the screen: it ends at --hb, (y1 - y0) of the photo's height, which follows the
+     screen's width, capped at 46% of its height so very wide screens don't get a taller band (laptops and 16:9 screens
+     land between 41% and 46%). The fade is its last --fade. */
+  @media (min-width: 961px) {
+    .band {
+      --hb: min(calc(0.385 * 66.7vw), 46svh);
+      --fade: calc(0.075 * 66.7vw);
+    }
+    .hero.band > :global(.bandscene.fit .frame) {
+      height: var(--hb);
+    }
+    .band > :global(.bandscene .frame > .shot) {
+      clip-path: inset(calc(var(--y0) * var(--IH)) 0 calc(var(--IH) - var(--y0) * var(--IH) - var(--hb)) 0);
+      -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--y0) * var(--IH) + var(--hb) - var(--fade)), transparent calc(var(--y0) * var(--IH) + var(--hb)));
+      mask-image: linear-gradient(to bottom, #000 calc(var(--y0) * var(--IH) + var(--hb) - var(--fade)), transparent calc(var(--y0) * var(--IH) + var(--hb)));
+    }
+  }
+  /* Large screens: the copy rises into the band, the title starting about where the fade begins, so the block sits
+     beside the phone instead of hanging below it. A soft paper glow behind the copy keeps the ink clear of the photo.
+     The type grows with the screen. Laptops are untouched. */
+  @media (min-width: 1800px) {
+    .band .inner {
+      margin-top: calc(-1 * var(--fade));
+    }
+    .band .copy {
+      isolation: isolate;
+      max-width: min(920px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    }
+    .band .copy::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -6% -14% 40% -18%;
+      background: radial-gradient(closest-side, rgb(255 247 236 / 0.78), rgb(255 247 236 / 0.5) 55%, rgb(255 247 236 / 0));
+      pointer-events: none;
+    }
+    .band .title {
+      font-size: min(3.3vw, 5.4svh);
+      max-width: 19ch;
+    }
+    .band .sub {
+      font-size: min(1.1vw, 1.8svh);
+    }
+    .band .claim {
+      max-width: min(700px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    }
+  }
+
   @media (max-width: 960px) {
     .inner {
       grid-template-columns: minmax(0, 1fr);

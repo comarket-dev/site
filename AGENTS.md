@@ -58,6 +58,8 @@ examples, "Pay for sales, not posts", the agent replay, then the rest; no fit li
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
 tap-to-skip, feels right.
 
+**Round 7 (2026-10-29, not pushed):** the fork has no device: two photos edge to edge (a SaaS founder for Brands, the cook for Creators), a diagonal on phones, three trips to try (`?trip=expand|doors|iris`, `src/scripts/forktrip.ts`). Wide-screen hero copy rises into the band; wide-screen waitlist text sits by her head. See A-GRADE.md round 7.
+
 **People and warmth (2026-10-27, pushed, in review):** both heroes open with a short florists banner, the copy high in the
 first screen and the phone standing right of the second florist's head. Both waitlists use B: the form sits between
 their faces at every size, the heading and preview left of her head. The fork's sides are full-height photos (a candle

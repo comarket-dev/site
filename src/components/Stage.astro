@@ -62,6 +62,9 @@
     return loading;
   }
 
+  /* The fork used to show the device and fly through its screen into a page (and back). Since 2026-10-29 the fork is
+     two photos and its trips live in src/scripts/forktrip.ts; true brings the device trip back with a device fork. */
+  const FORK_DEVICE = false;
   const motion = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const onHero = () => document.body.dataset.stage === 'brands' || document.body.dataset.stage === 'creators';
   let returning = false;
@@ -70,7 +73,7 @@
   // itself (the poster) rather than only in the live canvas, or the page would shrink back into the screen without it
   document.addEventListener('astro:before-preparation', (e) => {
     const to = (e as Event & { to: URL }).to;
-    returning = !!api && motion() && onHero() && to.pathname === '/' && 'startViewTransition' in document;
+    returning = FORK_DEVICE && !!api && motion() && onHero() && to.pathname === '/' && 'startViewTransition' in document;
     if (returning) document.documentElement.classList.add('leaving');
   });
 
@@ -163,6 +166,11 @@
     const anchor = document.querySelector<HTMLElement>('[data-stage-anchor]');
     if (mode === 'none') {
       api?.setMode('none', null);
+      // on the fork, fetch the 3D code while the visitor decides, so the side they pick draws its phone sooner
+      if (location.pathname === '/' && !matchMedia('(pointer: coarse)').matches) {
+        const warm = () => import('../scripts/stage/stage').catch(() => {});
+        'requestIdleCallback' in window ? requestIdleCallback(warm, { timeout: 3000 }) : setTimeout(warm, 1500);
+      }
       return;
     }
     const s = await load();

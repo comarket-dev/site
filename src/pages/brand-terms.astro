@@ -1,0 +1,455 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import Doc from '../components/legal/Doc.astro';
+const updated = '29 October 2026';
+// Drafts stay out of search until counsel signs off and every placeholder is filled (design/legal/README.md).
+const draft = true;
+---
+
+<Base title="Brand agreement · Comarket" description="The agreement for brands on Comarket: fees per completed sale, the new-customer rule, refunds, billing, creators, brand assets, data and liability." stage="none" noindex={draft}>
+  <Doc
+    title="Brand agreement"
+    lede="You pay only for completed sales from new customers. This is the agreement behind that, in full."
+    updated={updated}
+    draft={draft}
+    current="/brand-terms"
+  >
+    <div class="short">
+      <b>The short version</b>
+      <ul>
+        <li>Nothing upfront and nothing monthly. For each completed sale you pay the creator rate you set, plus our fee: 15% of the new customer's first payment and 10% of their renewals, for 12 months. After that, the customer is all yours.</li>
+        <li>A sale counts only if the buyer is new to you. We check their email, phone and card against your Stripe customers.</li>
+        <li>A refund inside your refund window cancels the fee. Lost chargebacks and fraud are reversed too.</li>
+        <li>You approve every creator before their storefront goes live, and you can end this agreement on 30 days' notice.</li>
+        <li>We bill monthly and pay the creators ourselves, after your refund window closes.</li>
+      </ul>
+    </div>
+
+    <h2>1. About this agreement</h2>
+    <p>
+      <span class="n">1.1</span>This Brand Agreement is between [[LEGAL ENTITY NAME]] ("Comarket", "we", "us") and the business
+      that accepts it when opening a brand account ("you"). The person accepting confirms that they can bind that business.
+      It applies from the moment you accept it and covers your use of Comarket as a brand.
+    </p>
+    <p>
+      <span class="n">1.2</span>It includes the general terms in <a href="/terms#part-b-general-terms">Part B of the Terms of
+      use</a>, the <a href="/acceptable-use">acceptable use policy</a> and the <a href="/dpa">data processing addendum</a> (the
+      "DPA"). If they conflict, this order applies: the DPA (for personal data), then any Offer terms you and a creator agree
+      through Comarket (for that Offer only, and only where this agreement allows), then this agreement, then the
+      acceptable use policy, then Part B.
+    </p>
+    <p>
+      <span class="n">1.3</span>Comarket is for businesses. You confirm that you are acting for your trade or business, not as a
+      consumer.
+    </p>
+
+    <h2>2. Words with a set meaning</h2>
+    <ul>
+      <li><b>Creator:</b> a person or business that has accepted the <a href="/creator-terms">Creator Agreement</a>.</li>
+      <li><b>Offer:</b> what you ask creators to promote: the product, any price, trial or discount for buyers, the Creator Rate, the Refund Window, the countries where it may be promoted, and the claims creators may make about it.</li>
+      <li><b>Approved Creator:</b> a Creator you have approved for an Offer.</li>
+      <li><b>Storefront:</b> the page we host for an Approved Creator and your Offer, in your look and with the creator's name on it, at an address such as yourbrand.comarket.si/creators/name.</li>
+      <li><b>Hub:</b> a Creator's page at comarket.si/their-handle, which links to their Storefronts.</li>
+      <li><b>Connected Stripe Account:</b> each Stripe account you connect to Comarket, through which buyers pay you.</li>
+      <li><b>Attributed Checkout:</b> a checkout in your Connected Stripe Account that a buyer starts from a Storefront and that carries that Storefront's reference.</li>
+      <li><b>Customer Records:</b> the customer, payment, subscription, refund and dispute records in your Connected Stripe Account, and any exclusion list you give us under 6.4.</li>
+      <li><b>First Payment:</b> the first successful payment of more than zero that a New Customer makes from an Attributed Checkout, including the first payment after a free trial that started there.</li>
+      <li><b>Renewal:</b> each later successful payment by the same customer, through your Connected Stripe Account, for the product in the Offer or a plan, upgrade or add-on of it, made during the Commission Period.</li>
+      <li><b>Commission Period:</b> the 12 months starting on the date of the First Payment.</li>
+      <li><b>Net Amount:</b> what the buyer actually paid for a payment, after discounts and credits, excluding VAT, GST, sales tax and similar taxes you collect, and less any part refunded. Card and Stripe processing fees are not deducted.</li>
+      <li><b>Creator Rate:</b> what you agree to pay the creator, set in the Offer either as a percentage of the Net Amount of each First Payment and Renewal, or as a fixed amount per Qualifying Sale.</li>
+      <li><b>Comarket Fee:</b> our fee, set out in section 7.</li>
+      <li><b>Refund Window:</b> the period after each payment, set in the Offer, during which a buyer may get a refund. It may not exceed [[MAXIMUM REFUND WINDOW]] days. If an Offer doesn't set one, it is 14 days.</li>
+      <li><b>Qualifying Sale:</b> a sale that meets section 6.</li>
+      <li><b>Statement:</b> the monthly record described in section 9.</li>
+    </ul>
+
+    <h2>3. What Comarket does</h2>
+    <p>
+      <span class="n">3.1</span>We find Creators whose audiences fit your Offer, introduce them to you, build and host a
+      Storefront for each Approved Creator, link each Storefront to your checkout, decide which sales count, bill you, and pay
+      the Creators.
+    </p>
+    <p>
+      <span class="n">3.2</span>You sell to buyers, not us. You are the seller of record for every sale, and your own terms of
+      sale, refund policy and privacy policy apply to buyers. We are not your agent for selling, and we don't take or handle
+      buyers' payments; buyers pay you through your Connected Stripe Account.
+    </p>
+    <p>
+      <span class="n">3.3</span><b>How we match.</b> We suggest Creators to you, and Offers to Creators, mainly on: how closely
+      their topic and audience fit the problem your product solves; where their audience is; their platforms and formats;
+      their past results on Comarket, such as completed sales and refund rates; whether their accepted rates fit yours; any
+      preferences you set; and our checks for quality, compliance and fraud. No one can pay for a higher place in matching.
+    </p>
+    <p>
+      <span class="n">3.4</span>We don't promise any number of creators, posts, clicks or sales. Creators are independent: they
+      decide what to post and when, within the Offer, the Creator Agreement and the acceptable use policy.
+    </p>
+
+    <h2>4. Setting up</h2>
+    <p>
+      <span class="n">4.1</span><b>Stripe.</b> You connect your Stripe account through Stripe's own authorisation screen. You
+      give us read access to your Customer Records and the ability to receive Stripe event notifications about them, so we can
+      run the checks in section 6 and calculate fees. We don't move money in your Stripe account or change your products,
+      prices or customers. Keep the account connected, and don't remove the Storefront reference from Attributed Checkouts,
+      while this agreement lasts and until the last Commission Period ends.
+    </p>
+    <p>
+      <span class="n">4.2</span><b>Offers.</b> You set each Offer and are responsible for it. You can change or end an Offer
+      going forward. A change to the Creator Rate or the Refund Window applies only to Attributed Checkouts started after
+      creators are told of it.
+    </p>
+    <p>
+      <span class="n">4.3</span><b>Storefronts.</b> We build each Storefront from your Brand Assets (section 14), the Offer and the
+      Approved Creator's profile. You approve the Storefront design before any Storefront for that Offer goes live. Every
+      Storefront shows a notice that the creator earns a commission; you may not ask us to remove it.
+    </p>
+
+    <h2>5. Approving creators</h2>
+    <p>
+      <span class="n">5.1</span>No Storefront goes live until you approve the creator. You may decline any creator, without
+      giving a reason, as long as the decision is not based on a characteristic protected by law.
+    </p>
+    <p>
+      <span class="n">5.2</span>You may withdraw an approval at any time. We take the Storefront down within 2 business days.
+      Attributed Checkouts started before the Storefront came down still count.
+    </p>
+    <p>
+      <span class="n">5.3</span>Creators may decline your Offer, or stop promoting it, at any time.
+    </p>
+
+    <h2>6. What counts as a sale</h2>
+    <p><span class="n">6.1</span>A sale is a Qualifying Sale when all of these are true:</p>
+    <ol>
+      <li>the buyer started an Attributed Checkout from an Approved Creator's Storefront;</li>
+      <li>the First Payment succeeded within [[ATTRIBUTION WINDOW]] days after the buyer last opened that Storefront;</li>
+      <li>the buyer is a New Customer under 6.2;</li>
+      <li>the First Payment was not fully refunded within its Refund Window; and</li>
+      <li>the sale is not excluded under 6.6.</li>
+    </ol>
+    <p>
+      <span class="n">6.2</span><b>New Customer.</b> A buyer is a New Customer unless their email address, phone number or card
+      fingerprint (a code Stripe derives from a card, never the card number) matches a customer in your Customer Records that
+      existed before the Attributed Checkout began, or an entry on your exclusion list. A match on any one of the three makes
+      the buyer an existing customer, and the sale doesn't count.
+    </p>
+    <p>
+      <span class="n">6.3</span>If none of the three identifiers is available for a buyer, the sale counts as new unless you show,
+      under section 11, that the buyer was already your customer.
+    </p>
+    <p>
+      <span class="n">6.4</span><b>Exclusion list.</b> If you have customers outside your Connected Stripe Account, you may give
+      us a list of their email addresses or phone numbers in the format we specify. A list applies to Attributed Checkouts
+      started after we confirm we have loaded it. The DPA covers it.
+    </p>
+    <p>
+      <span class="n">6.5</span><b>One creator per sale.</b> The Storefront that started the Attributed Checkout gets the credit.
+      We don't split a sale between creators, and a sale through a Storefront never also counts for another channel through
+      Comarket.
+    </p>
+    <p><span class="n">6.6</span><b>Excluded sales.</b> A sale doesn't count, or stops counting, if:</p>
+    <ul>
+      <li>the buyer is the creator, someone in their household, or someone acting for them;</li>
+      <li>it came from conduct the Creator Agreement or the acceptable use policy forbids, such as cookie stuffing, paying buyers, or spam;</li>
+      <li>it is a test, or a fraudulent or unauthorised payment; or</li>
+      <li>the buyer is your employee or contractor and you told us so before the payment.</li>
+    </ul>
+    <p>
+      <span class="n">6.7</span>Free trials don't count until the First Payment. Payments by a customer after their Commission
+      Period ends never count.
+    </p>
+
+    <h2>7. Fees</h2>
+    <p><span class="n">7.1</span>For each Qualifying Sale you pay:</p>
+    <ol>
+      <li><b>the Creator Rate,</b> on the First Payment and on each Renewal, unless the Offer limits it to the First Payment; and</li>
+      <li><b>the Comarket Fee:</b> 15% of the Net Amount of the First Payment, and 10% of the Net Amount of each Renewal.</li>
+    </ol>
+    <p>
+      <span class="n">7.2</span>Both stop when the Commission Period ends. Nothing is payable for that customer after that.
+    </p>
+    <p>
+      <span class="n">7.3</span>There is no setup fee, subscription, minimum spend or fee for sales that don't count.
+    </p>
+    <p>
+      <span class="n">7.4</span><b>Rates you were shown.</b> If you joined the waitlist and were shown lower fee rates than these,
+      section 3.4 of the <a href="/terms">Terms of use</a> applies and your Statement shows the rates used.
+    </p>
+    <p>
+      <span class="n">7.5</span><b>Changes.</b> We may change the Comarket Fee by giving you at least 30 days' notice. A change
+      applies only to Attributed Checkouts started after it takes effect. Customers already in a Commission Period keep the
+      rates that applied when their Attributed Checkout started.
+    </p>
+    <p>
+      <span class="n">7.6</span><b>Currency.</b> Fees are calculated in the currency of each payment and invoiced in
+      [[BILLING CURRENCY]], converted at the rate Stripe applies on the invoice date.
+    </p>
+    <p>
+      <span class="n">7.7</span><b>Taxes.</b> Fees exclude VAT and similar taxes, which we add where the law requires. Where the
+      reverse charge applies, you account for the tax. If the law requires you to withhold tax from a payment to us, you will
+      pay us an extra amount so that we receive what we would have received without the withholding, and give us the
+      withholding certificate.
+    </p>
+
+    <h2>8. Refunds, chargebacks and reversals</h2>
+    <p>
+      <span class="n">8.1</span><b>Inside the Refund Window.</b> If a payment is fully refunded within its Refund Window, no Creator
+      Rate or Comarket Fee is due on it. If it is partly refunded, both are reduced in proportion. Because we bill only for
+      payments whose Refund Window has closed (section 9), you normally never pay for these.
+    </p>
+    <p>
+      <span class="n">8.2</span><b>Chargebacks.</b> If a buyer disputes a payment with their bank within [[CHARGEBACK PERIOD]] days
+      of the payment and you lose the dispute, the Creator Rate and Comarket Fee on that payment are reversed.
+    </p>
+    <p>
+      <span class="n">8.3</span><b>Fraud.</b> If a sale is excluded under 6.6, its fees are reversed whenever we find out.
+    </p>
+    <p>
+      <span class="n">8.4</span><b>Refunds after the window.</b> A refund made after the Refund Window closes doesn't reverse fees,
+      except under 8.2 or 8.3.
+    </p>
+    <p>
+      <span class="n">8.5</span><b>How reversals are paid.</b> We credit reversals on your next invoice. If there is no next
+      invoice, we refund the credit within 30 days of the end of this agreement.
+    </p>
+    <p>
+      <span class="n">8.6</span>Don't refund and re-charge a buyer, or move them to another account or payment route, to avoid
+      fees on a Qualifying Sale. Fees remain due on any such sale.
+    </p>
+
+    <h2>9. Statements, invoices and payment</h2>
+    <p>
+      <span class="n">9.1</span>In the first 5 business days of each month, we issue a Statement and an invoice for every
+      payment on a Qualifying Sale whose Refund Window closed in the previous month. The Statement lists each payment by its
+      Stripe payment ID, which identifies the buyer only to you, with its date, Net Amount, the creator credited, the Creator
+      Rate, the Comarket Fee and any reversals.
+    </p>
+    <p>
+      <span class="n">9.2</span>We charge the card or bank account you keep on file through Stripe on the invoice date. If we
+      agree to invoice you instead, payment is due within [[PAYMENT TERMS DAYS]] days.
+    </p>
+    <p>
+      <span class="n">9.3</span>If an undisputed amount is unpaid 14 days after it is due and we have reminded you, we may charge
+      interest at the rate allowed for late commercial payments under the governing law, claim reasonable recovery costs as
+      that law allows, and pause your Storefronts until it is paid. Sales from Attributed Checkouts started before the pause
+      still count.
+    </p>
+
+    <h2>10. Creator earnings</h2>
+    <p>
+      <span class="n">10.1</span>Each Creator appoints us as their limited agent to receive the Creator Rate from you. When you
+      pay us an amount for a Creator Rate, your obligation to the creator for that amount is fully settled, whether or not we
+      have paid the creator yet. You must not pay creators directly for Qualifying Sales.
+    </p>
+    <p>
+      <span class="n">10.2</span>We pay creators under the Creator Agreement. We are not responsible to you for a creator's posts,
+      conduct or tax affairs, but we enforce the Creator Agreement and the acceptable use policy, and we will act on any breach
+      you report.
+    </p>
+
+    <h2>11. Questioning a sale</h2>
+    <p>
+      <span class="n">11.1</span>You may dispute any line on a Statement within [[SALE DISPUTE PERIOD]] days of receiving it, by
+      telling us which line and why, for example that the buyer was already your customer. Pay the undisputed part on time.
+    </p>
+    <p>
+      <span class="n">11.2</span>A person at Comarket reviews each dispute, may ask you and the creator for information, and tells
+      you the decision and the reasons within 30 days. If we agree, we credit the amount on your next invoice. If you still
+      disagree, sections 16 and 17 of Part B apply.
+    </p>
+    <p>
+      <span class="n">11.3</span>Lines you don't dispute in time are final, except for fraud or an obvious error.
+    </p>
+
+    <h2>12. Your responsibilities</h2>
+    <p><span class="n">12.1</span>You are responsible for:</p>
+    <ul>
+      <li>your products and services, their safety, delivery and support, your prices, your checkout, and your terms of sale and refund policy;</li>
+      <li>the consumer, tax, product, licensing and sector rules that apply to selling them, in each country where you allow the Offer to be promoted;</li>
+      <li>telling buyers, in your privacy policy, that you share purchase data with service providers like us to check new customers and credit referrals;</li>
+      <li>making sure every claim in the Offer, and every claim you let creators make, is true and backed by evidence you can show; and</li>
+      <li>the accuracy of what you tell us, including your exclusion list.</li>
+    </ul>
+    <p><span class="n">12.2</span>You must not:</p>
+    <ul>
+      <li>ask or encourage a creator to hide or weaken their disclosure, or to make a claim you haven't approved;</li>
+      <li>interfere with Storefronts, references or our checks;</li>
+      <li>offer products or use Comarket in a way the acceptable use policy forbids; or</li>
+      <li>use what you learn about creators through Comarket for anything other than working with them on Comarket.</li>
+    </ul>
+
+    <h2>13. Advertising law and disclosures</h2>
+    <p>
+      <span class="n">13.1</span>Storefronts and creators' posts about your Offer are advertising for you. Under the US Federal Trade
+      Commission's Guides Concerning the Use of Endorsements and Testimonials in Advertising (16 CFR Part 255), the UK CAP Code
+      and consumer protection law, the EU Unfair Commercial Practices Directive and the national laws that implement it,
+      advertisers can be responsible for misleading endorsements and missing disclosures.
+    </p>
+    <p>
+      <span class="n">13.2</span>Every Storefront discloses the creator's commission, and the Creator Agreement requires creators to
+      disclose their connection to you clearly in every post. If you see a post or Storefront that breaks these rules, tell us
+      at [[CONTACT EMAIL]]. We will act on it, and we may pause a Storefront while we do.
+    </p>
+    <p>
+      <span class="n">13.3</span>We don't give legal advice about your advertising. Our Storefront design and disclosure wording
+      don't make us responsible for the claims in your Offer.
+    </p>
+
+    <h2>14. Brand assets and content</h2>
+    <p>
+      <span class="n">14.1</span><b>Your licence to us.</b> "Brand Assets" means your names, logos, trademarks, colors, typefaces,
+      product images, copy and other material you give us or publish on your website, including what our preview reads from
+      your homepage. You give Comarket a non-exclusive, worldwide, royalty-free licence, for as long as this agreement lasts and
+      the wind-down in 20.4, to use, copy, adapt for layout (such as resizing or cropping) and display Brand Assets to build,
+      host and show Storefronts, Hubs, previews and our dashboards, and to let Approved Creators use them to promote your Offer
+      under the Offer's rules. We may sublicense these rights only to Approved Creators and to our service providers.
+    </p>
+    <p>
+      <span class="n">14.2</span>You confirm that you have the rights to give this licence, including to use your typefaces on the
+      web. If you don't have web rights for a typeface, tell us and we will use a similar one.
+    </p>
+    <p>
+      <span class="n">14.3</span><b>Naming you as a customer.</b> We may name you and show your logo as a Comarket brand only with
+      your consent, which you can withdraw at any time going forward.
+    </p>
+    <p>
+      <span class="n">14.4</span><b>Ownership.</b> You keep all rights in your Brand Assets. We keep all rights in Comarket, its
+      software, Storefront templates and designs, and the data we create in running the service (other than your Customer
+      Records). Creators keep the rights in their content. You may display creators' content on your Storefronts only, and
+      use it anywhere else (for example in your own ads) only if the creator has agreed to that through Comarket.
+    </p>
+    <p>
+      <span class="n">14.5</span><b>Usage data.</b> We may use information about how Comarket performs, combined with information
+      from other brands so that neither you nor any person can be identified, to run and improve Comarket and to publish
+      general benchmarks.
+    </p>
+
+    <h2>15. Data protection</h2>
+    <p>
+      <span class="n">15.1</span>For the Customer Records and buyer data we process to run the new-customer check, credit sales and
+      prepare your Statements, you are the controller and we are your processor (in California terms, your service provider).
+      The <a href="/dpa">DPA</a> governs that processing.
+    </p>
+    <p>
+      <span class="n">15.2</span>We are an independent controller for: information about the people who use your account; our
+      records of each Qualifying Sale (a reference, dates, amounts, the creator credited and the result of the checks), which
+      we keep to bill you, pay creators, meet tax and accounting law, prevent fraud and handle disputes; and data about how
+      Storefronts are used, which we keep to run and secure Comarket. Our <a href="/privacy">privacy policy</a> describes this.
+    </p>
+    <p>
+      <span class="n">15.3</span>We never give creators the identity or contact details of your buyers.
+    </p>
+
+    <h2>16. Promises each side makes</h2>
+    <p>
+      <span class="n">16.1</span>Each party promises that it may enter into this agreement and that it will comply with the laws
+      that apply to its part in it, including anti-bribery and sanctions laws.
+    </p>
+    <p>
+      <span class="n">16.2</span>We will provide Comarket with reasonable skill and care. Otherwise, to the extent the law allows,
+      Comarket is provided "as is", and we give no other warranties, express or implied. We don't promise that Comarket will be
+      uninterrupted or error-free, or that it will produce any level of sales.
+    </p>
+
+    <h2>17. Indemnities</h2>
+    <p>
+      <span class="n">17.1</span><b>From you.</b> You will defend Comarket against any claim by a third party (including a buyer,
+      creator or regulator) to the extent it arises from your products or services, your Offers or the claims in them, your
+      Brand Assets infringing someone's rights, your dealings with buyers, or your breach of consumer, advertising or data
+      protection law. You will pay the damages, fines and reasonable costs finally awarded or agreed in settlement.
+    </p>
+    <p>
+      <span class="n">17.2</span><b>From us.</b> We will defend you against any claim by a third party that Comarket itself, as we
+      provide it, infringes their intellectual property rights, and pay the damages and reasonable costs finally awarded or
+      agreed in settlement. This doesn't cover your Brand Assets, creators' content, third-party services, or anything changed
+      or combined with something we didn't provide. If such a claim is made, we may change Comarket so it no longer infringes or,
+      if that isn't reasonable, end the affected part and refund any fees paid for it in advance.
+    </p>
+    <p>
+      <span class="n">17.3</span><b>How.</b> The party asking for defence must tell the other promptly, let it control the defence
+      and settlement, and help at its cost. No settlement may admit fault for, or impose a duty on, the defended party without
+      its consent.
+    </p>
+
+    <h2>18. Liability</h2>
+    <p>
+      <span class="n">18.1</span>Neither party is liable for lost profits, revenue, business or goodwill, or for indirect or
+      consequential loss, arising from this agreement.
+    </p>
+    <p>
+      <span class="n">18.2</span>Each party's total liability arising from this agreement in any 12-month period is limited to the
+      greater of the Comarket Fees paid and payable by you in the 12 months before the event giving rise to the claim, and
+      [[BRAND LIABILITY FLOOR]].
+    </p>
+    <p>
+      <span class="n">18.3</span>Liability for breach of the DPA or of data protection law is limited separately to
+      [[DATA PROTECTION CAP]] in total.
+    </p>
+    <p>
+      <span class="n">18.4</span>No limit in this section applies to: your duty to pay Creator Rates and Comarket Fees; amounts
+      under section 17; breach of confidentiality; fraud, gross negligence or wilful misconduct; death or personal injury caused
+      by negligence; or any liability that can't be limited by law.
+    </p>
+
+    <h2>19. Suspension</h2>
+    <p>
+      <span class="n">19.1</span>We may pause an Offer, a Storefront or your account where we reasonably believe it is needed to
+      stop a serious breach of this agreement or the acceptable use policy, fraud, a security risk, or a breach of law, or
+      because a regulator or court requires it. We will tell you, with our reasons, when the suspension starts, unless the law
+      or the risk of fraud prevents that.
+    </p>
+    <p>
+      <span class="n">19.2</span>You can respond through the complaints process in Part B. We lift a suspension as soon as its
+      reason is resolved.
+    </p>
+
+    <h2>20. Term and ending</h2>
+    <p>
+      <span class="n">20.1</span>This agreement lasts until either party ends it.
+    </p>
+    <p>
+      <span class="n">20.2</span>You may end it at any time by giving 30 days' notice. You may pause your Offers immediately at
+      any time.
+    </p>
+    <p>
+      <span class="n">20.3</span>We may end it by giving 30 days' notice, with our reasons. We may end it sooner, with our reasons:
+      if you materially breach it and don't fix the breach within 15 days of notice; if you don't pay an undisputed amount
+      within 30 days of a reminder; for fraud or repeated breaches of the acceptable use policy; if you become insolvent; or if
+      the law or a regulator requires us to.
+    </p>
+    <p>
+      <span class="n">20.4</span><b>What happens at the end.</b> We take your Storefronts down within 10 business days and stop
+      using your Brand Assets, except in records we must keep and in creators' posts already published, which creators don't
+      have to delete. Attributed Checkouts started before the Storefronts came down still count.
+    </p>
+    <p>
+      <span class="n">20.5</span><b>Sales already made.</b> Creator Rates and Comarket Fees on Qualifying Sales made before the end,
+      including their Renewals until each Commission Period ends, stay payable, and we keep billing them monthly. You must keep
+      your Connected Stripe Account connected, read-only, until then. If you disconnect it, we may invoice the Renewals we would
+      expect from the customer's plan, and you may correct the invoice with your records.
+    </p>
+    <p>
+      <span class="n">20.6</span>Sections 7 to 11, 14.4, 15, 17, 18, 20.4 to 20.6 and 21, and Part B, survive the end of this
+      agreement.
+    </p>
+
+    <h2>21. Working with creators outside Comarket</h2>
+    <p>
+      <span class="n">21.1</span>If, within 12 months after we first introduce you to a creator, you pay that creator to promote
+      your products outside Comarket, you will tell us and pay us [[NON-CIRCUMVENTION FEE]]. This doesn't apply to a creator who
+      was already working with you before we introduced them, if you show that to us.
+    </p>
+
+    <h2>22. Other terms</h2>
+    <p>
+      <span class="n">22.1</span>This agreement is not exclusive. You may use other marketing channels, and we may work with other
+      brands, including your competitors.
+    </p>
+    <p>
+      <span class="n">22.2</span>We may change this agreement under section 13 of Part B, and the general terms in Part B apply to
+      everything else.
+    </p>
+  </Doc>
+  <Footer />
+</Base>

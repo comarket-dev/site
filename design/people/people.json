@@ -128,7 +128,43 @@
     0.5
    ],
    "alt": "A cook setting up her camera on the kitchen counter before she films",
-   "where": "the fork: Creators column on desktop, beside the device on phones"
+   "where": "the fork: Creators side"
+  },
+  {
+   "id": "founder-desk",
+   "source": "https://www.pexels.com/photo/10376031/",
+   "credit": "RDNE Stock project on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.62,
+    0.4
+   ],
+   "alt": "A software founder at his studio desk, turned from his monitor toward the room",
+   "where": "the fork: Brands side (default, a SaaS founder)"
+  },
+  {
+   "id": "founder-screen",
+   "source": "https://www.pexels.com/photo/10376035/",
+   "credit": "RDNE Stock project on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.66,
+    0.42
+   ],
+   "alt": "A software founder working at his studio desk, eyes on his monitor",
+   "where": "the fork: Brands alternate (?brands=founder-screen)"
+  },
+  {
+   "id": "founder-board",
+   "source": "https://www.pexels.com/photo/7710042/",
+   "credit": "Alena Darmel on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.36,
+    0.42
+   ],
+   "alt": "A founder smiling back from a planning board of sticky notes",
+   "where": "unused: a second person stands in the background (the fork needs one person)"
   },
   {
    "id": "candle-maker",
@@ -140,7 +176,7 @@
     0.34
    ],
    "alt": "A candle maker smiling as she pours wax at the table in her studio",
-   "where": "the fork: Brands column on desktop"
+   "where": "the fork: Brands alternate (?brands=candle-maker); was the default until 2026-10-29"
   },
   {
    "id": "owner-hero",

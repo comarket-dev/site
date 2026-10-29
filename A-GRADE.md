@@ -250,6 +250,23 @@ answer, not a card.
 - yarn (yarn.css, lead): the nav's "Get early access" over ink bands was painted flat by Nav.astro's .on-dark rule; it now gets the paper yarn.
 - Checked: all pages at 1512x860, 1440x960, 1920x1080 and 390x844 (no page errors, no sideways overflow); the switch both ways and browser back; build passes; 10 tests pass; no em dashes.
 
+### Round 7 (2026-10-29, owner feedback: fork without the device, SaaS brand photo, wide-screen hero and waitlists)
+- lead, index.astro: the fork is two photos edge to edge, meeting in the middle, with no device (the page uses `stage="none"`; the 3D code is fetched while the visitor decides). Each photo is placed by where its face is (FACE in the frontmatter; CSS container units), so the face holds its spot at every size. Hovering zooms the photo (1.07), nothing slides. The paper bar with the wordmark is back. Paper type over two ink washes (headline at top, each side's words at its foot).
+- lead, people.json: new Brands photo `founder-desk` (Pexels 10376031, RDNE Stock project), a software founder at his studio desk, for a SaaS brand. Alternates on a live page: `?brands=founder-screen` (10376035, same series, eyes on his screen) or `?brands=candle-maker` (the old one). `founder-board` (7710042) downloaded but unused: a second person stands behind her. All graded warm by scripts/people.py, like every photo.
+- lead, phones (860px and under): one screen split on a diagonal (right edge high, left edge low), Brands above with the headline, Creators below, a paper hairline on the cut. Brands' words are placed by script a fixed 26px clear of the cut at every size; Creators' sit in the bottom right. Buttons scale with the screen.
+- lead, src/scripts/forktrip.ts + src/styles/forktrip.css (new): the fork's trips, three to try with `?trip=` (remembered for the session): `expand` (default; the chosen photo opens across the screen, the page rises over it like a sheet; back: the page drops away and the fork arrives open on that side, then settles), `doors` (the halves part, out through their corners on phones; back: they close), `iris` (the page opens out of a circle from the click; back: the fork opens from the middle). Any tap, key or scroll lands a trip at once; reduced motion goes straight there. Stage.astro's device trip is switched off (`FORK_DEVICE = false`).
+- lead, Hero.astro: the band holds one share of the screen (41 to 46% of its height, capped so ultrawide screens don't get a taller band). From 1800px the copy rises into the band's fade, starting about where the fade begins, with a soft paper glow behind it, and the type grows with the screen. Title top: 39 to 43% on laptops (unchanged), 37% at 1920 and 2560, 34% at 3440.
+- lead, Waitlist.astro: from 1280px the heading, lede and preview keep to the right end of their column (420px), a set distance left of her head, instead of drifting to the left gutter on wide screens.
+- Checked: fork at 1280, 1366, 1440, 1512, 1920, 3440 and 320 to 820 phones and tablets; all three trips in and back at 1512 and 390 (frame strips, no errors); hero and both waitlists at 1512, 1920, 2560, 3440. No sideways overflow; build passes; 10 tests pass; no em dashes.
+
+### Round 8 (2026-10-29, owner feedback)
+- lead, Waitlist.astro: the ink scrim behind the waitlist heading follows the words (it starts 140px before them and deepens under them) now that they sit by her head on wide screens.
+- lead, index.astro: the fork buttons stay knitted when their side is pointed at or chosen (the fork's own `.on` rule was painting the yarn flat; it now switches to the hover knit).
+- lead, src/lib/palette.ts (new), stage.ts, screens.ts, waitlist.ts, Waitlist.astro: a visitor's storefront is built from their own logo's colours. When the icon loads, its pixels are bucketed into primary, accent, ink, a pale paper tint and a contrast-checked label colour; the phone's storefront draws its page, words, panel (with an accent shape) and button from them, and the waitlist preview card follows (`brand:palette` event). Checked with notion.so, spotify.com, duolingo.com and mailchimp.com.
+- lead, Showcase.astro: the carousel's clock runs only while the deck is at least half on screen, so the first thing anyone sees is the first example (never a "Your turn" card), and it waits whenever they scroll away.
+- lead, Outcome.astro: the month plays as you scroll again (pinned on desktop over a 190vh track; on phones and short screens it plays as the cards pass through the screen; reduced motion shows it finished). The storefront's payments are a column per day with a stacked pill per sale: 38 sales over 30 days (a spike after the post, then a long tail). The same 540 clicks make 11 sales on a homepage, so cost per sale is $36.36 against $17.15. Replay button removed. The example line says the storefront converts the same clicks better.
+- lead, index.astro + brands.astro + creators.astro: the fork's text section rewritten from the SEO agent's research (design/seo/fork-section.md): "Creator marketing that pays per sale, not per post.", keyworded H3s and blocks per side, four long-tail questions, Organization, WebSite and FAQPage JSON-LD. New titles and meta descriptions on all three pages. Prices come from the pricing arm.
+
 ## HANDOFF (2026-10-29): start here
 
 **State.** Pushed to `a-grade` through round 6 (commit 5b74c7e). Builds, 10 tests pass, no page errors and no sideways
@@ -262,10 +279,9 @@ overflow at 1512x860, 1440x960, 1920x1080 and 390x844, no em dashes. Everything 
 - Both waitlists: B, the shop owner and creator (7679663). The form card sits between their faces at every size (its
   width and place come from the faces' inner edges, `fl` and `fr` in `spots.form`); heading, lede and preview sit left
   of her head on an ink scrim. Side by side from 1280px, stacked below.
-- The fork: full-height photos from under the wordmark to the bottom on desktop, a candle maker (5761119) for Brands
-  and the cook (12674093) for Creators, each side's word, line and button on the photo over an ink gradient. Hovering
-  zooms a side; the device no longer previews or tilts (stage.ts `FORK_HOVER_PREVIEW = false`). Phones: the florists
-  and the cook beside the device, plain cards under it.
+- The fork (round 7): no device. Two photos edge to edge, the SaaS founder (10376031) for Brands and the cook
+  (12674093) for Creators, split down the middle on desktop and on a diagonal on phones; trips in `forktrip.ts`
+  (`?trip=expand|doors|iris`, expand by default). Owner to pick a trip.
 - Unused: shop-film (7679677) and the Kaboompics stand-ins from rounds 1 and 2.
 
 **How the pieces work:**

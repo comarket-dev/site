@@ -13,6 +13,7 @@
  * The device follows a [data-stage-anchor] element, so the page layout decides where it sits and the stage only
  * decides how it moves.
  */
+import { paletteFrom } from '../../lib/palette';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
@@ -738,10 +739,18 @@ class Stage {
     if (p.host) b.domain = p.host.replace(/^www\./, '').toLowerCase().slice(0, 40);
     b.product = b.name;
     b.icon = null;
+    b.pal = null;
     if (p.icon) {
       const img = new Image();
       img.onload = () => {
         b.icon = img;
+        // the storefront takes its colours from the logo itself; the waitlist's preview card follows
+        b.pal = paletteFrom(img, p.color);
+        if (b.pal) {
+          b.color = b.pal.primary;
+          b.ink = b.pal.onPrimary;
+          dispatchEvent(new CustomEvent('brand:palette', { detail: b.pal }));
+        }
         this.dirty = true;
       };
       img.src = p.icon;

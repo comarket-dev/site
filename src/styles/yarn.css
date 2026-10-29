@@ -84,21 +84,6 @@ html[data-yarn] .nav.on-dark .convert:not(.ghost) .arr {
   filter: none;
 }
 
-/* the fork's choices are plain text links once its cards stack (index.astro): no yarn there */
-@media (max-width: 860px), (max-aspect-ratio: 4/5) {
-  html[data-yarn] .side .convert {
-    border: 0;
-    background: none;
-    box-shadow: none;
-    text-shadow: none;
-    color: inherit;
-    font-weight: 600;
-  }
-  html[data-yarn] .side .convert:hover {
-    background: none;
-  }
-}
-
 @media (prefers-contrast: more) {
   html[data-yarn] .convert:not(.ghost) {
     text-shadow: none;

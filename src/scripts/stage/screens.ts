@@ -27,6 +27,8 @@ export interface BrandSkin {
   look: BrandId | null;
   /** days free through the creator's link; 0 means the buyer pays at checkout */
   trial: number;
+  /** a visitor's brand: the palette read from its own logo (src/lib/palette.ts), null until it's read */
+  pal?: import('../../lib/palette').Palette | null;
 }
 export interface CreatorSkin {
   name: string;
@@ -564,9 +566,11 @@ const post: Draw = (x, t, b, c) => {
    standard (lockup, headline, what it is and the creator's welcome, one visual, the creator's note, one button). */
 const store: Draw = (x, t, b, c) => {
   const fern = b.look === 'fernwood';
-  base(x, ST.store, fern ? PAPER : '#FAF9F7');
-  const ink = fern ? PINE : TEXT;
-  const quiet = fern ? LICHEN : MUTED;
+  // a visitor's brand is drawn in its logo's own palette: its tint for the page, its darkest for the words
+  const pal = !b.look ? b.pal : null;
+  base(x, ST.store, fern ? PAPER : pal ? pal.paper : '#FAF9F7');
+  const ink = fern ? PINE : pal ? pal.ink : TEXT;
+  const quiet = fern ? LICHEN : pal ? `${pal.ink}99` : MUTED;
   // brand x creator, one centered row, both names in the brand's type
   const nameFont = fern ? `23px ${SERIF}` : '700 18px Satoshi, system-ui, sans-serif';
   x.font = nameFont;
@@ -630,19 +634,36 @@ const store: Draw = (x, t, b, c) => {
     const qy = wrapIn(x, '“Fernwood showed me the screen my trials quit on. Mine was integrations. Of course it was.”', 82, 500, 256, `17.5px ${SERIF}`, 20, PINE);
     say(x, `${c.name}, Trial & Error`, 82, qy + 20, `400 11.5px ${SANS}`, LICHEN);
   } else {
-    wrapIn(x, `${b.name}, picked by ${c.first}.`, 22, 150, 316, '700 36px Satoshi, system-ui, sans-serif', 38, TEXT, -1.2);
-    say(x, `${b.domain} · ${c.first}’s readers start here.`, 22, 238, '500 14px Satoshi, system-ui, sans-serif', MUTED);
+    wrapIn(x, `${b.name}, picked by ${c.first}.`, 22, 150, 316, '700 36px Satoshi, system-ui, sans-serif', 38, ink, -1.2);
+    say(x, `${b.domain} · ${c.first}’s readers start here.`, 22, 238, '500 14px Satoshi, system-ui, sans-serif', quiet);
     rr(x, 14, 262, 332, 196, 18);
-    x.fillStyle = b.color;
+    x.fillStyle = pal ? pal.primary : b.color;
     x.fill();
+    if (pal) {
+      // the logo's second colour as a soft shape in the panel's corner, so the page carries more than one colour
+      x.save();
+      rr(x, 14, 262, 332, 196, 18);
+      x.clip();
+      x.globalAlpha = 0.9;
+      x.fillStyle = pal.accent;
+      x.beginPath();
+      x.arc(352, 262, 84, 0, Math.PI * 2);
+      x.fill();
+      x.globalAlpha = 0.22;
+      x.fillStyle = pal.paper;
+      x.beginPath();
+      x.arc(14, 458, 92, 0, Math.PI * 2);
+      x.fill();
+      x.restore();
+    }
     logo(x, b, 150, 300, 60, true);
     x.font = '700 22px Satoshi, system-ui, sans-serif';
     say(x, fit(x, b.product, 280), 180, 404, '700 22px Satoshi, system-ui, sans-serif', b.ink, 'center');
     // we don't know the visitor's price, so the one we draw says it's an example
     say(x, `Example price: ${money(b.amount)}/mo`, 180, 430, '500 14px Satoshi, system-ui, sans-serif', b.ink, 'center');
     face(x, c, 46, 508, 24);
-    const qy = wrapIn(x, '“The first one I recommend when someone asks. I use it every week.”', 82, 500, 256, '600 16px Satoshi, system-ui, sans-serif', 21, TEXT);
-    say(x, c.name, 82, qy + 20, '400 11.5px Satoshi, system-ui, sans-serif', MUTED);
+    const qy = wrapIn(x, '“The first one I recommend when someone asks. I use it every week.”', 82, 500, 256, '600 16px Satoshi, system-ui, sans-serif', 21, ink);
+    say(x, c.name, 82, qy + 20, '400 11.5px Satoshi, system-ui, sans-serif', quiet);
   }
   const k = clamp01((t - 1.6) / 0.6);
   const s = 1 - press(k);
@@ -651,9 +672,9 @@ const store: Draw = (x, t, b, c) => {
   x.scale(s, s);
   x.translate(-180, -625);
   rr(x, 22, 600, 316, 50, 25);
-  x.fillStyle = fern ? FERN : b.color;
+  x.fillStyle = fern ? FERN : pal ? pal.primary : b.color;
   x.fill();
-  say(x, fern ? 'Start my free 30 days' : `Get ${b.name}`, 180, 631, fern ? `600 16px ${SANS}` : '700 16px Satoshi, system-ui, sans-serif', fern ? '#fff' : b.ink, 'center');
+  say(x, fern ? 'Start my free 30 days' : `Get ${b.name}`, 180, 631, fern ? `600 16px ${SANS}` : '700 16px Satoshi, system-ui, sans-serif', fern ? '#fff' : pal ? pal.onPrimary : b.ink, 'center');
   x.restore();
   storeFoot(x, c, 674, quiet);
   safariBar(x, `${b.host}.comarket.si/creators/${c.slug}`);

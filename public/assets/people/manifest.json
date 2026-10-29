@@ -19,6 +19,21 @@
   "h": 4800,
   "original": true
  },
+ "founder-desk": {
+  "w": 3200,
+  "h": 2133,
+  "original": true
+ },
+ "founder-screen": {
+  "w": 3200,
+  "h": 2133,
+  "original": true
+ },
+ "founder-board": {
+  "w": 3200,
+  "h": 2134,
+  "original": true
+ },
  "candle-maker": {
   "w": 3200,
   "h": 4800,

@@ -10,17 +10,24 @@ const { arm } = Astro.props;
 const PRICE = 49;
 const RATE = 20;
 const FLAT = 400;
-const VIEWS = 12000;
-const CLICKS = 360;
-/** days of the month the example sales land on */
-const DAYS = [2, 3, 5, 8, 9, 12, 15, 17, 20, 23, 26, 29];
-const SALES = DAYS.length;
+const VIEWS = 18000;
+const CLICKS = 540;
+/* Example month, labelled as one. The same post and the same clicks: sent to the brand's homepage they make 11 sales;
+   sent to a storefront built for the creator's audience, 38. Sales per day across the 30 days, a spike after the
+   post and a long tail (the post keeps getting found). */
+const PER_DAY = [4, 5, 4, 3, 2, 2, 2, 1, 2, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0];
+const SALES = PER_DAY.reduce((a, b) => a + b, 0);
+const OLD_SALES = 11;
+const MAX_DAY = Math.max(...PER_DAY);
+/* every sale in order, with its day and its place in that day's stack */
+let k = 0;
+const PIPS = PER_DAY.flatMap((n, d) => Array.from({ length: n }, (_, j) => ({ d, j, k: k++ })));
 const fee = (PRICE * (RATE + arm.first)) / 100;
 const usd = (v: number) => `$${v.toFixed(2)}`;
 ---
 
 <section class="outcome" id="outcome" aria-labelledby="out-h">
-  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-views={VIEWS} data-clicks={CLICKS}>
+  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-old-sales={OLD_SALES} data-views={VIEWS} data-clicks={CLICKS}>
     <div class="scene">
       <div class="wrap">
         <h2 class="display-l" id="out-h">Pay for sales, not posts.</h2>
@@ -34,13 +41,13 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
             <ul class="funnel num" aria-hidden="true">
               <li><span>Views</span><b data-v>{VIEWS.toLocaleString('en-US')}</b></li>
               <li><span>Clicks</span><b data-c>{CLICKS}</b></li>
-              <li><span>Sales</span><b data-s>{SALES}</b></li>
+              <li><span>Sales</span><b data-os>{OLD_SALES}</b></li>
             </ul>
             <div class="when-paid" aria-hidden="true">
               <div class="line"><i class="pay lump" style="--x:0"><span class="num">${FLAT}</span></i></div>
               <div class="days num"><span>Day 1</span><span>Day 30</span></div>
             </div>
-            <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / SALES)}</b></p>
+            <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / OLD_SALES)}</b></p>
           </article>
 
           <article class="card new" aria-label="A Comarket storefront">
@@ -55,7 +62,9 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
               <li><span>Sales</span><b data-s>{SALES}</b></li>
             </ul>
             <div class="when-paid" aria-hidden="true">
-              <div class="line">{DAYS.map((d, i) => <i class="pay" data-tick style={`--x:${(d - 1) / 29};--i:${i}`} />)}</div>
+              <div class="line days30" style={`--max:${MAX_DAY}`}>
+                {PIPS.map((p) => <i class="pip" data-tick style={`--d:${p.d};--j:${p.j}`} />)}
+              </div>
               <div class="days num"><span>Day 1</span><span>Day 30</span></div>
             </div>
             <p class="per"><span>Cost per sale</span><b class="num">{usd(fee)}</b></p>
@@ -64,12 +73,8 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
 
         <div class="end">
           <p class="verdict">If the post flops, one costs you ${FLAT}. The other costs <mark class="hl">nothing.</mark></p>
-          <button class="replay" type="button" data-month-replay aria-describedby="out-ex">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.05-4.95" /><path d="M5 4.5V8h3.5" /></svg>
-            <span data-month-replay-label>Replay the month</span>
-          </button>
         </div>
-        <p class="ex" id="out-ex">Example month: one post, 12,000 views, a ${PRICE}/mo product, a {RATE}% creator rate.</p>
+        <p class="ex" id="out-ex">Example month: one post, 18,000 views, a ${PRICE}/mo product, a {RATE}% creator rate. The storefront converts the same clicks better than a homepage.</p>
       </div>
     </div>
   </div>
@@ -97,8 +102,21 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     background-position: var(--paper-x, 0px) var(--paper-y, 0px);
     padding-bottom: clamp(64px, 8vw, 128px);
   }
-  /* No pin: the finished month is on the page from the start, so a fast scroller reads the result. The run is a
-     replay on request. */
+  /* The month plays out as you scroll: the scene pins under the nav while the track scrolls past it (the script maps
+     the track's progress to the month). Short screens, phones and reduced motion don't pin; there the month plays as
+     the cards pass through the screen, or shows finished. */
+  .track {
+    position: relative;
+  }
+  @media (min-width: 721px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+    .track {
+      height: 190vh;
+    }
+    .scene {
+      position: sticky;
+      top: 64px;
+    }
+  }
   /* it follows the hero directly, which already leaves room below itself */
   .scene {
     padding-block: clamp(48px, 7vw, 120px) 0;
@@ -196,9 +214,29 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     transform: scaleY(var(--on, 1));
     transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .new .pay {
+  /* the storefront's month: a column per day, a stacked pill per sale, so busy days stand tall and the month reads
+     as a run of sales, not a few lonely ticks */
+  .days30 {
+    --gap: 3px;
+    --col: calc((100% - 29 * var(--gap)) / 30);
+    --pip: min(12px, calc((64px - (var(--max) - 1) * 2px) / var(--max)));
+    height: 64px;
+  }
+  .pip {
+    position: absolute;
+    left: calc(var(--d) * (var(--col) + var(--gap)));
+    bottom: calc(var(--j) * (var(--pip) + 2px));
+    width: var(--col);
+    height: var(--pip);
+    border-radius: 3px;
     background: var(--yellow);
     box-shadow: inset 0 0 0 1.5px var(--ink);
+    transform-origin: bottom;
+    transform: scaleY(var(--on, 1));
+    opacity: var(--on, 1);
+    transition:
+      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.2s ease;
   }
   .pay.lump {
     width: 34%;
@@ -237,43 +275,6 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     align-items: center;
     justify-content: space-between;
     gap: 16px 32px;
-  }
-  .replay {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    min-height: 44px;
-    padding: 0 18px 0 14px;
-    border-radius: 999px;
-    border: 1px solid var(--ink);
-    background: transparent;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      background-color 0.3s var(--ease),
-      color 0.3s var(--ease);
-  }
-  .replay:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .replay svg {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .replay[aria-busy='true'] svg {
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
   }
   .ex {
     margin-top: 14px;
@@ -385,58 +386,65 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     const fee = Number(el.dataset.fee);
     const flat = Number(el.dataset.flat);
     const SALES = Number(el.dataset.sales);
+    const OLD = Number(el.dataset.oldSales);
     const $$ = (s: string) => Array.from(el.querySelectorAll<HTMLElement>(s));
     const VIEWS = Number(el.dataset.views);
     const CLICKS = Number(el.dataset.clicks);
     const views = $$('[data-v]');
     const clicks = $$('[data-c]');
     const sold = $$('[data-s]');
+    const oldSold = $$('[data-os]');
     const ticks = $$('[data-tick]');
     const bill = el.querySelector<HTMLElement>('[data-bill]')!;
     const when = el.querySelector<HTMLElement>('[data-when]')!;
     const oldPer = el.querySelector<HTMLElement>('[data-old-per]')!;
-    const btn = el.querySelector<HTMLButtonElement>('[data-month-replay]')!;
-    const label = el.querySelector<HTMLElement>('[data-month-replay-label]')!;
+    const cols = el.querySelector<HTMLElement>('.cols')!;
     const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
     const ramp = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
 
     /** One frame of the month at progress p: people see the post, click, buy; only one bill follows the buying. */
+    let shown = -1;
     const draw = (p: number) => {
       const v = ramp(p, 0.02, 0.3);
       const c = ramp(p, 0.14, 0.42);
-      const n = Math.floor(ramp(p, 0.34, 0.96) * SALES + 0.001);
+      const s = ramp(p, 0.3, 0.97);
+      const n = Math.floor(s * SALES + 0.001);
+      const o = Math.floor(s * OLD + 0.001);
       views.forEach((e) => (e.textContent = fmt(VIEWS * v)));
       clicks.forEach((e) => (e.textContent = fmt(CLICKS * c)));
+      if (n === shown && s > 0 && s < 1) return;
+      shown = n;
       sold.forEach((e) => (e.textContent = String(n)));
+      oldSold.forEach((e) => (e.textContent = String(o)));
       ticks.forEach((t, k) => t.style.setProperty('--on', k < n ? '1' : '0'));
       bill.textContent = `$${(fee * n).toFixed(2)}`;
-      when.textContent = n ? 'paid only as each sale lands' : 'nothing before it goes live';
-      oldPer.textContent = n ? `$${(flat / n).toFixed(2)}` : 'no sales yet';
+      when.textContent = n ? 'paid only as each sale lands' : 'nothing before a sale';
+      oldPer.textContent = o ? `$${(flat / o).toFixed(2)}` : 'no sales yet';
     };
 
-    // The page already shows the finished month. A replay runs it from day 1, then rests on the result again.
-    let raf = 0;
-    const replay = () => {
-      cancelAnimationFrame(raf);
-      if (reduceMotion()) return draw(1);
-      btn.setAttribute('aria-busy', 'true');
-      label.textContent = 'Playing the month';
-      const t0 = performance.now();
-      const step = (now: number) => {
-        const p = Math.min(1, (now - t0) / 3600);
-        draw(p);
-        if (p < 1) raf = requestAnimationFrame(step);
-        else {
-          btn.removeAttribute('aria-busy');
-          label.textContent = 'Replay the month';
-        }
-      };
-      raf = requestAnimationFrame(step);
+    /* Progress from the scroll: pinned, it's how far the track has scrolled past the pin; unpinned, how far the
+       cards have travelled up through the screen (they finish while still fully in view). */
+    const pinned = () => getComputedStyle(el.querySelector('.scene')!).position === 'sticky';
+    const progress = () => {
+      if (pinned()) {
+        const r = el.getBoundingClientRect();
+        return ramp(-r.top, 0, Math.max(1, r.height - innerHeight + 64));
+      }
+      const r = cols.getBoundingClientRect();
+      return ramp(innerHeight - r.top, r.height * 0.25, r.height * 0.25 + innerHeight * 0.6);
     };
-    btn.addEventListener('click', replay);
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => draw(reduceMotion() ? 1 : progress()));
+    };
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
     return [
       () => {
-        btn.removeEventListener('click', replay);
+        removeEventListener('scroll', onScroll);
+        removeEventListener('resize', onScroll);
         cancelAnimationFrame(raf);
       },
     ];

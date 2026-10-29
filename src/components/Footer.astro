@@ -28,6 +28,14 @@ const year = new Date().getFullYear();
   <div class="wrap bottom">
     <div class="legal label">
       <span>© {year} Comarket</span>
+      <nav class="docs" aria-label="Legal">
+        <a href="/terms">Terms</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/brand-terms">Brand agreement</a>
+        <a href="/creator-terms">Creator agreement</a>
+        <a href="/dpa">DPA</a>
+        <a href="/acceptable-use">Acceptable use</a>
+      </nav>
     </div>
   </div>
 </footer>
@@ -95,6 +103,17 @@ const year = new Date().getFullYear();
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+  }
+  .docs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .docs a {
+    text-decoration: none;
+  }
+  .docs a:hover {
+    text-decoration: underline;
   }
   @media (max-width: 760px) {
     .top {

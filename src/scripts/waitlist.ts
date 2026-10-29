@@ -92,6 +92,15 @@ export function mountWaitlist(root: HTMLElement): () => void {
         btn.textContent = 'Preview';
       }
     };
+    // once the hero's phone has read the logo's palette, the preview card wears it too
+    const onPalette = (e: Event) => {
+      const pal = (e as CustomEvent<{ primary: string; paper: string; ink: string }>).detail;
+      mini.style.setProperty('--brand', pal.primary);
+      mini.style.setProperty('--brand-paper', pal.paper);
+      mini.style.setProperty('--brand-ink', pal.ink);
+    };
+    addEventListener('brand:palette', onPalette);
+    cleanups.push(() => removeEventListener('brand:palette', onPalette));
     btn.addEventListener('click', run);
     site.addEventListener('change', run);
     site.addEventListener('keydown', (e) => {
