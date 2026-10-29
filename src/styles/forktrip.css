@@ -1,0 +1,9 @@
+/* The fork's iris trip (src/scripts/forktrip.ts): the hero's 3D phone stays out of the trip and fades in once the page
+   has landed. */
+#stage {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.trip-iris #stage {
+  opacity: 0 !important;
+  transition: none;
+}

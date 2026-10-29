@@ -2,26 +2,16 @@
 <html><head><meta charset="utf-8"><link rel="stylesheet" href="../common.css">
 <style>
   /* A frame of Ama's slow-morning video: the pour, Hollow Tea's paper label on the tin, her captions burned in.
-     The photo is 768x1344 shown cover in 360x640, so photo pixels x 0.4762, minus 2.9 px on x. */
+     The photo is framed a touch tighter and to the right (118% wide, so photo pixels x 0.5531, minus 64.8 px on x and
+     51.7 on y), which keeps the tin clear of TikTok's right rail. The tin's label is printed into the photo by scripts/print-labels.py. */
   body { width: 360px; height: 640px; background: #2a2118; }
-  .photo { position: absolute; inset: 0; background: url(../../content/posts/ama-pour-a.png) center / cover; }
-  .label { position: absolute; left: 196px; top: 291px; width: 80px; height: 98px; background: #d9cdb5; border-radius: 2px; box-shadow: 0 0 0 0.5px rgba(60, 50, 30, .25), 0 1px 2px rgba(40, 30, 10, .18); color: #405746; text-align: center; padding-top: 12px; filter: blur(0.3px) saturate(.9); }
-  .label::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(255,236,200,.10), rgba(0,0,0,0) 35%, rgba(30,24,10,.16)), linear-gradient(rgba(0,0,0,0) 55%, rgba(30,24,10,.10)); }
-  .label svg { width: 15px; height: 15px; margin: 0 auto; }
-  .label b { display: block; font: 600 12px/1 ui-serif, 'New York', Georgia, serif; letter-spacing: 0.16em; margin-top: 5px; }
-  .label i { display: block; width: 26px; height: 1px; background: currentColor; margin: 7px auto; opacity: .5; }
-  .label small { display: block; font: 500 6.5px/1.35 ui-serif, Georgia, serif; font-style: italic; color: #4c5e50; }
-  .label em { display: block; font: 600 4.5px/1 -apple-system, system-ui; font-style: normal; letter-spacing: 0.2em; margin-top: 10px; opacity: .75; }
+  .photo { position: absolute; inset: 0; background: url(../../content/posts/ama-pour2-a.labeled.png) right center / 118% auto no-repeat; }
   .cap { position: absolute; left: 0; right: 0; text-align: center; font: 700 18px/1.2 'TikTok Sans', -apple-system, sans-serif; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
   .c1 { top: 128px; }
   .c2 { top: 154px; font-size: 14px; }
 </style></head>
 <body>
   <div class="photo"></div>
-  <div class="label">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h13v3a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6zM17 11h2a2 2 0 0 1 0 4h-2M9 7c0-2 2-3 3-4"/></svg>
-    <b>HOLLOW</b><i></i><small>smoky oolong<br>no. 32</small><em>LOOSE LEAF · 100G</em>
-  </div>
   <div class="cap c1">slow morning, week 32</div>
   <div class="cap c2">this month's box: smoky oolong</div>
 </body></html>

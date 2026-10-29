@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Texture and warmth</title>
+<style>
+  @font-face { font-family: 'Satoshi'; src: url('../../public/fonts/Satoshi-Variable.woff2') format('woff2'); font-weight: 300 900; }
+  @font-face { font-family: 'Fragment Mono'; src: url('../../public/fonts/FragmentMono-Regular.woff2') format('woff2'); }
+  :root {
+    --ink: #1e0e3f; --paper: #fff7ec; --paper-2: #fdeed6; --sun: #fdbf68; --yellow: #fff200; --graphite: #5f5672;
+    --grain: url('../../public/assets/texture/grain.webp'); --grain-ink: url('../../public/assets/texture/grain-ink.webp');
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1520px; padding: 72px; font-family: Satoshi, sans-serif; color: var(--ink);
+    background: var(--grain) 0 0 / 384px 384px, var(--paper); }
+  h1 { font-size: 64px; letter-spacing: -0.045em; line-height: 1.05; }
+  .lede { font-size: 22px; color: var(--graphite); max-width: 60ch; margin-top: 18px; line-height: 1.45; }
+  h2 { font-size: 30px; letter-spacing: -0.03em; margin: 72px 0 8px; }
+  .note { font-size: 17px; color: var(--graphite); max-width: 78ch; line-height: 1.5; margin-bottom: 24px; }
+  .label { font-family: 'Fragment Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--graphite); margin-top: 10px; }
+  .row { display: grid; gap: 20px; }
+  .three { grid-template-columns: repeat(3, 1fr); }
+  .two { grid-template-columns: repeat(2, 1fr); }
+
+  /* paper: each swatch is plain on the left half, grained on the right */
+  .sw { height: 260px; position: relative; display: grid; grid-template-columns: 1fr 1fr; }
+  .sw > i { display: block; }
+  .sw .plain { background: var(--c); }
+  .sw .tex { background: var(--g) 0 0 / 384px 384px, var(--c); }
+  .sw b { position: absolute; left: 16px; bottom: 14px; font: 12px 'Fragment Mono', monospace; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--t); }
+  .sw b + b { left: auto; right: 16px; }
+  .zoom { height: 260px; background: var(--grain) 0 0 / 1152px 1152px, var(--paper); image-rendering: pixelated; }
+
+  /* grade */
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .pair img { width: 100%; height: 300px; object-fit: cover; display: block; }
+  .ph { position: relative; }
+  .ph::after { content: ''; position: absolute; inset: 0; background: var(--grain) 0 0 / 384px 384px; pointer-events: none; }
+
+  /* light: the same photo edge meeting the paper, with and without the sun's spill */
+  .light { position: relative; height: 380px; overflow: hidden; background: var(--grain) 0 0 / 384px 384px, var(--paper); }
+  .light .shot { position: absolute; top: 0; right: 0; bottom: 0; width: 52%; }
+  .light .shot img { width: 100%; height: 100%; object-fit: cover; object-position: 52% 40%; display: block; }
+  .light.sun::before { content: ''; position: absolute; inset: 0;
+    background: radial-gradient(60% 90% at 50% 20%, rgb(253 191 104 / 0.22), transparent 72%); }
+  .light h3 { position: absolute; left: 32px; top: 36px; width: calc(48% - 56px); font-size: 34px; letter-spacing: -0.04em;
+    line-height: 1.12; }
+  .ink { height: 260px; position: relative; display: grid; grid-template-columns: 1fr 1fr; }
+
+  ul.rules { columns: 2; column-gap: 48px; font-size: 17px; line-height: 1.5; padding-left: 20px; max-width: 1300px; }
+  ul.rules li { margin-bottom: 10px; break-inside: avoid; }
+</style>
+</head>
+<body>
+  <h1>Warm stock.</h1>
+  <p class="lede">Wada No. 295 inks on uncoated cream paper, in late-afternoon window light. The photos are printed on the
+    same paper, in the same light, so they belong to the page instead of sitting on it.</p>
+
+  <h2>1. Paper</h2>
+  <p class="note">One grain on every section surface, alpha over the section’s own colour. Left half of each swatch is
+    today’s flat colour, right half is with the grain. Fourth panel: the grain at 3x, to show its tooth, mottle and
+    fibres.</p>
+  <div class="row" style="grid-template-columns: repeat(4, 1fr)">
+    <div><div class="sw" style="--c: var(--paper); --g: var(--grain); --t: var(--graphite)"><i class="plain"></i><i class="tex"></i><b>flat</b><b>grain</b></div><p class="label">--paper #fff7ec</p></div>
+    <div><div class="sw" style="--c: var(--paper-2); --g: var(--grain); --t: var(--graphite)"><i class="plain"></i><i class="tex"></i><b>flat</b><b>grain</b></div><p class="label">--paper-2 #fdeed6</p></div>
+    <div><div class="sw" style="--c: var(--ink); --g: var(--grain-ink); --t: #b5adc9"><i class="plain"></i><i class="tex"></i><b>flat</b><b>grain</b></div><p class="label">--ink #1e0e3f, paper specks</p></div>
+    <div><div class="zoom"></div><p class="label">grain at 3x</p></div>
+  </div>
+
+  <h2>2. Photo grade</h2>
+  <p class="note">One grade for every photo: black lifts to the palette’s ink, white settles on the page’s paper, the mids
+    catch a little sun, colour eases back 12%. Then the page’s grain goes on top. Left: the Pexels original. Right: graded,
+    with grain.</p>
+  <div class="row two">
+    <div><div class="pair"><img src="build/shop-plan-before.jpg" alt="" /><div class="ph"><img src="build/shop-plan-after.jpg" alt="" /></div></div><p class="label">B, shop owner and creator: original / graded</p></div>
+    <div><div class="pair"><img src="build/florists-before.jpg" alt="" /><div class="ph"><img src="build/florists-after.jpg" alt="" /></div></div><p class="label">D, florists: original / graded</p></div>
+  </div>
+
+  <h2>3. Light</h2>
+  <p class="note">One warm source, upper right. Where a photo meets the paper, a soft wash of Cream Yellow (--sun,
+    #fdbf68) spills from it onto the page, so its light carries into the layout. Light only, never a flat fill; yellow
+    stays with the sale.</p>
+  <div class="row two">
+    <div><div class="light"><h3>Without the spill, the photo stops at its edge.</h3><div class="shot ph"><img src="build/shop-plan-after.jpg" alt="" /></div></div><p class="label">photo and paper, no light</p></div>
+    <div><div class="light sun"><h3>With it, the room’s light reaches the type.</h3><div class="shot ph"><img src="build/shop-plan-after.jpg" alt="" /></div></div><p class="label">photo and paper, with the sun’s spill</p></div>
+  </div>
+
+  <h2>Rules</h2>
+  <ul class="rules">
+    <li>Grain on sections and photos only. The phone, storefronts, posts, forms and cards stay clean, like screens laid on the paper.</li>
+    <li>One scale: a 384px tile at 1x. It scrolls with the page and never moves on its own.</li>
+    <li>Photos bleed off at least one edge of the viewport or fill their column. Square corners, no frames, no shadows.</li>
+    <li>The 3D phone stands across a photo’s edge, half on the photo, half on the paper.</li>
+    <li>--sun is a radial wash at 12 to 22%, beside photos and in the hero. Never a flat block behind text.</li>
+    <li>Not this: torn edges, tape, stickers, stamps, halftone, film borders, vignettes, light leaks, moving grain.</li>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,175 @@
+---
+/* Hollow Tea x Alma B., per design/brands/README.md: a journal. Alma's pour (the tin's label printed by
+   scripts/print-labels.py), this month's issue line, the promise in Cormorant, Alma's note in her own lowercase, the
+   half-off offer in Amber and one Sage button. Drawn at 390 x 846 design pixels. Fictional, labeled as an example. */
+import BrandMark from '../BrandMark.astro';
+import StoreFoot from '../StoreFoot.astro';
+---
+
+<div class="root">
+  <header class="lock">
+    <span class="brand"><BrandMark id="hollow" size="22" />HOLLOW</span>
+    <span class="x">×</span>
+    <span class="who"><span class="av"></span>Alma B.</span>
+  </header>
+
+  <div class="photo" role="img" aria-label="Tea poured into a glass beside a Hollow tin of smoky oolong"></div>
+
+  <p class="issue"><i>no. 32</i><span>smoky oolong, from Wuyi</span></p>
+  <h1>One good tea, <em>a month.</em></h1>
+  <p class="sub">Single-origin loose leaf by subscription. A tin a month, about 30 cups. Skip or cancel anytime.</p>
+
+  <figure class="note">
+    <span class="av big"></span>
+    <span>
+      <blockquote>“week 32 of tea before my phone. this month’s is my favorite so far.”</blockquote>
+      <figcaption>Alma B., @alma.steeps</figcaption>
+    </span>
+  </figure>
+
+  <div class="buy">
+    <p class="offer">Alma’s followers: first box <b>$11</b> <s>$22</s></p>
+    <span class="cta">Start my box for $11</span>
+    <StoreFoot first="Alma" />
+  </div>
+</div>
+
+<style>
+  .root {
+    --sage: #5e7f64;
+    --leaf: #2f4536;
+    --label: #e9e1cd;
+    --oat: #f5f1e6;
+    --amber: #c98a2b;
+    --foot: #6f7a6c;
+    position: relative;
+    height: 100%;
+    padding-top: 50px;
+    background: var(--oat);
+    color: var(--leaf);
+    font-family: 'Hollow', Georgia, serif;
+    overflow: hidden;
+  }
+  .lock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 54px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    letter-spacing: 0.14em;
+  }
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 21px;
+    font-weight: 500;
+  }
+  .x {
+    font: 400 14px/1 -apple-system, system-ui, sans-serif;
+    color: #8f9a8c;
+  }
+  .av {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/alma.jpg) center / cover;
+    flex: none;
+  }
+  .photo {
+    height: 236px;
+    background: url(/assets/stores/hollow.jpg) 50% 50% / cover;
+  }
+  /* the issue, set like a journal entry */
+  .issue {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 16px 22px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #cfd3c2;
+    font: 500 13px/1 -apple-system, system-ui, sans-serif;
+    color: #6f7a6c;
+  }
+  .issue i {
+    font: italic 500 22px/1 'Hollow', Georgia, serif;
+    color: var(--leaf);
+  }
+  h1 {
+    margin: 12px 22px 0;
+    font-size: 40px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  h1 em {
+    font-weight: 500;
+    color: var(--sage);
+  }
+  .sub {
+    margin: 8px 22px 0;
+    font: 400 14px/1.4 -apple-system, system-ui, sans-serif;
+    color: #55604f;
+  }
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 22px 0;
+  }
+  /* the creator's own photo beside their note (scripts/render-posts.py SHOTS), larger than the lockup's avatar */
+  .av.big {
+    width: 64px;
+    height: 80px;
+    border-radius: 3px;
+    background-image: url(/assets/stores/creators/alma.jpg);
+  }
+  blockquote {
+    margin: 0;
+    font: italic 500 17px/1.2 'Hollow', Georgia, serif;
+  }
+  figcaption {
+    margin-top: 3px;
+    font: 400 11.5px/1 -apple-system, system-ui, sans-serif;
+    color: #6f7a6c;
+  }
+
+  .buy {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 94px;
+    display: grid;
+    gap: 10px;
+  }
+  .offer {
+    margin: 0;
+    text-align: center;
+    font: 500 14px/1 -apple-system, system-ui, sans-serif;
+    color: var(--leaf);
+  }
+  .offer b {
+    color: var(--amber);
+    font-size: 16px;
+  }
+  .offer s {
+    color: #9aa395;
+  }
+  .cta {
+    display: grid;
+    place-items: center;
+    height: 52px;
+    border-radius: 4px;
+    background: var(--sage);
+    color: #fff;
+    font: 600 16px/1 -apple-system, system-ui, sans-serif;
+    letter-spacing: 0.01em;
+  }
+</style>

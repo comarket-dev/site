@@ -1,9 +1,11 @@
 ---
+import Icon from '../Icon.astro';
+import BrandMark from '../examples/BrandMark.astro';
 /* What a brand match looks like when it reaches a creator. Example brand, example rate. */
 const points = [
   { h: 'Brands pay only on sales, so they say yes.', p: 'No upfront budget means no follower minimum. Creators your size get real offers.' },
-  { h: 'The brand pays Comarket.', p: 'Your rate is your rate. We never take our cut out of it.' },
-  { h: 'Paid to your bank through Stripe.', p: 'Payouts land monthly, for every month the customer keeps paying.' },
+  { h: 'The rate is on the offer.', p: 'You see what each sale pays before you say yes.' },
+  { h: 'One post, in your words.', p: 'Disclose it as a paid link. Keep it up as long as you like.' },
 ];
 ---
 
@@ -32,12 +34,8 @@ const points = [
         <span class="tag">Example</span>
       </header>
       <div class="c-brand">
-        <span class="logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
-            ><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14Zm0 0 7-7"></path></svg
-          >
-        </span>
-        <span><b>Fernwood wants you on their storefront</b><span class="muted">Onboarding analytics · $49/mo</span></span>
+        <span class="logo" aria-hidden="true"><BrandMark id="fernwood" size="26" /></span>
+        <span><b>Fernwood wants you on their storefront</b><span class="muted">Onboarding analytics for SaaS teams · $49/mo</span></span>
       </div>
       <dl class="c-terms">
         <div><dt>Your rate</dt><dd class="num">20%</dd></div>
@@ -48,25 +46,56 @@ const points = [
         <span class="label">Why you</span>
         <p>You wrote about trial-to-paid in 6 of your last 20 posts. Fernwood’s buyers read the same things.</p>
       </div>
-      <div class="c-brief">
-        <span class="label">The ask</span>
-        <p>One post in the next 30 days, in your words. Disclose it as a paid link. Keep it up as long as you like.</p>
+      <div class="c-decide" data-pitch>
+        <div class="c-act" data-pitch-ask>
+          <button class="btn" type="button" data-pitch-go="yes">Accept <Icon name="arrow-right" class="arr" /></button>
+          <button class="btn ghost" type="button" data-pitch-go="no">Pass</button>
+        </div>
+        <p class="c-foot" data-pitch-ask>Nothing to pay, ever. Pass and we won’t pitch you this brand again.</p>
+
+        <div class="c-done yes" data-pitch-done="yes" hidden>
+          <div class="c-live">
+            <svg class="tick" viewBox="0 0 40 40" aria-hidden="true">
+              <circle cx="20" cy="20" r="20" />
+              <path d="M12.5 20.5l5 5 10-11" />
+            </svg>
+            <div class="c-said">
+              <b tabindex="-1" data-pitch-head>Accepted. Your Fernwood storefront is live.</b>
+              <span class="c-url num"><span class="lock" aria-hidden="true"></span><span>fernwood.comarket.si/<wbr />creators/<wbr /><span data-pitch-handle>yourname</span></span></span>
+            </div>
+          </div>
+          <p class="c-small">That’s how a match works. This one is an example.</p>
+          <div class="c-next">
+            <a class="btn convert" href="#waitlist">Claim my page <Icon name="arrow-right" class="arr" /></a>
+            <button class="undo" type="button" data-pitch-undo>Undo</button>
+          </div>
+        </div>
+
+        <div class="c-done no" data-pitch-done="no" hidden>
+          <div class="c-said">
+            <b tabindex="-1" data-pitch-head>Passed. We won’t pitch you Fernwood again.</b>
+            <span class="c-small">Passing costs nothing.</span>
+          </div>
+          <div class="c-next">
+            <a class="btn convert" href="#waitlist">Claim my page <Icon name="arrow-right" class="arr" /></a>
+            <button class="undo" type="button" data-pitch-undo>Undo</button>
+          </div>
+        </div>
       </div>
-      <div class="c-act">
-        <span class="btn">Accept <span class="arr" aria-hidden="true">→</span></span>
-        <span class="btn ghost">Pass</span>
-      </div>
-      <p class="c-foot label">Nothing to pay, ever. Pass and we won’t pitch you this brand again.</p>
     </article>
   </div>
 </section>
 
 <style>
+  /* sits between two paper sections, so it doesn't need a full section's air on both sides */
+  .pitch {
+    padding-block: clamp(64px, 8vw, 128px);
+  }
   .grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
-    gap: 48px clamp(40px, 7vw, 120px);
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 600px);
+    gap: 48px clamp(40px, 6vw, 104px);
+    align-items: start;
   }
   .copy {
     display: grid;
@@ -151,7 +180,7 @@ const points = [
     width: 48px;
     height: 48px;
     border-radius: 14px;
-    background: #1e6b47;
+    background: #f3f0e8;
     display: grid;
     place-items: center;
   }
@@ -176,37 +205,145 @@ const points = [
     color: var(--graphite);
   }
   .c-terms dd {
+    white-space: nowrap;
     margin: 6px 0 0;
     font-family: var(--sans);
-    font-size: 24px;
+    font-size: clamp(19px, 1.7vw, 24px);
     font-weight: 700;
     letter-spacing: -0.03em;
   }
-  .c-why,
-  .c-brief {
+  .c-why {
     display: grid;
     gap: 6px;
   }
-  .c-why p,
-  .c-brief p {
+  .c-why p {
     font-size: 15.5px;
     line-height: 1.5;
+  }
+  .c-decide {
+    display: grid;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
   }
   .c-act {
     display: flex;
     gap: 10px;
   }
   .c-act .btn {
-    cursor: default;
+    --h: 48px;
   }
-  .c-act .btn:hover {
-    transform: none;
+  .c-foot,
+  .c-small {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--graphite);
   }
-  .c-foot {
-    text-transform: none;
-    letter-spacing: 0;
+  /* the answer, drawn as UI: a check that draws itself, and the storefront's address */
+  .c-done {
+    display: grid;
+    gap: 14px;
+    animation: rise 0.35s var(--ease) both;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+  .c-live {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .tick {
+    flex: none;
+    width: 40px;
+    height: 40px;
+  }
+  .tick circle {
+    fill: var(--blue);
+  }
+  .tick path {
+    fill: none;
+    stroke: var(--white);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 26;
+    stroke-dashoffset: 26;
+    animation: draw 0.5s var(--ease) 0.12s forwards;
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .c-said {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+  .c-said b {
+    font-size: 17px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    outline: none;
+  }
+  .c-url {
+    display: block;
     font-size: 12.5px;
-    font-family: var(--sans);
+    line-height: 1.5;
+    color: var(--graphite);
+    overflow-wrap: break-word;
+  }
+  .lock {
+    display: inline-block;
+    vertical-align: -1px;
+    margin-right: 6px;
+    width: 8px;
+    height: 7px;
+    border-radius: 1.5px;
+    background: currentColor;
+    position: relative;
+  }
+  .lock::before {
+    content: '';
+    position: absolute;
+    left: 1.5px;
+    bottom: 5px;
+    width: 5px;
+    height: 4px;
+    border: 1.5px solid currentColor;
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    box-sizing: border-box;
+  }
+  .c-next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .c-next .btn {
+    --h: 48px;
+  }
+  .undo {
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tick path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
   }
   @media (max-width: 960px) {
     .grid {
@@ -217,11 +354,74 @@ const points = [
     .card {
       padding: 18px;
     }
+    /* the rate is short, the term and the payout are long: size the columns to fit, so nothing wraps */
+    .c-terms {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.05fr);
+    }
+    .c-terms dt,
     .c-terms dd {
-      font-size: 19px;
+      white-space: nowrap;
+    }
+    .c-terms dd {
+      font-size: 18px;
     }
     .c-terms div {
-      padding: 12px;
+      padding: 12px 10px;
+    }
+  }
+  /* narrower still: one term per row, label left, value right */
+  @media (max-width: 380px) {
+    .c-terms {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .c-terms div {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 10px 14px;
+    }
+    .c-terms div + div {
+      border-left: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .c-terms dd {
+      margin: 0;
     }
   }
 </style>
+
+<script>
+  import { onPage } from '../../scripts/ui';
+
+  // the handle someone tried in the hero, so the example storefront carries their name
+  let handle = '';
+  addEventListener('stage:creator', (e) => (handle = String((e as CustomEvent<string>).detail || '')));
+
+  onPage(() => {
+    const root = document.querySelector<HTMLElement>('[data-pitch]');
+    if (!root) return;
+    const asks = Array.from(root.querySelectorAll<HTMLElement>('[data-pitch-ask]'));
+    const dones = Array.from(root.querySelectorAll<HTMLElement>('[data-pitch-done]'));
+    const show = (which: 'yes' | 'no' | null) => {
+      asks.forEach((a) => (a.hidden = which !== null));
+      dones.forEach((d) => (d.hidden = d.dataset.pitchDone !== which));
+      if (which === 'yes') {
+        const h = root.querySelector<HTMLElement>('[data-pitch-handle]');
+        if (h) h.textContent = handle || 'yourname';
+      }
+      const target = which
+        ? root.querySelector<HTMLElement>(`[data-pitch-done="${which}"] [data-pitch-head]`)
+        : root.querySelector<HTMLElement>(`[data-pitch-go="yes"]`);
+      target?.focus({ preventScroll: true });
+    };
+    const onClick = (e: Event) => {
+      const t = (e.target as HTMLElement).closest<HTMLElement>('[data-pitch-go], [data-pitch-undo]');
+      if (!t) return;
+      if (t.dataset.pitchGo) show(t.dataset.pitchGo as 'yes' | 'no');
+      else show(null);
+    };
+    root.addEventListener('click', onClick);
+    return [() => root.removeEventListener('click', onClick)];
+  });
+</script>

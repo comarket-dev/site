@@ -1,5 +1,7 @@
 ---
-/* A coupon extension tries to swap the referral at checkout. It can't, because credit isn't in the browser. */
+/* A coupon extension tries to swap the referral at checkout. It can't, because credit isn't in the browser.
+   The checkout is Fernwood's own, as the stage phone shows it (design/brands/README.md). */
+import BrandMark from '../examples/BrandMark.astro';
 ---
 
 <section class="section band-ink on-ink credit" id="credit" aria-labelledby="credit-h">
@@ -11,21 +13,26 @@
 
     <div class="scene" data-credit aria-hidden="true">
       <div class="checkout">
-        <div class="top">
-          <span class="label">Checkout · Fernwood Growth</span>
-          <span class="num">$49.00/mo</span>
+        <div class="top"><BrandMark id="fernwood" size="20" /><span>Fernwood</span></div>
+        <p class="c-hl">Start your <em>free</em> trial</p>
+        <div class="fields">
+          <span class="f"><span class="fl">Work email</span><span class="fv">jordan@acme.io</span></span>
+          <span class="f"><span class="fl">Card</span><span class="fv num">4242 4242 4242 4242</span></span>
         </div>
-        <div class="lines">
-          <span></span><span class="s"></span><span></span>
+        <div class="order">
+          <div class="row"><span class="nm">Fernwood</span><span>$49/mo</span></div>
+          <span class="perk">30 days free with Sarah’s link</span>
+          <div class="row due"><b>Due today</b><b>$0.00</b></div>
+          <div class="row then"><span>First payment, Nov 22</span><span>$49.00</span></div>
         </div>
         <div class="ref">
-          <span class="lockic"></span>
+          <span class="face"></span>
           <span class="who"><b>Credited to Sarah K.</b><span class="label">recorded on comarket.si</span></span>
         </div>
-        <span class="pay">Pay $49</span>
+        <span class="pay">Start my free trial</span>
       </div>
       <div class="ext">
-        <div class="ext-h"><span class="ext-logo"></span><b>Coupon add-on</b></div>
+        <div class="ext-h"><span class="ext-logo">%</span><b>Coupon add-on</b></div>
         <span class="ext-msg" data-msg>Trying 12 codes…</span>
         <span class="bar"><i></i></span>
       </div>
@@ -59,25 +66,89 @@
     gap: 18px;
     box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.6);
   }
+  .checkout {
+    background: #f3f0e8;
+    color: #0f2a1e;
+    font-family: 'Fernwood Sans', system-ui, sans-serif;
+  }
   .top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: 23px/1 'Fernwood Serif', Georgia, serif;
+  }
+  /* Fernwood's own checkout (design/brands/README.md): serif head with one italic word in Fern, white fields on Paper */
+  .c-hl {
+    font: 34px/1.04 'Fernwood Serif', Georgia, serif;
+    letter-spacing: -0.015em;
+    padding-bottom: 2px;
+  }
+  .c-hl em {
+    color: #1e6b47;
+  }
+  .fields {
+    display: grid;
+    gap: 8px;
+  }
+  .f {
+    display: grid;
+    gap: 4px;
+  }
+  .fl {
+    font-size: 12px;
+    color: #6e7d72;
+  }
+  .fv {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #dce2d5;
+    font-size: 14px;
+  }
+  .fv.num {
+    font-family: 'Fernwood Sans', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .order {
+    display: grid;
+    gap: 6px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #fff;
+    font-size: 14px;
+  }
+  .row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
   }
-  .top .label {
-    color: #5b6660;
+  .nm {
+    font: 19px/1 'Fernwood Serif', Georgia, serif;
   }
-  .lines {
-    display: grid;
-    gap: 10px;
+  .perk {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e6b47;
   }
-  .lines span {
-    height: 10px;
-    border-radius: 5px;
-    background: #e3e8e4;
+  .due {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid #dce2d5;
+    font-weight: 600;
   }
-  .lines .s {
-    width: 60%;
+  .then {
+    font-size: 13px;
+    color: #6e7d72;
+  }
+  .face {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/sarah.jpg) center / cover;
   }
   .ref {
     display: grid;
@@ -96,25 +167,6 @@
   .who .label {
     color: #5b6660;
   }
-  .lockic {
-    width: 18px;
-    height: 16px;
-    border: 2px solid var(--benzol);
-    border-radius: 3px;
-    position: relative;
-    margin-top: 6px;
-  }
-  .lockic::before {
-    content: '';
-    position: absolute;
-    left: 2px;
-    right: 2px;
-    top: -9px;
-    height: 9px;
-    border: 2px solid var(--benzol);
-    border-bottom: 0;
-    border-radius: 7px 7px 0 0;
-  }
   .pay {
     height: 48px;
     border-radius: 999px;
@@ -126,8 +178,8 @@
   }
   .ext {
     position: absolute;
-    top: 8px;
-    right: max(0px, calc(50% - 260px));
+    top: -12px;
+    right: max(0px, calc(50% - 270px));
     width: 230px;
     padding: 14px;
     border-radius: 14px;
@@ -146,10 +198,14 @@
     font-size: 14px;
   }
   .ext-logo {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    background: repeating-linear-gradient(45deg, #b8b8b8 0 3px, #d8d8d8 3px 6px);
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: #3b3b3b;
+    color: #fff;
+    font: 700 12px/1 system-ui, sans-serif;
   }
   .ext-msg {
     font-size: 13px;
@@ -206,22 +262,28 @@
   @keyframes hold {
     0%,
     52% {
-      box-shadow: 0 0 0 0 rgb(0 151 141 / 0);
+      box-shadow: 0 0 0 0 rgb(0 110 184 / 0);
     }
     58% {
-      box-shadow: 0 0 0 8px rgb(0 151 141 / 0.25);
+      box-shadow: 0 0 0 8px rgb(0 110 184 / 0.25);
     }
     70%,
     100% {
-      box-shadow: 0 0 0 0 rgb(0 151 141 / 0);
+      box-shadow: 0 0 0 0 rgb(0 110 184 / 0);
     }
   }
   @media (max-width: 900px) {
     .grid {
       grid-template-columns: minmax(0, 1fr);
     }
+    /* on one column the add-on sits above the card's corner, clear of the headline */
+    .scene {
+      padding-top: 56px;
+    }
     .ext {
+      top: 0;
       right: 0;
+      width: 210px;
     }
   }
 </style>

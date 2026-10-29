@@ -1,0 +1,273 @@
+{
+ "_license": "Two sources. Kaboompics Standard License (kaboompics.com/page/terms-of-use, read 2026-10-26): commercial use; model releases on file; never imply personal endorsement, participation or recommendation. Pexels License (pexels.com/license, read 2026-10-27): commercial use, no attribution needed; no model releases are collected, and identifiable people must not be shown in a way that implies they endorse a product or in a bad light. So for both: no names, quotes, handles, results or product UI on these people. They illustrate a side of the market, unnamed. Pexels photos are credited in the `credit` field even though the license doesn't ask for it.",
+ "_how": "Originals live in design/people/originals/<id>.jpg (Pexels: images.pexels.com/photos/<n>/pexels-photo-<n>.jpeg). Run `python3 scripts/people.py` to build public/assets/people/ (480 to 3200 wide). `grade: warm` bakes the site's photo grade (design/texture/README.md). Kaboompics entries without an original build from design/people/standins/; none are used on the site now.",
+ "people": [
+  {
+   "id": "shop-plan",
+   "source": "https://www.pexels.com/photo/7679663/",
+   "credit": "MART PRODUCTION on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.55,
+    0.4
+   ],
+   "alt": "A shop owner and a creator planning a post on the sofa in his vintage clothing shop",
+   "where": "both waitlists (/brands and /creators): the form card between their faces (spots.form)",
+   "spots": {
+    "phone": {
+     "z": 1.6,
+     "x": 0.58,
+     "tx": 0.62,
+     "y0": 0.24,
+     "y1": 0.82,
+     "top": 0.27,
+     "h": 0.42,
+     "m": {
+      "z": 1.15,
+      "x": 0.58,
+      "tx": 0.5,
+      "y0": 0.15,
+      "y1": 1,
+      "top": 0.78,
+      "h": 1.3
+     }
+    },
+    "form": {
+     "z": 1.24,
+     "x": 0.5825,
+     "tx": 0.69,
+     "y0": 0.17,
+     "y1": 0.74,
+     "top": 0.38,
+     "w": 0.17,
+     "clear": 0.24,
+     "fl": 0.475,
+     "fr": 0.69,
+     "m": {
+      "z": 1.5,
+      "x": 0.6,
+      "tx": 0.5,
+      "y0": 0.18,
+      "y1": 0.74,
+      "top": 0.66,
+      "w": 0.6
+     }
+    }
+   }
+  },
+  {
+   "id": "shop-film",
+   "source": "https://www.pexels.com/photo/7679677/",
+   "credit": "MART PRODUCTION on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.5,
+    0.34
+   ],
+   "alt": "A creator films a sneaker shop owner holding up a pair from his shelves",
+   "where": "unused, kept for later sections"
+  },
+  {
+   "id": "florists",
+   "source": "https://www.pexels.com/photo/5414021/",
+   "credit": "Amina Filkins on Pexels (by series)",
+   "grade": "warm",
+   "focal": [
+    0.48,
+    0.26
+   ],
+   "alt": "Two florists laughing as they arrange flowers at the counter of their shop",
+   "where": "both heroes (/brands and /creators): the banner, the phone right of the second florist (spots.phone); the fork on phones (beside the device)",
+   "spots": {
+    "phone": {
+     "z": 1,
+     "x": 0.595,
+     "tx": 0.595,
+     "y0": 0.075,
+     "y1": 0.46,
+     "top": 0.17,
+     "h": 0.76,
+     "clear": 0.69,
+     "m": {
+      "z": 1.6,
+      "x": 0.595,
+      "tx": 0.56,
+      "y0": 0,
+      "y1": 1,
+      "top": 0.42,
+      "h": 1.1
+     }
+    },
+    "form": {
+     "z": 1,
+     "x": 0.6,
+     "tx": 0.6,
+     "y0": 0,
+     "y1": 1,
+     "top": 0.43,
+     "w": 0.36,
+     "m": {
+      "z": 1.2,
+      "x": 0.5,
+      "tx": 0.5,
+      "y0": 0.04,
+      "y1": 0.8,
+      "top": 0.62,
+      "w": 0.9
+     }
+    }
+   }
+  },
+  {
+   "id": "cook",
+   "source": "https://www.pexels.com/photo/12674093/",
+   "credit": "Anna Shvets on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.44,
+    0.5
+   ],
+   "alt": "A cook setting up her camera on the kitchen counter before she films",
+   "where": "the fork: Creators side"
+  },
+  {
+   "id": "founder-desk",
+   "source": "https://www.pexels.com/photo/10376031/",
+   "credit": "RDNE Stock project on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.62,
+    0.4
+   ],
+   "alt": "A software founder at his studio desk, turned from his monitor toward the room",
+   "where": "the fork: Brands side (default, a SaaS founder)"
+  },
+  {
+   "id": "founder-screen",
+   "source": "https://www.pexels.com/photo/10376035/",
+   "credit": "RDNE Stock project on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.66,
+    0.42
+   ],
+   "alt": "A software founder working at his studio desk, eyes on his monitor",
+   "where": "the fork: Brands alternate (?brands=founder-screen)"
+  },
+  {
+   "id": "founder-board",
+   "source": "https://www.pexels.com/photo/7710042/",
+   "credit": "Alena Darmel on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.36,
+    0.42
+   ],
+   "alt": "A founder smiling back from a planning board of sticky notes",
+   "where": "unused: a second person stands in the background (the fork needs one person)"
+  },
+  {
+   "id": "candle-maker",
+   "source": "https://www.pexels.com/photo/5761119/",
+   "credit": "Anna Shvets on Pexels",
+   "grade": "warm",
+   "focal": [
+    0.4,
+    0.34
+   ],
+   "alt": "A candle maker smiling as she pours wax at the table in her studio",
+   "where": "the fork: Brands alternate (?brands=candle-maker); was the default until 2026-10-29"
+  },
+  {
+   "id": "owner-hero",
+   "source": "https://kaboompics.com/photo/20562/working-from-the-sofa-with-a-laptop-in-a-bright-home-office-lifestyle-scene",
+   "focal": [
+    0.5,
+    0.35
+   ],
+   "alt": "A shop owner smiling at her laptop at home, an order of red shoes beside her",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "owner-pack",
+   "source": "https://kaboompics.com/photo/20582/careful-tissue-wrapping-for-a-boutique-clothing-order-in-a-white-box",
+   "focal": [
+    0.5,
+    0.5
+   ],
+   "alt": "The same shop owner wrapping a clothing order in tissue, her laptop open beside the box",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "owner-call",
+   "source": "https://kaboompics.com/photo/20550/woman-talking-on-the-phone-while-enjoying-coffee-during-remote-work",
+   "focal": [
+    0.56,
+    0.34
+   ],
+   "alt": "The shop owner on a call with a coffee in hand",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "creator-mic",
+   "source": "https://kaboompics.com/photo/38507/smiling-black-woman-recording-audio",
+   "focal": [
+    0.56,
+    0.32
+   ],
+   "alt": "A podcaster smiling as she records at her microphone",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "creator-desk",
+   "source": "https://kaboompics.com/photo/38534/smiling-black-woman-behind-laptop",
+   "focal": [
+    0.52,
+    0.3
+   ],
+   "alt": "The same podcaster smiling at something on her laptop",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "creator-work",
+   "source": "https://kaboompics.com/photo/38517/black-woman-using-laptop-beside-planner-in-home-office",
+   "focal": [
+    0.5,
+    0.35
+   ],
+   "alt": "The podcaster planning at her desk, laptop and planner open",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "creator-record",
+   "source": "https://kaboompics.com/photo/38508/black-woman-recording-a-podcast-at-home",
+   "focal": [
+    0.6,
+    0.38
+   ],
+   "alt": "A podcaster recording at home",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "camera-man",
+   "source": "https://kaboompics.com/photo/13088/male-photographer-taking-a-picture-in-a-plant-filled-room",
+   "focal": [
+    0.5,
+    0.4
+   ],
+   "alt": "A photographer aiming his camera in a room full of plants",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  },
+  {
+   "id": "makeup",
+   "source": "https://kaboompics.com/photo/13750/smiling-woman-at-a-makeup-vanity-with-lipstick-eyeshadow-palette-and-brushes",
+   "focal": [
+    0.44,
+    0.3
+   ],
+   "alt": "A beauty creator smiling at her vanity mid-routine",
+   "where": "unused (round 1 to 2 Kaboompics stand-in, rejected); safe to delete with its stand-in and built files"
+  }
+ ],
+ "_spots": "Where a photo's people are looking, so the phone or the sign-up card can sit there (Scene.astro). Fractions of the whole photo: z is the photo's width as a multiple of the screen's, x the object's centre, tx where on screen that centre lands, y0 to y1 the rows shown, top the object's top, h the phone's height (phone) or w the card's width (form), all in photo widths or heights. `m` is the same for phones (960px and under)."
+}

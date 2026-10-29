@@ -42,7 +42,8 @@ export function pickDevice(): DeviceKind {
   if (d === 'phone' || d === 'tablet' || d === 'laptop' || d === 'monitor') return d;
   const a = innerWidth / innerHeight;
   const coarse = matchMedia('(pointer: coarse)').matches;
-  if (a < 0.72 || (coarse && Math.min(screen.width, screen.height) < 600)) return 'phone';
+  // phones by width, not shape: a tall iPad is narrow too
+  if (innerWidth < 600 || (coarse && Math.min(screen.width, screen.height) < 600)) return 'phone';
   if (coarse || a < 1.15) return 'tablet';
   return innerWidth >= 1800 ? 'monitor' : 'laptop';
 }

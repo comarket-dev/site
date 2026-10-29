@@ -3,19 +3,23 @@
  * creator's post to the moment the sale completes (the only moment anyone pays), then what that sale meant to each
  * side. On the fork it's whatever the visitor is probably holding (devices.ts), resting on one completed sale.
  *
- * Picking a side on the fork: the device turns to face you, its browser goes to that page, holds it for a beat, and
- * then we fly through its screen into the page itself. The page in the screen is the real next page, drawn under the
- * canvas by the view transition at its true proportions (Stage.astro), so the flight ends exactly on it.
+ * Picking a side on the fork is one continuous move: the device squares up and starts easing toward you while its
+ * browser loads that page (the address changes, a load bar runs, the page paints), then it speeds up and we fly
+ * through its screen into the page itself. Going back to the fork runs the same move in reverse: the page shrinks
+ * back into the device's screen as the device settles into its place, then its browser goes back to the demo.
+ * The page in the screen is the real page, the view transition's own layer at its true proportions (Stage.astro),
+ * and the device is placed from that layer's transform every frame, so the two can't drift apart.
  *
  * The device follows a [data-stage-anchor] element, so the page layout decides where it sits and the stage only
  * decides how it moves.
  */
+import { paletteFrom } from '../../lib/palette';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import { paintScreen, type Nav } from './browser';
 import { buildDevice, pickDevice, type Device, type DeviceKind } from './devices';
-import { DEFAULT_BRAND, DEFAULT_CREATOR, H, W, paint, type BrandSkin, type CreatorSkin, type Shot } from './screens';
+import { DEFAULT_BRAND, DEFAULT_CREATOR, DEFAULT_PHOTO, H, W, paint, type BrandSkin, type CreatorSkin, type Shot } from './screens';
 
 export type StageMode = 'fork' | 'brands' | 'creators' | 'none';
 export type Side = 'brands' | 'creators';
@@ -39,13 +43,21 @@ const DIST = 7;
 
 /* the trip from the fork into a page, in seconds from the pick */
 const SQUARE = 0.35; // the device turns to face you
-const TYPE_AT = 0.1; // the address bar starts typing
-const TYPE = 0.3;
-const LOAD = 0.32; // the load bar, once the address is in (it waits at 85% for the page if it's slow)
-const REVEAL = 0.32; // the page area clears to show the next page
-const HOLD = 0.7; // a beat to take it in
-const FLY = 1.05; // through the screen
-const FLY_CURVE: [number, number, number, number] = [0.66, 0, 0.2, 1];
+const COMMIT = 0.06; // the address bar changes and the load bar starts
+const LOAD = 0.4; // the load bar's run to 70% (it waits at 85% for the page if the network is slow)
+const PAINT = 0.06; // the page paints over the demo, near enough a cut, as in a real browser
+const SLOW_END = 0.95; // until here the device eases in slowly
+const SLOW_E = 0.07; // how far along it gets in that time
+const SLOW_CAP = 1.6; // on a slow network it stops creeping here and waits for the page
+const SHOWN = 0.45; // the page is on screen at least this long before the fast part
+const FLY = 1.1;
+const V0 = SLOW_E / SLOW_END;
+// starts at the slow part's speed, so the move never stalls between the two
+const FLY_CURVE: [number, number, number, number] = [0.55, 0.05, 0.18, 1];
+/* and back: the page pulls back into the screen, then the browser goes back to the demo */
+const RETURN = 1.2;
+const RETURN_CURVE: [number, number, number, number] = [0.3, 0.05, 0.1, 1];
+const RETURN_SWAP = 0.1; // a near-cut, as a real browser's back is
 /* the page is drawn this much narrower than the screen's page area, so its edge never shows */
 const MINI = 0.995;
 
@@ -148,26 +160,36 @@ function bezier(x1: number, y1: number, x2: number, y2: number): (x: number) => 
   };
 }
 const flyEase = bezier(...FLY_CURVE);
+const returnEase = bezier(...RETURN_CURVE);
 const easeOut = (k: number) => 1 - (1 - Math.min(1, Math.max(0, k))) ** 3;
 const clamp01 = (k: number) => Math.min(1, Math.max(0, k));
 const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+/** The fork's device used to turn toward the side under the pointer and show that side's view. */
+const FORK_HOVER_PREVIEW = false as boolean;
 const coarse = () => matchMedia('(pointer: coarse)').matches || innerWidth < 820;
 const transitions = () => typeof document !== 'undefined' && 'startViewTransition' in document;
 
-/** The fork-to-page trip in progress. */
+/** The page layer's transform at the fork end of a trip: centred (tx, ty) off the view's middle, at scale k. */
+type Mini = { tx: number; ty: number; k: number };
+
+/** A trip between the fork and a page, in either direction. */
 interface Trip {
-  side: Side;
+  dir: 'in' | 'out';
+  side: Side | null;
+  /** seconds since it began; once the page layer is animating, its clock keeps this */
   t: number;
-  from: Placement;
+  /** where the page sits in the screen at the fork end */
+  mini: Mini;
   yaw0: number;
   pitch0: number;
-  /** the next page is in: its layer is drawn under the screen */
+  /** in: the next page is in, and its layer is under the screen */
   arrived: boolean;
-  revealAt: number;
+  arriveAt: number;
   flyAt: number;
-  /** the page layer's grow animation: it keeps the flight's time, so device and page never drift */
+  eArrive: number;
+  eFly: number;
   clock: Animation | null;
-  delay: number;
+  clockFrom: number;
   nav: Nav;
   resolve: (() => void) | null;
 }
@@ -257,6 +279,10 @@ class Stage {
   private mode: StageMode = 'none';
   private anchor: HTMLElement | null = null;
   private trip: Trip | null = null;
+  private lastHero: Side | null = null;
+  private appear = 1; // 0..1, the fork device fading up the first time it's drawn
+  private reveal: HTMLElement | null = null; // the anchor's [data-reveal] wrapper, while it's still revealing
+  private opacity = -1;
   private settle = 1; // 0..1, how much pointer tilt and breathing apply; eased back in after landing on a poster
   private loop = 0;
   private beat = 0;
@@ -362,7 +388,17 @@ class Stage {
 
   private async load() {
     const pmrem = new THREE.PMREMGenerator(this.renderer);
-    const fonts = Promise.all([document.fonts.load('700 40px Satoshi'), document.fonts.load('900 40px Satoshi'), document.fonts.load('20px "Fragment Mono"')]).catch(() => {});
+    // Satoshi and Fragment Mono for our screens; Fernwood's own faces for its storefront and checkout
+    const fonts = Promise.all(
+      ['700 40px Satoshi', '900 40px Satoshi', '20px "Fragment Mono"', '40px "Fernwood Serif"', 'italic 40px "Fernwood Serif"', '400 16px "Fernwood Sans"', '600 16px "Fernwood Sans"'].map((f) => document.fonts.load(f)),
+    ).catch(() => {});
+    const photo = new Image();
+    photo.onload = () => {
+      if (this.creator.slug !== DEFAULT_CREATOR.slug) return;
+      this.creator.photo = photo;
+      this.dirty = true;
+    };
+    photo.src = DEFAULT_PHOTO;
     const gltf = new GLTFLoader();
     const [hdr, phone] = await Promise.all([
       new HDRLoader().loadAsync('/assets/stage/studio.hdr').catch(() => null),
@@ -425,7 +461,13 @@ class Stage {
     dress(this.phone);
     this.phoneScreen = mats.screen;
     this.turn.add(this.phone);
-    if (this.mode === 'fork') this.useDevice(true);
+    if (this.mode === 'fork') {
+      this.useDevice(true);
+      // the model arrived after the page: a device with no poster fades up now, its screen already settled
+      if (this.kind() !== 'phone' && !reduce()) this.appear = 0;
+      this.prev = null;
+      this.slide = 1;
+    }
     this.dirty = true;
     this.renderer.compile(this.scene, this.camera);
     document.documentElement.classList.add('stage-live');
@@ -481,6 +523,8 @@ class Stage {
     const d = this.dev!;
     this.phone.visible = d.kind === 'phone';
     if (d.kind !== 'phone') d.root.visible = true;
+    // on the fork the phone is a phone with its browser open, so picking a side is just a page load in it
+    this.setPhoneBrowser(d.kind === 'phone');
     this.shadow.scale.set(d.size.w / 0.72, d.size.h / 1.52, 1);
     this.dirty = true;
   }
@@ -489,7 +533,7 @@ class Stage {
     return this.mode === 'fork' || this.trip ? (this.dev?.kind ?? 'phone') : 'phone';
   }
 
-  /** The phone's screen as a browser (on the fork, once a side is picked), or its own app. */
+  /** The phone's screen as a browser (on the fork), or its own app (on the heroes). */
   private setPhoneBrowser(on: boolean) {
     if (!this.phoneScreen) return;
     for (const m of this.screenMeshes) m.material = on ? this.devMat : this.phoneScreen;
@@ -500,22 +544,22 @@ class Stage {
   setMode(mode: StageMode, anchor: HTMLElement | null, opts: { from?: Side } = {}) {
     if (!this.ready) return;
     const before = this.last;
-    const wasHero = this.mode === 'brands' || this.mode === 'creators';
-    this.canvas.style.transition = '';
+    if (this.mode === 'brands' || this.mode === 'creators') this.lastHero = this.mode;
     this.mode = mode;
     this.anchor = anchor;
+    this.reveal = anchor?.closest<HTMLElement>('[data-reveal]') ?? null;
     if (mode === 'none' || !anchor) {
       this.trip = null;
-      this.canvas.style.opacity = '0';
+      this.setOpacity(0);
       return;
     }
-    // mid-trip from the fork: the page we're flying into is a still until we land, so it gets no story yet
-    if (this.trip && opts.from && mode !== 'fork' && transitions()) {
-      this.trip.arrived = true;
+    // mid-trip: the page we're travelling to is a still until we land, so it gets no story yet
+    if (this.trip && ((this.trip.dir === 'in' && opts.from && mode !== 'fork') || (this.trip.dir === 'out' && mode === 'fork'))) {
+      if (this.trip.dir === 'in') this.trip.arrived = true;
       this.dirty = true;
       return;
     }
-    // without view transitions the page simply arrives: its phone fades in where it belongs
+    // without view transitions the page simply arrives, and its device fades up where it belongs
     const plain = !!this.trip;
     this.trip = null;
     this.loop = 0;
@@ -527,14 +571,14 @@ class Stage {
     this.pitch.w = mode === 'fork' ? 3 : 5;
     const cut = Number(document.body.dataset.cut);
     if (cut > 0 && cut < 100) this.brand.cut = cut;
-    this.canvas.style.opacity = '1';
+    const wasHero = !!before && this.kind() === 'phone' && mode === 'fork';
     this.useDevice(mode === 'fork');
     if (reduce()) this.holdOn(mode === 'creators' ? 'hub' : mode === 'fork' ? 'sale' : 'store', Infinity, 99);
     else this.show(this.current().id);
     const after = this.place();
-    // back from a hero to a fork showing a different device: no shape to spring between, so it fades in place
-    const swapped = plain || (wasHero && mode === 'fork' && this.kind() !== 'phone');
-    if (before && after && this.drawnOnce && !swapped) {
+    // a device with no poster (or a different one from last page's) fades up in place instead of springing over
+    const fresh = plain || (mode === 'fork' && this.kind() !== 'phone') || (wasHero && this.kind() !== 'phone');
+    if (before && after && this.drawnOnce && !fresh) {
       // spring from wherever the device was to the new anchor
       this.px.set(before.x - after.x);
       this.py.set(before.y - after.y);
@@ -546,20 +590,37 @@ class Stage {
       this.ps.set(1);
       this.yaw.set(mode === 'fork' ? 0 : HERO_YAW);
       this.pitch.set(this.restPitch());
-      if (swapped) {
-        this.canvas.style.transition = 'none';
-        this.canvas.style.opacity = '0';
-        requestAnimationFrame(() => {
-          this.canvas.style.transition = '';
-          this.canvas.style.opacity = '1';
-        });
-      }
+    }
+    this.appear = fresh && !reduce() ? 0 : 1;
+    // a device appearing fresh shows its screen settled, not sliding in from whatever it showed last
+    if (fresh || !this.drawnOnce) {
+      this.prev = null;
+      this.slide = 1;
     }
     this.dirty = true;
+    // back from a hero: start out covering the view, inside the screen, before the fork's first frame shows
+    if (mode === 'fork' && document.documentElement.classList.contains('returning') && !reduce()) this.beginReturn();
   }
 
-  /** Fork: preview one side's view of the sale. */
+  /** Out: the device starts with its page area covering the view (where the hero we left is), headed for its place. */
+  private beginReturn() {
+    const end = this.place();
+    if (!end || !this.dev) return;
+    const from = location.pathname === '/' ? (this.lastHero ?? 'brands') : location.pathname.replace(/^\/+/, '');
+    const nav: Nav = { url: `comarket.si/${from}`, title: 'Comarket', typing: 1, progress: null, reveal: 1 };
+    this.trip = {
+      dir: 'out', side: null, t: 0, mini: this.miniFor(end), yaw0: 0, pitch0: 0,
+      arrived: true, arriveAt: 0, flyAt: 0, eArrive: 0, eFly: 0, clock: null, clockFrom: 0, nav, resolve: null,
+    };
+    this.appear = 1;
+    this.yaw.set(0);
+    this.pitch.set(0);
+  }
+
+  /** Fork: preview one side's view of the sale. Off since 2026-10-27: the device shows the one shared sale to both
+   *  sides until a side is chosen (owner), and the side's photo zooming says which one is pointed at (index.astro). */
   hover(side: Side | null) {
+    if (FORK_HOVER_PREVIEW === false) return;
     if (this.mode !== 'fork' || this.trip) return;
     if (side) this.holdOn(HOME[side], Infinity, 0, null, side === 'brands' ? -1 : 1);
     else if (this.hold) {
@@ -568,58 +629,77 @@ class Stage {
     }
   }
 
-  /** Fork: set off for a side. Resolves when it's time to navigate: at once where the browser can draw the next page
-   *  into the screen as it loads (view transitions), or once the load bar is through where it can't. */
+  /** Fork: set off for a side. Resolves when it's time to navigate: almost at once where the browser can draw the
+   *  next page into the screen (view transitions), or once the load bar is through where it can't. */
   choose(side: Side): Promise<void> {
-    this.holdOn(HOME[side], Infinity);
-    if (reduce() || !this.ready || !this.last) return Promise.resolve();
+    if (reduce() || !this.ready || !this.last || !this.dev) {
+      this.holdOn(HOME[side], Infinity);
+      return Promise.resolve();
+    }
+    // whatever the device shows stays put: the next thing on its screen is the page itself
+    this.shotT = this.hold ? this.holdT : this.t;
+    this.holdT = this.shotT;
+    this.hold = this.shot;
+    this.holdUntil = Infinity;
     const nav: Nav = { url: `comarket.si/${side}`, title: side === 'brands' ? 'Comarket for brands' : 'Comarket for creators', typing: 0, progress: null, reveal: 0 };
-    this.trip = { side, t: 0, from: { ...this.last }, yaw0: this.yaw.x, pitch0: this.pitch.x, arrived: false, revealAt: Infinity, flyAt: Infinity, clock: null, delay: 0, nav, resolve: null };
-    if (this.kind() === 'phone') this.setPhoneBrowser(true);
-    // the page under the device is snapshotted as we navigate, so let the other card finish clearing first
-    if (transitions()) return new Promise((r) => setTimeout(r, 220));
+    this.trip = {
+      dir: 'in', side, t: 0, mini: this.miniFor(this.last), yaw0: this.yaw.x, pitch0: this.pitch.x,
+      arrived: false, arriveAt: Infinity, flyAt: Infinity, eArrive: 0, eFly: 0, clock: null, clockFrom: 0, nav, resolve: null,
+    };
+    // the fork is snapshotted as we navigate, so let the other card finish clearing first
+    if (transitions()) return new Promise((r) => setTimeout(r, 200));
     return new Promise((r) => (this.trip!.resolve = r));
   }
 
-  /** The page layer's motion for the trip, asked for once the next page is in (Stage.astro animates it).
-   *  It sits in the screen's page area as a true miniature, holds while we look at it, then grows on the flight's
-   *  own curve to exactly full size. */
-  tripPlan(): { from: string; clip: string; delay: number; dur: number; easing: string } | null {
+  /** In: the page layer's motion, asked for once the next page is in (Stage.astro animates it). From where the device
+   *  has got to, it keeps creeping in with it until it's been on screen a moment, then grows on the flight's curve. */
+  tripPlan(): { keyframes: Keyframe[]; ms: number; clip: string } | null {
     const trip = this.trip;
-    const d = this.dev;
-    if (!trip || !d) return null;
-    const upp = this.upp();
-    const vw = innerWidth;
-    const vh = innerHeight;
-    // the page area where the device sat, squared up to us
-    const c = d.content;
-    const s = trip.from.s;
-    const persp = DIST / (DIST - c.z * s);
-    const cx = ((trip.from.x + c.x * s) * persp) / upp + vw / 2;
-    const cy = -((trip.from.y + c.y * s) * persp) / upp + vh / 2;
-    const cw = (c.w * s * persp) / upp;
-    const k = (cw * MINI) / vw;
-    // the page area in the page layer's own pixels: fixed, since the layer's scale tracks the area's width. 2% over,
-    // so its edge always sits under the browser chrome or the bezel
-    const halfW = (vw / MINI / 2) * 1.02;
-    const halfH = ((vw * (c.h / c.w)) / MINI / 2) * 1.02;
-    const clip = `inset(${(vh / 2 - halfH).toFixed(1)}px ${(vw / 2 - halfW).toFixed(1)}px)`;
+    if (!trip || trip.dir !== 'in' || !this.dev) return null;
     trip.arrived = true;
-    trip.revealAt = Math.max(trip.t, TYPE_AT + TYPE + 0.12);
-    trip.flyAt = trip.revealAt + REVEAL + HOLD;
-    trip.delay = (trip.flyAt - trip.t) * 1000;
+    trip.arriveAt = trip.t;
+    trip.eArrive = this.slowE(trip.t);
+    trip.flyAt = Math.max(SLOW_END, trip.t + SHOWN);
+    trip.eFly = this.slowE(trip.flyAt);
+    const span = trip.flyAt + FLY - trip.arriveAt;
     return {
-      from: `translate(${(cx - vw / 2).toFixed(2)}px, ${(cy - vh / 2).toFixed(2)}px) scale(${k.toFixed(5)})`,
-      clip,
-      delay: trip.delay,
-      dur: FLY * 1000,
-      easing: `cubic-bezier(${FLY_CURVE.join(', ')})`,
+      keyframes: [
+        { transform: this.layerTransform(trip.mini, trip.eArrive), offset: 0, easing: 'linear' },
+        { transform: this.layerTransform(trip.mini, trip.eFly), offset: (trip.flyAt - trip.arriveAt) / span, easing: `cubic-bezier(${FLY_CURVE.join(', ')})` },
+        { transform: 'none', offset: 1 },
+      ],
+      ms: span * 1000,
+      clip: this.layerClip(),
     };
   }
 
-  /** The page layer's grow animation keeps the flight's time from here. */
-  syncTrip(grow: Animation) {
-    if (this.trip) this.trip.clock = grow;
+  /** Out: going back to the fork from a page. Starts the trip if the fork hasn't told us yet, and returns the page
+   *  layer's motion: from full size back into the device's screen, then away as the browser goes back to its demo. */
+  returnPlan(): { keyframes: Keyframe[]; ms: number; clip: string } | null {
+    if (!this.ready || !this.phone || reduce()) return null;
+    const anchor = document.querySelector<HTMLElement>('[data-stage-anchor]');
+    if (!anchor) return null;
+    if (this.trip?.dir !== 'out') this.setMode('fork', anchor);
+    if (this.trip?.dir !== 'out') return null;
+    const m = this.trip.mini;
+    const span = RETURN + RETURN_SWAP;
+    return {
+      keyframes: [
+        { transform: 'none', opacity: 1, offset: 0, easing: `cubic-bezier(${RETURN_CURVE.join(', ')})` },
+        { transform: this.layerTransform(m, 0), opacity: 1, offset: RETURN / span, easing: 'linear' },
+        { transform: this.layerTransform(m, 0), opacity: 0, offset: 1 },
+      ],
+      ms: span * 1000,
+      clip: this.layerClip(),
+    };
+  }
+
+  /** The page layer's animation keeps the trip's time from here, so the device and the page can't drift. */
+  syncTrip(anim: Animation) {
+    const trip = this.trip;
+    if (!trip) return;
+    trip.clock = anim;
+    trip.clockFrom = trip.dir === 'in' ? trip.arriveAt : 0;
   }
 
   /** A click on the phone: press the button on screen, or move the story on. */
@@ -653,13 +733,24 @@ class Stage {
       b.ink = luminance(p.color) > 0.55 ? '#17141F' : '#FFFFFF';
     }
     b.what = 'Picked by creators';
+    // the visitor's own brand: drawn in its colors, paid at checkout (we don't know its trial)
+    b.look = null;
+    b.trial = 0;
     if (p.host) b.domain = p.host.replace(/^www\./, '').toLowerCase().slice(0, 40);
     b.product = b.name;
     b.icon = null;
+    b.pal = null;
     if (p.icon) {
       const img = new Image();
       img.onload = () => {
         b.icon = img;
+        // the storefront takes its colours from the logo itself; the waitlist's preview card follows
+        b.pal = paletteFrom(img, p.color);
+        if (b.pal) {
+          b.color = b.pal.primary;
+          b.ink = b.pal.onPrimary;
+          dispatchEvent(new CustomEvent('brand:palette', { detail: b.pal }));
+        }
         this.dirty = true;
       };
       img.src = p.icon;
@@ -675,6 +766,7 @@ class Stage {
     c.handle = `@${h}`;
     c.first = h.charAt(0).toUpperCase() + h.slice(1).split(/[._]/)[0];
     c.name = c.first.length > 12 ? c.first.slice(0, 12) : c.first;
+    c.photo = null;
     this.holdOn('hub', 7, 0.4);
   }
 
@@ -761,19 +853,12 @@ class Stage {
     return this.mode === 'fork' && this.kind() === 'laptop' ? -0.05 : 0;
   }
 
-  /** World-space placement for the current anchor, or along the trip. */
+  /** World-space placement for the current anchor, or along a trip. */
   private place(): Placement | null {
     const vw = innerWidth;
     const vh = innerHeight;
     const upp = this.upp();
-    const trip = this.trip;
-    if (trip) {
-      const k = this.flightK();
-      if (k <= 0) return trip.from;
-      const end = this.tripEnd(upp);
-      const e = flyEase(k);
-      return { x: trip.from.x + (end.x - trip.from.x) * e, y: trip.from.y + (end.y - trip.from.y) * e, s: trip.from.s + (end.s - trip.from.s) * e };
-    }
+    if (this.trip) return this.fromLayer(this.layerAt(this.trip.mini, this.tripE()), upp);
     if (!this.anchor) return null;
     const r = this.anchor.getBoundingClientRect();
     if (!r.width || !r.height) return null;
@@ -783,48 +868,105 @@ class Stage {
     return { x: (cx - vw / 2) * upp, y: -(cy - vh / 2) * upp, s: (h * upp) / this.modelH() };
   }
 
-  /** Where the trip ends: the screen's page area exactly covering the view, a hair over so its edges are gone. */
-  private tripEnd(upp: number): Placement {
+  /* The page layer and the device's page area are one rectangle seen two ways. The layer is the page at scale k,
+     centred (tx, ty) off the view's middle; the area is that rectangle a hair wider (MINI). Perspective is exact:
+     the area sits c.z in front of the device's middle, so it projects a little larger than the device's plane. */
+
+  /** Where the page sits in the screen for a device placement. */
+  private miniFor(p: Placement): Mini {
     const c = this.dev!.content;
-    const want = (innerWidth / MINI) * upp;
-    let s = want / c.w;
-    for (let i = 0; i < 4; i++) s = want / (c.w * (DIST / (DIST - c.z * s)));
-    return { x: -c.x * s, y: -c.y * s, s };
+    const upp = this.upp();
+    const persp = DIST / (DIST - c.z * p.s);
+    const cx = ((p.x + c.x * p.s) * persp) / upp;
+    const cy = -((p.y + c.y * p.s) * persp) / upp;
+    const cw = (c.w * p.s * persp) / upp;
+    return { tx: cx, ty: cy, k: (cw * MINI) / innerWidth };
   }
 
-  /** 0..1 through the flight. Once the page layer is animating, it keeps the time. */
-  private flightK(): number {
+  /** The device placement that puts its page area around the page layer at `m`. */
+  private fromLayer(m: Mini, upp: number): Placement {
+    const c = this.dev!.content;
+    const want = ((innerWidth * m.k) / MINI) * upp; // the area's projected width, in world units at the device plane
+    let s = want / c.w;
+    let persp = 1;
+    for (let i = 0; i < 5; i++) {
+      persp = DIST / (DIST - c.z * s);
+      s = want / (c.w * persp);
+    }
+    return { x: (m.tx * upp) / persp - c.x * s, y: (-m.ty * upp) / persp - c.y * s, s };
+  }
+
+  /** The layer between the fork end (e = 0) and full size (e = 1); translate and scale both move linearly in e,
+   *  exactly as the browser interpolates the layer's keyframes. */
+  private layerAt(m: Mini, e: number): Mini {
+    return { tx: m.tx * (1 - e), ty: m.ty * (1 - e), k: m.k + (1 - m.k) * e };
+  }
+  private layerTransform(m: Mini, e: number): string {
+    const l = this.layerAt(m, e);
+    return `translate(${l.tx.toFixed(2)}px, ${l.ty.toFixed(2)}px) scale(${l.k.toFixed(5)})`;
+  }
+  /** The page area in the layer's own pixels: fixed, since the layer's scale tracks the area. 2% over, so its edge
+   *  always sits under the browser chrome or the bezel; page colour fills the hair between page and area. */
+  private layerClip(): string {
+    const c = this.dev!.content;
+    const vw = innerWidth;
+    const vh = innerHeight;
+    const halfW = (vw / MINI / 2) * 1.02;
+    const halfH = ((vw * (c.h / c.w)) / MINI / 2) * 1.02;
+    return `inset(${(vh / 2 - halfH).toFixed(1)}px ${(vw / 2 - halfW).toFixed(1)}px)`;
+  }
+
+  /** The slow first part of the trip in: how far along it is at t. */
+  private slowE(t: number): number {
+    return V0 * Math.min(t, SLOW_CAP);
+  }
+
+  /** 0..1 along the trip, from the fork end to full size. Out runs it backwards. */
+  private tripE(): number {
     const trip = this.trip!;
     const ct = trip.clock?.currentTime;
-    if (typeof ct === 'number') return clamp01((ct - trip.delay) / (FLY * 1000));
-    return clamp01((trip.t - trip.flyAt) / FLY);
+    const t = typeof ct === 'number' ? trip.clockFrom + ct / 1000 : trip.t;
+    if (trip.dir === 'out') return 1 - returnEase(Math.min(1, t / RETURN));
+    if (!trip.arrived) return this.slowE(t);
+    if (t < trip.flyAt) return trip.eArrive + (trip.eFly - trip.eArrive) * clamp01((t - trip.arriveAt) / Math.max(0.001, trip.flyAt - trip.arriveAt));
+    return trip.eFly + (1 - trip.eFly) * flyEase(Math.min(1, (t - trip.flyAt) / FLY));
   }
 
-  /** Move the trip on: square up, type, load, show the page, hold, fly, land. */
+  /** Move a trip on, and the device's browser with it. */
   private stepTrip(dt: number) {
     const trip = this.trip!;
-    trip.t += dt;
+    const ct = trip.clock?.currentTime;
+    trip.t = typeof ct === 'number' ? trip.clockFrom + ct / 1000 : trip.t + dt;
     const n = trip.nav;
-    n.typing = clamp01((trip.t - TYPE_AT) / TYPE);
-    const loadAt = TYPE_AT + TYPE;
-    if (trip.t < loadAt) n.progress = null;
-    else if (!trip.arrived) n.progress = Math.min(0.85, ((trip.t - loadAt) / LOAD) * 0.85);
-    else n.progress = trip.t < trip.revealAt ? 0.85 + 0.15 * clamp01((trip.t - loadAt) / LOAD) : 1;
-    n.reveal = trip.arrived && trip.clock ? easeOut((trip.t - trip.revealAt) / REVEAL) : 0;
+    const e = this.tripE();
     this.dirty = true;
+    if (trip.dir === 'out') {
+      // the browser goes back to its demo once the page is home in the screen
+      const k = clamp01((trip.t - RETURN) / RETURN_SWAP);
+      n.reveal = 1 - k;
+      n.typing = k > 0.5 ? 0 : 1;
+      this.setOpacity(1);
+      if (trip.t >= RETURN + RETURN_SWAP) this.landHome();
+      return;
+    }
+    // a page load: the address changes, the load bar runs, the page paints over the demo
+    n.typing = trip.t >= COMMIT ? 1 : 0;
+    if (trip.t < COMMIT) n.progress = null;
+    else if (!trip.arrived || !trip.clock) n.progress = Math.min(0.85, 0.08 + 0.62 * easeOut((trip.t - COMMIT) / LOAD) + 0.15 * clamp01((trip.t - COMMIT - LOAD) / 1.5));
+    else n.progress = Math.min(1, (n.progress ?? 0.7) + dt / 0.18);
+    n.reveal = trip.arrived && trip.clock ? easeOut((trip.t - trip.arriveAt) / PAINT) : 0;
     // without view transitions there's no page to show in the screen: go once the load bar is through
-    if (trip.resolve && trip.t >= loadAt + LOAD) {
+    if (trip.resolve && trip.t >= COMMIT + LOAD) {
       trip.resolve();
       trip.resolve = null;
     }
     // the last of the flight: the page all but fills the view, so the device's edges slip away rather than linger
-    const k = this.flightK();
-    this.canvas.style.opacity = String(1 - clamp01((k - 0.8) / 0.16));
-    if (trip.arrived && trip.clock && k >= 1) this.land();
+    this.setOpacity(1 - clamp01((e - 0.86) / 0.12));
+    if (trip.arrived && trip.clock && e >= 1) this.land();
   }
 
-  /** The flight is over: the page in the screen is now the page. The hero's phone takes over from its poster in the
-   *  same spot, and the story starts from its first frame, so the hand-off is invisible. */
+  /** In, done: the page in the screen is now the page. The hero's phone takes over from its poster in the same spot,
+   *  and the story starts from its first frame, so the hand-off is invisible. */
   private land() {
     this.trip = null;
     this.useDevice(false);
@@ -836,17 +978,35 @@ class Stage {
     this.slide = 1;
     this.shot = this.current().id;
     this.show(this.shot);
+    this.settleAt(HERO_YAW, 0);
+    dispatchEvent(new CustomEvent('stage:landed'));
+  }
+
+  /** Out, done: the device is in its place on the fork, showing its demo again. */
+  private landHome() {
+    this.trip = null;
+    this.settleAt(0, 0);
+    this.yaw.w = 3;
+    this.pitch.w = 3;
+    dispatchEvent(new CustomEvent('stage:landed'));
+  }
+
+  private settleAt(yaw: number, pitch: number) {
     this.px.set(0);
     this.py.set(0);
     this.ps.set(1);
-    this.yaw.w = 5;
-    this.pitch.w = 5;
-    this.yaw.set(HERO_YAW);
-    this.pitch.set(0);
+    this.yaw.set(yaw);
+    this.pitch.set(pitch);
     this.settle = 0;
-    this.canvas.style.opacity = '1';
+    this.setOpacity(1);
     this.dirty = true;
-    dispatchEvent(new CustomEvent('stage:landed'));
+  }
+
+  private setOpacity(v: number) {
+    const o = Math.round(v * 1000) / 1000;
+    if (o === this.opacity) return;
+    this.opacity = o;
+    this.canvas.style.opacity = String(o);
   }
 
   private frame = (now: number) => {
@@ -889,8 +1049,11 @@ class Stage {
     const ox = still || this.trip ? 0 : this.px.step(0, dt);
     const oy = still || this.trip ? 0 : this.py.step(0, dt);
     const os = still || this.trip ? 1 : this.ps.step(1, dt);
-    this.rig.position.set(p.x + ox, p.y + oy, 0);
-    this.rig.scale.setScalar(p.s * os);
+    // appearing: it rises a touch and grows into place as it fades up
+    const ea = easeOut(this.appear);
+    const lift = this.trip ? 0 : (1 - ea) * 0.05 * p.s * this.modelH();
+    this.rig.position.set(p.x + ox, p.y + oy - lift, 0);
+    this.rig.scale.setScalar(p.s * os * (this.trip ? 1 : 0.97 + 0.03 * ea));
     if (!this.trip) this.last = { x: p.x + ox, y: p.y + oy, s: p.s * os };
 
     /* pose */
@@ -899,7 +1062,8 @@ class Stage {
     if (beat?.yaw !== undefined) yawT = beat.yaw;
     if (this.hold === 'brand' && this.mode === 'fork') yawT = -0.3;
     if (this.hold === 'creator' && this.mode === 'fork') yawT = 0.3;
-    const fine = !coarse() && !this.frozen;
+    // the fork's device faces us square: no pointer tilt there, so the shared view reads the same from both sides
+    const fine = !coarse() && !this.frozen && this.mode !== 'fork';
     if (this.settle < 1) this.settle = Math.min(1, this.settle + dt / 1.2);
     const live = this.trip ? 0 : this.settle * this.settle * (3 - 2 * this.settle);
     const breathe = still || this.frozen || this.trip ? 0 : Math.sin(this.time * 0.6) * 0.012 * live;
@@ -917,7 +1081,19 @@ class Stage {
     this.turn.rotation.set(pitch + (this.frozen || this.trip ? 0 : Math.sin(this.time * 0.45) * 0.008 * live), yaw + breathe, 0);
     this.turn.position.z = dip;
     this.shadow.position.x = 0.08 - Math.sin(yaw) * 0.2;
-    (this.shadow.material as THREE.MeshBasicMaterial).opacity = this.trip ? 1 - flyEase(this.flightK()) : 1;
+    (this.shadow.material as THREE.MeshBasicMaterial).opacity = this.trip ? 1 - this.tripE() : 1;
+
+    /* the fork's device fades up with the page's own reveal, and the first time it's drawn */
+    if (!this.trip) {
+      let o = 1;
+      if (this.reveal) {
+        o = parseFloat(getComputedStyle(this.reveal).opacity);
+        if (o >= 1) this.reveal = null;
+      }
+      // it waits for the page's own reveal to start, then takes its time
+      if (this.appear < 1 && o > 0.05) this.appear = Math.min(1, this.appear + dt / 0.9);
+      this.setOpacity(o * easeOut(this.appear));
+    }
 
     /* a small haptic dip as the payment confirms */
     if ((this.shot === 'verify' || this.shot === 'refused') && t >= 1.4 && t < 1.6) {
@@ -929,7 +1105,8 @@ class Stage {
 
     /* screen */
     if (this.slide < 1) {
-      this.slide = Math.min(1, this.slide + dt / (this.mode === 'fork' ? 0.8 : 0.5));
+      // a slide still running when a side is picked finishes quickly, before the page paints
+      this.slide = Math.min(1, this.slide + dt / (this.trip ? 0.22 : this.mode === 'fork' ? 0.8 : 0.5));
       this.dirty = true;
     }
     if ((SETTLE[this.shot] ?? 2) > t - dt) this.dirty = true;
@@ -942,7 +1119,7 @@ class Stage {
         paint(this.uiCtx, this.shot, t, this.brand, this.creator, prev, this.slide, this.slideDir);
         this.tex.needsUpdate = true;
       }
-      if (this.dev && (kind !== 'phone' || this.trip)) {
+      if (this.dev && (this.mode === 'fork' || this.trip)) {
         paintScreen(this.devCtx, { kind, css: this.dev.css }, this.devPx, this.shot, t, this.brand, this.creator, this.trip?.nav ?? null, {
           prev,
           slide: this.slide,

@@ -1,37 +1,63 @@
 ---
+import Icon from './Icon.astro';
+import Scene from './Scene.astro';
+import { person, type PersonId } from '../lib/people';
 import { env } from 'cloudflare:workers';
 interface Props {
   side: 'brand' | 'creator';
+  /** the people this is for, edge to edge. The form floats on it as a card where they're looking (the photo's `form`
+      spot); the heading and the preview sit in a column left of whatever the spot's `clear` keeps clear (her head). */
+  photo?: PersonId;
 }
-const { side } = Astro.props;
+const { side, photo } = Astro.props;
+/* the spot's extras: `clear` is her hair's left edge, `fl` and `fr` the inner edges of the two faces (her glasses,
+   his nose), all as shares of the photo's width. The card is centred in the gap between fl and fr. */
+const form = photo ? (person(photo).spots.form as { clear?: number; fl?: number; fr?: number } | undefined) : undefined;
+const clear = form?.clear ?? 0;
+const fl = form?.fl ?? 0;
+const fr = form?.fr ?? 0;
 const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY || '';
 const brand = side === 'brand';
 ---
 
-<section class="section band-ink on-ink waitlist" id="waitlist" aria-labelledby="wl-h" data-waitlist data-side={side}>
-  <div class="wrap grid">
+<section
+  class:list={['section band-ink on-ink waitlist', { 'has-photo': photo }]}
+  id="waitlist"
+  aria-labelledby="wl-h"
+  data-waitlist
+  data-side={side}
+  style={photo ? `--clear:${clear};--fl:${fl};--fr:${fr}` : undefined}
+>
+  <Scene photo={photo} spot="form" class="wlscene">
+  <div class:list={[{ wrap: !photo }, 'grid']}>
+    <div class="lead">
     <div class="intro">
       <h2 class="display-l" id="wl-h">{brand ? 'Get your first creator sales.' : 'Claim your page.'}</h2>
       <p class="lede muted">
-        {brand ? 'Free until a sale. Join now and we’ll build your storefront and line up creators when your spot opens.' : 'Free forever. Pick your handle and it’s yours when your spot opens.'}
+        {brand ? 'Join now. We build your storefront and line up your first creators when your spot opens.' : 'Pick your handle. It’s yours when your spot opens.'}
       </p>
+    </div>
 
+    <div class="more">
       <div class="preview" data-preview>
         {
           brand ? (
-            <div class="mini" data-mini style="--brand:#1E6B47">
+            <div class="mini" data-mini style="--brand:#1E0E3F">
               <span class="url num" data-mini-url>
                 yourapp.comarket.si/creators/sarah
               </span>
               <div class="mini-body">
-                <span class="lock num" data-mini-lock>
-                  YOUR BRAND × SARAH K.
-                </span>
-                <span class="mini-h">Sarah’s pick</span>
-                <div class="mini-prod">
+                <span class="lock">
                   <span class="mini-logo" data-mini-logo />
                   <b data-mini-name>Your brand</b>
-                </div>
+                  <span class="x">×</span>
+                  <span class="face" />
+                  <b>Sarah K.</b>
+                </span>
+                <span class="mini-h">
+                  <span data-mini-name>Your brand</span>, picked by Sarah.
+                </span>
+                <span class="mini-sub">Sarah’s readers get your offer here.</span>
                 <span class="mini-cta">Get started</span>
               </div>
             </div>
@@ -52,6 +78,8 @@ const brand = side === 'brand';
           )
         }
       </div>
+
+    </div>
     </div>
 
     <div class="formcol">
@@ -77,26 +105,10 @@ const brand = side === 'brand';
                   Handle
                 </label>
                 <div class="at">
-                  <span aria-hidden="true">@</span>
-                  <input id="wl-handle" name="handle" autocomplete="nickname" placeholder="yourname" required />
+                  <span class="num" aria-hidden="true">comarket.si/</span>
+                  <input id="wl-handle" name="handle" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="yourname" required />
                 </div>
                 <span class="err" data-err="handle" />
-              </div>
-              <div class="field">
-                <label class="label" for="wl-platform">
-                  Where your audience is
-                </label>
-                <select id="wl-platform" name="platform">
-                  <option value="youtube">YouTube</option>
-                  <option value="tiktok">TikTok</option>
-                  <option value="instagram">Instagram</option>
-                  <option value="substack">Substack</option>
-                  <option value="reddit">Reddit</option>
-                  <option value="x">X</option>
-                  <option value="podcast">Podcast</option>
-                  <option value="blog">Blog</option>
-                  <option value="other">Somewhere else</option>
-                </select>
               </div>
             </>
           )
@@ -105,12 +117,16 @@ const brand = side === 'brand';
           <label class="label" for="wl-email">
             {brand ? 'Work email' : 'Email'}
           </label>
-          <input id="wl-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+          <input id="wl-email" name="email" type="email" autocomplete="email" placeholder={brand ? 'you@company.com' : 'you@email.com'} required />
           <span class="err" data-err="email"></span>
         </div>
         {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" />}
-        <button class="btn submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <span class="arr" aria-hidden="true">→</span></button>
+        <button class="btn convert submit" type="submit">{brand ? 'Get early access' : 'Claim my page'} <Icon name="arrow-right" class="arr" /></button>
         <p class="fine label">We email once when your spot opens. <a href="/privacy">Privacy</a></p>
+        <!-- PLACEHOLDER: hello@comarket.si is not a live inbox yet; confirm the address before deploy -->
+        <p class="founder">
+          <span>Questions before you join? Email us directly at <a href="mailto:hello@comarket.si">hello@comarket.si</a>.</span>
+        </p>
         <p class="err form-err" data-err="form" role="alert"></p>
       </form>
 
@@ -124,22 +140,259 @@ const brand = side === 'brand';
           <h3 class="display-m" data-issued-h>You’re in.</h3>
           <p class="muted" data-issued-p>Drag the pass to turn it over.</p>
           <div class="acts">
-            <button type="button" class="btn" data-save>Save image</button>
+            <button type="button" class="btn ghost" data-save>Save image</button>
             <a class="btn ghost" data-share target="_blank" rel="noopener">Share on X</a>
           </div>
         </div>
+
+        <div class="refer">
+          <p>{brand ? 'Know creators who already talk about your product? Send them your link.' : 'Know a creator who’d want this? Send them your link.'}</p>
+          <div class="refer-row">
+            <span class="num" data-ref-url>comarket.si/creators</span>
+            <button type="button" class="btn" data-ref-copy>Copy my link</button>
+          </div>
+        </div>
+
+        <form class="profile" data-profile novalidate>
+          <div class="profile-head">
+            <h4>Help us match you faster.</h4>
+            <span class="muted">Optional. Takes 10 seconds.</span>
+          </div>
+          {
+            (brand
+              ? [
+                  ['sells', 'What do you sell?', ['Software', 'An app', 'A subscription box', 'Physical products', 'Courses or memberships', 'Something else']],
+                  ['pays', 'How do customers pay you?', ['Stripe, on my site', 'Shopify', 'App Store or Google Play', 'Something else']],
+                  ['price', 'Your main plan’s price', ['Under $20 a month', '$20 to $50', '$50 to $150', 'Over $150', 'A one-time price']],
+                ]
+              : [
+                  ['platform', 'Where’s your audience?', ['YouTube', 'TikTok', 'Instagram', 'Substack or a newsletter', 'Reddit', 'X', 'A podcast', 'A blog', 'Somewhere else']],
+                  ['followers', 'How many followers there?', ['Under 1,000', '1,000 to 10,000', '10,000 to 50,000', '50,000 to 100,000', 'Over 100,000']],
+                  ['topic', 'What does your audience ask you about?', ['Software and apps', 'Money and work', 'Beauty and skincare', 'Food and drink', 'Health and fitness', 'Something else']],
+                ]
+            ).map(([name, q, opts]) => (
+              <fieldset class="q">
+                <legend>{q}</legend>
+                <div class="opts">
+                  {(opts as string[]).map((o) => (
+                    <label class="opt">
+                      <input type="radio" name={name as string} value={o} />
+                      <span>{o}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))
+          }
+          <div class="acts">
+            <button type="submit" class="btn" disabled data-profile-save>Save my answers</button>
+            <button type="button" class="btn ghost" data-profile-skip>Skip</button>
+          </div>
+        </form>
+        <p class="saved" data-profile-saved hidden aria-live="polite">Saved. That helps us match you.</p>
       </div>
     </div>
   </div>
+  </Scene>
   {siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
 </section>
 
 <style>
+  /* without a photo the lead column steps aside, so its intro and preview take their own grid areas */
+  .lead {
+    display: contents;
+  }
+
+  /* With people (the photo, Scene.astro, under everything): the form is a card floating where they're looking, between
+     their faces at eye level (the photo's form spot), and the heading and preview stand in a column from the left
+     gutter to just short of her head (the spot's `clear`, as a share of the photo's width), on a soft ink scrim that
+     fades out before her hair. So nothing covers a face. Every edge comes from the photo's drawn width (--W, which
+     follows the screen's width), so the three hold their places at any desktop size. Under 1280px there's no room
+     for the column beside the card: the layout stacks (see below).
+     The photo is only a slice, from above their heads to their chests; its foot fades into the ink, and the card may
+     hang past it. */
+  .has-photo {
+    padding-top: 0;
+  }
+  .has-photo :global(.wlscene .shot) {
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(var(--y1) * 100% - 120px), transparent calc(var(--y1) * 100%));
+    mask-image: linear-gradient(180deg, #000 calc(var(--y1) * 100% - 120px), transparent calc(var(--y1) * 100%));
+  }
+  @media (min-width: 1280px) {
+    /* .grid is the card's own box. The spot centres it in the gap between the faces; it's as wide as that gap less a
+       margin each side, the wider margin on her side (glasses and a raised hand) than by his nose, so it sits right of
+       centre by --d and never reaches either face. */
+    .has-photo .grid {
+      --ml: max(32px, 3.2cqw);
+      --mr: max(20px, 1.6cqw);
+      --cw: clamp(260px, calc((var(--fr) - var(--fl)) * var(--W) - var(--ml) - var(--mr)), 440px);
+      --d: calc((var(--ml) - var(--mr)) / 2);
+      display: block;
+      position: relative;
+      left: var(--d);
+      width: var(--cw);
+    }
+    /* the column: from the left gutter to 24px short of the clear line (her hair). Measured from the card's box:
+       its left edge is at tx * 100cqw - cw / 2 + d on screen. */
+    .has-photo .lead {
+      position: absolute;
+      top: 0;
+      left: calc(var(--gl) - var(--tx) * 100cqw + var(--cw) / 2 - var(--d));
+      right: calc(var(--cw) / 2 + var(--d) + (var(--x) - var(--clear)) * var(--W) + 24px);
+      display: grid;
+      gap: 32px;
+      align-content: start;
+      isolation: isolate;
+    }
+    .has-photo .lead::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      top: -64px;
+      bottom: -64px;
+      /* behind the words, wherever they sit: from a little before their left edge (never past the screen's), deepest
+         under them, easing out before her hair */
+      left: max(calc(-1 * var(--gl)), calc(100% - min(100%, 420px) - 140px));
+      right: -24px;
+      background: linear-gradient(90deg, rgb(30 14 63 / 0), rgb(30 14 63 / 0.86) 140px, rgb(30 14 63 / 0.8) 72%, rgb(30 14 63 / 0));
+      -webkit-mask-image: linear-gradient(180deg, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+      mask-image: linear-gradient(180deg, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+      pointer-events: none;
+    }
+    .has-photo .intro,
+    .has-photo .more {
+      grid-area: auto;
+    }
+    /* on wide screens the column is wider than its words: they keep to its right end, a set distance from her hair,
+       instead of drifting to the far left gutter */
+    .has-photo .lead > * {
+      justify-self: end;
+      width: min(100%, 420px);
+    }
+    .has-photo .intro {
+      gap: 14px;
+    }
+    .has-photo .intro h2 {
+      font-size: var(--fs-m);
+      line-height: 1.05;
+    }
+    .has-photo .intro .lede {
+      font-size: 17px;
+      max-width: 34ch;
+    }
+    .has-photo .preview {
+      margin-top: 0;
+    }
+    .has-photo .formcol {
+      background: var(--grain-ink), var(--ink);
+      border: 1px solid var(--ink-rule);
+      border-radius: 28px;
+      padding: clamp(22px, 2vw, 30px);
+      box-shadow: 0 50px 90px -50px rgb(0 0 0 / 0.7);
+    }
+    .has-photo .formcol :global(.form) {
+      background: none;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+  }
+  /* a narrow card: the site field and its Preview button stack */
+  .has-photo .formcol {
+    container-type: inline-size;
+  }
+  @container (max-width: 260px) {
+    .formcol .inline {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Stacked (under 1280px): the photo with their faces at the top, then the heading and the form as one card from
+     their chins down, then the preview. 961 to 1279px borrows the phone placement (Scene's --m* values). */
+  @media (min-width: 961px) and (max-width: 1279px) {
+    .has-photo :global(.wlscene .frame) {
+      --z: var(--mz);
+      --x: var(--mx);
+      --tx: var(--mtx);
+      --y0: var(--my0);
+      --y1: var(--my1);
+      --top: var(--mtop);
+      --h: var(--mh);
+      --w: var(--mw);
+    }
+  }
+  @media (max-width: 1279px) {
+    .has-photo .grid {
+      width: min(var(--ow), calc(100vw - var(--gl) - var(--gr)), 640px);
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'intro'
+        'form'
+        'more';
+      grid-template-rows: auto auto auto;
+      row-gap: 0;
+    }
+    .has-photo .intro,
+    .has-photo .formcol {
+      background: var(--grain-ink), var(--ink);
+      border-inline: 1px solid var(--ink-rule);
+      padding-inline: clamp(22px, 2.4vw, 32px);
+    }
+    .has-photo .intro {
+      gap: 12px;
+      padding-top: clamp(24px, 2.6vw, 34px);
+      border-top: 1px solid var(--ink-rule);
+      border-radius: 28px 28px 0 0;
+    }
+    .has-photo .intro h2 {
+      font-size: var(--fs-m);
+      line-height: 1.05;
+    }
+    .has-photo .intro .lede {
+      font-size: 16px;
+    }
+    .has-photo .formcol {
+      padding-bottom: clamp(22px, 2.4vw, 32px);
+      border-bottom: 1px solid var(--ink-rule);
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 50px 90px -50px rgb(0 0 0 / 0.7);
+    }
+    .has-photo .formcol :global(.form) {
+      background: none;
+      border: 0;
+      padding: 18px 0 0;
+      box-shadow: none;
+    }
+    .has-photo .more {
+      margin-top: 28px;
+      justify-items: center;
+    }
+  }
+
+  /* the pitch, then the form beside it, the preview under the pitch. Stacked, the form comes straight after the
+     pitch so the heading and the fields stay together. */
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(32px, 6vw, 96px);
+    grid-template-areas:
+      'intro form'
+      'more form';
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(32px, 6vw, 96px);
+    row-gap: 28px;
     align-items: start;
+  }
+  .intro {
+    grid-area: intro;
+  }
+  .more {
+    grid-area: more;
+    display: grid;
+    gap: 28px;
+    align-content: start;
+  }
+  .formcol {
+    grid-area: form;
   }
   .intro {
     display: grid;
@@ -177,6 +430,10 @@ const brand = side === 'brand';
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .mini .mini-body {
+    background: var(--brand-paper, transparent);
+    color: var(--brand-ink, inherit);
+  }
   .mini-body,
   .hub-body {
     padding: 22px;
@@ -185,9 +442,25 @@ const brand = side === 'brand';
     justify-items: start;
   }
   .lock {
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    color: var(--brand);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .lock .x {
+    color: #8a948e;
+    font-size: 12px;
+  }
+  .face {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: url(/assets/posts/avatars/sarah.jpg) center / cover;
+  }
+  .mini-sub {
+    margin-top: -4px;
+    font-size: 14px;
+    color: #4b5650;
   }
   .mini-h {
     font-size: 30px;
@@ -195,15 +468,10 @@ const brand = side === 'brand';
     letter-spacing: -0.035em;
     line-height: 1;
   }
-  .mini-prod {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
   .mini-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     background: var(--brand) center / cover no-repeat;
     border: 1px solid #e3e8e4;
   }
@@ -271,8 +539,137 @@ const brand = side === 'brand';
     transform: translateY(-50%);
     color: var(--on-ink-muted);
   }
+  /* the same comarket.si/ prefix as the hero's field, so it reads as the same page */
+  .at span {
+    font-size: 15px;
+  }
   .at input {
-    padding-left: 36px;
+    padding-left: 134px;
+    font-family: var(--mono);
+    font-size: 15px;
+  }
+  .fine {
+    margin-top: -10px;
+    text-align: center;
+  }
+  .founder {
+    display: grid;
+    gap: 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ink-rule);
+    text-align: center;
+    justify-items: center;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--on-ink-muted);
+  }
+  .founder a {
+    color: var(--on-ink);
+  }
+  .refer,
+  .profile {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid var(--ink-rule);
+    border-radius: 20px;
+  }
+  .refer p {
+    font-weight: 600;
+  }
+  .refer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .refer-row .num {
+    flex: 1 1 200px;
+    min-width: 0;
+    font-size: 13.5px;
+    color: var(--on-ink-muted);
+    overflow-wrap: anywhere;
+  }
+  .refer-row .btn {
+    --h: 44px;
+  }
+  .profile[hidden],
+  .saved[hidden] {
+    display: none;
+  }
+  .profile-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .profile-head h4 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .profile-head span {
+    font-size: 13.5px;
+  }
+  .q {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .q legend {
+    padding: 0;
+    margin-bottom: 8px;
+    font-size: 14.5px;
+    color: var(--on-ink-muted);
+  }
+  .opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .opt {
+    position: relative;
+    cursor: pointer;
+  }
+  .opt input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .opt span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--ink-rule);
+    font-size: 14px;
+    transition:
+      background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease),
+      color 0.2s var(--ease);
+  }
+  .opt:hover span {
+    border-color: var(--on-ink-muted);
+  }
+  .opt input:checked + span {
+    background: var(--on-ink);
+    border-color: var(--on-ink);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .opt input:focus-visible + span {
+    outline: 2px solid var(--on-ink);
+    outline-offset: 2px;
+  }
+  .profile .acts .btn {
+    --h: 44px;
+  }
+  .saved {
+    font-weight: 600;
   }
   .submit {
     --h: 60px;
@@ -321,6 +718,8 @@ const brand = side === 'brand';
   @media (max-width: 900px) {
     .grid {
       grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'intro' 'form' 'more';
+      grid-template-rows: auto;
     }
   }
 </style>

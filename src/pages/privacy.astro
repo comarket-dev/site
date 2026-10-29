@@ -1,83 +1,350 @@
 ---
 import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
-const updated = '20 October 2026';
+import Doc from '../components/legal/Doc.astro';
+const updated = '29 October 2026';
+// Drafts stay out of search until counsel signs off and every placeholder is filled (design/legal/README.md).
+const draft = true;
 ---
 
-<Base title="Privacy at Comarket" description="What Comarket collects on this site, why, and how to have it deleted." stage="none">
-  <header class="top wrap">
-    <a class="wm" href="/?fork=1">Comarket</a>
-  </header>
-  <main class="wrap doc">
-    <span class="label">Updated {updated}</span>
-    <h1 class="display-l">Privacy</h1>
-    <p class="lede">This site runs a waitlist. Here is everything it collects and why.</p>
+<Base title="Privacy policy · Comarket" description="What Comarket collects, why, who processes it, how long we keep it, and how to use your rights." stage="none" noindex={draft}>
+  <Doc
+    title="Privacy policy"
+    lede="What we collect, why, who helps us, how long we keep it, and how to see, change or delete it."
+    updated={updated}
+    draft={draft}
+    current="/privacy"
+  >
+    <div class="short">
+      <b>The short version</b>
+      <ul>
+        <li>Today this site runs a waitlist. We keep what you type into it, a few facts about how you found us, and, if you allow it, a random visitor ID so we can tell which pages work.</li>
+        <li>We don't sell your personal information, share it for cross-site advertising, or use third-party ad trackers.</li>
+        <li>In the EU, EEA, UK and Switzerland we ask before setting any analytics cookie. Everywhere else you can turn analytics off on the <a href="/cookies">cookie page</a>.</li>
+        <li>Email <a href="mailto:[[PRIVACY EMAIL]]">[[PRIVACY EMAIL]]</a> to see, correct or delete your data. We answer within one month.</li>
+      </ul>
+    </div>
 
-    <h2>What we collect</h2>
-    <ul>
-      <li><b>When you join the waitlist:</b> your email, and either your website (brands) or your handle and platform (creators).</li>
-      <li><b>If you allow it:</b> a random visitor ID in a cookie, which version of a page you saw, and simple events like which side you chose. We use this to learn which pages work.</li>
-      <li><b>Always:</b> your country, as reported by our hosting provider, so we know whether to ask before setting cookies.</li>
-    </ul>
-
-    <h2>What we don’t do</h2>
-    <ul>
-      <li>We don’t sell your data or share it with advertisers.</li>
-      <li>We don’t use third-party ad trackers on this site.</li>
-    </ul>
-
-    <h2>Who processes it</h2>
-    <ul>
-      <li>Cloudflare hosts the site and runs our servers.</li>
-      <li>Neon stores the waitlist in a Postgres database.</li>
-      <li>Resend sends the one confirmation email.</li>
-    </ul>
-
-    <h2>Your choices</h2>
+    <h2>Who we are</h2>
     <p>
-      Decline cookies and nothing about your visit is stored. To see or delete your waitlist entry, email us from the address you
-      signed up with and we’ll do it.
+      Comarket is run by [[LEGAL ENTITY NAME]], a [[ENTITY TYPE AND JURISDICTION]] registered under number [[COMPANY NUMBER]],
+      with its registered office at [[REGISTERED ADDRESS]] ("Comarket", "we", "us"). For the personal information described
+      here we are the controller, except where this policy says we act for a brand (see "When we act for a brand").
     </p>
-  </main>
+    <p>
+      Contact for anything in this policy: <a href="mailto:[[PRIVACY EMAIL]]">[[PRIVACY EMAIL]]</a>, or post to the address
+      above. Data protection officer: [[DPO CONTACT]]. If we are established outside the EU, our representative in the EU
+      under Article 27 GDPR is [[EU REPRESENTATIVE]]. If we are established outside the UK, our UK representative is
+      [[UK REPRESENTATIVE]].
+    </p>
+
+    <h2>What this policy covers</h2>
+    <p>
+      This policy covers comarket.si and its subdomains, the waitlist, and the emails we send. Comarket matches brands with
+      creators and gives each creator a co-branded storefront page. That platform has not opened yet. The section "When the
+      platform opens" describes what it will collect, so that people joining the waitlist know what comes next. We will
+      update this policy and tell waitlist members before the platform goes live.
+    </p>
+
+    <h2>What we collect on this site, and why</h2>
+    <p>
+      The table lists each purpose, the information used, our legal basis under the GDPR and UK GDPR, and how long we keep it.
+      "Legitimate interests" means we have weighed our interest against yours. You can ask us for that assessment, and you can
+      object (see "Your rights").
+    </p>
+    <div class="tbl">
+      <table>
+        <thead>
+          <tr><th>Purpose</th><th>Information</th><th>Legal basis</th><th>Kept for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Holding your place on the waitlist and telling you when it opens</td>
+            <td>Email; whether you are a brand or a creator; your brand's website and name (brands) or your handle and platform (creators); your pass number; the date you joined</td>
+            <td>Steps you asked us to take before a contract (Art. 6(1)(b))</td>
+            <td>Until you ask us to remove it, or 24 months after you joined if you have not opened an account by then</td>
+          </tr>
+          <tr>
+            <td>Honouring the price a brand was shown</td>
+            <td>The pricing version and fee rates shown to you when you joined (brands only)</td>
+            <td>Steps before a contract (Art. 6(1)(b)) and legitimate interests in keeping our word</td>
+            <td>As long as the waitlist entry, then for the life of any Brand Agreement</td>
+          </tr>
+          <tr>
+            <td>Knowing how people found us</td>
+            <td>Campaign tags in the link you followed (utm_ tags), the page that sent you (referrer), your country as reported by our host, and the pass number in a referral link (<code>?ref=</code>)</td>
+            <td>Legitimate interests in measuring our marketing and crediting referrals</td>
+            <td>As long as the waitlist entry</td>
+          </tr>
+          <tr>
+            <td>Optional questions after you join (for example what you sell, how you charge, your audience size or topic)</td>
+            <td>Your answers, linked to your pass</td>
+            <td>Consent (Art. 6(1)(a)), which you can withdraw at any time</td>
+            <td>As long as the waitlist entry, or until you withdraw consent</td>
+          </tr>
+          <tr>
+            <td>The confirmation email</td>
+            <td>Email, pass number, brand name or handle</td>
+            <td>Steps before a contract (Art. 6(1)(b))</td>
+            <td>Our email provider keeps delivery logs for a limited period under its own settings</td>
+          </tr>
+          <tr>
+            <td>Building a storefront preview when a brand types its website</td>
+            <td>The website you type, and the public name, theme color, icon and share image on its homepage, which our server fetches</td>
+            <td>Legitimate interests in showing you what your storefront would look like</td>
+            <td>24 hours in a cache, not linked to you; kept with your entry only if you join</td>
+          </tr>
+          <tr>
+            <td>Checking whether a creator handle is free</td>
+            <td>The handle you type</td>
+            <td>Legitimate interests</td>
+            <td>Not stored unless you join</td>
+          </tr>
+          <tr>
+            <td>Analytics: learning which pages and versions work</td>
+            <td>A random visitor ID (cookie), the page version you were shown, and simple events such as which side you chose, whether you built a preview or used a calculator, and whether you saved or shared your pass</td>
+            <td>Consent in the EU, EEA, UK and Switzerland (Art. 6(1)(a) and the ePrivacy and PECR cookie rules); legitimate interests elsewhere, with an opt-out</td>
+            <td>13 months, then deleted or reduced to totals that identify no one</td>
+          </tr>
+          <tr>
+            <td>Testing prices and pages on a share of visitors</td>
+            <td>Which version you were assigned, linked to your visitor ID</td>
+            <td>As for analytics</td>
+            <td>13 months</td>
+          </tr>
+          <tr>
+            <td>Keeping the site secure and stopping bots</td>
+            <td>IP address, browser and device signals, and request logs, handled by Cloudflare (including its Turnstile bot check on the waitlist form)</td>
+            <td>Legitimate interests in security; the bot check is strictly necessary for the form</td>
+            <td>Request logs up to 7 days. We don't store your IP address in our database</td>
+          </tr>
+          <tr>
+            <td>Answering you when you write to us</td>
+            <td>Your message, email and anything you include</td>
+            <td>Legitimate interests, or steps before a contract</td>
+            <td>24 months after the conversation ends</td>
+          </tr>
+          <tr>
+            <td>Meeting legal duties and defending claims</td>
+            <td>What the duty or claim needs</td>
+            <td>Legal obligation (Art. 6(1)(c)) and legitimate interests</td>
+            <td>As long as the law requires or the claim lasts</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      You don't have to give us anything to read this site. To join the waitlist we need your email and your website or
+      handle; without them we can't hold your place. The questions after you join are optional.
+    </p>
+    <p>
+      If you save your pass image, it is made in your browser and stays on your device. If you use the share button, you go
+      to X (formerly Twitter), and X's own privacy policy applies to what you post there.
+    </p>
+
+    <h2>When the platform opens</h2>
+    <p>This section describes what the platform will process. It is not live yet.</p>
+    <h3>Brands</h3>
+    <p>
+      Account and contact details for the people who run your account; your company and billing details; your offers,
+      creator rates and approvals; and, through the Stripe account you connect, the information we need to decide whether a
+      sale counts and to bill you. Legal basis: performance of our contract with your company (Art. 6(1)(b)) for the account,
+      legitimate interests for the individuals who work for it, and legal obligation for invoices and tax records.
+    </p>
+    <h3>Creators</h3>
+    <p>
+      Your account details, profile, handle, the public social profiles you link and their public statistics (such as
+      follower counts), the offers you accept, your storefront and hub content, your sales and earnings, and the identity,
+      tax and payout details that Stripe and the law require, which may include your legal name, address, date of birth, tax
+      identification number and VAT number. Stripe collects and holds your bank details; we don't see your full account
+      number. Legal basis: performance of our contract with you (Art. 6(1)(b)); legal obligation for tax reporting, such as
+      the EU's DAC7 rules and US information returns (Art. 6(1)(c)); legitimate interests for fraud prevention.
+    </p>
+    <h3>Shoppers who visit a storefront</h3>
+    <p>
+      When you open a creator's storefront, we record which storefront you came from and when, so the brand can credit the
+      creator. When you go on to the brand's checkout, the brand processes your purchase under its own privacy policy. To
+      decide whether the sale counts, we compare your email, phone number and a card fingerprint (a code Stripe derives from
+      your card, never the card number) with the brand's existing Stripe customers. We do that on the brand's behalf, as its
+      processor (see the next section). We do not sell shopper data, and we never show a creator who bought.
+    </p>
+
+    <h2>When we act for a brand</h2>
+    <p>
+      For the new-customer check and the sale reports we prepare for a brand, the brand is the controller and we are its
+      processor, under our <a href="/dpa">data processing addendum</a>. If you bought from a brand and want to use your rights
+      over that purchase data, contact the brand; we will help it answer. We remain the controller for our own records of
+      each counted sale (a reference number, dates, amounts and the creator credited), which we keep to bill the brand, pay the
+      creator, meet tax rules and handle disputes.
+    </p>
+
+    <h2>Automated decisions</h2>
+    <p>
+      On the platform, software decides whether a sale counts: whether the buyer is new to the brand, whether the payment
+      cleared, whether it was refunded in time, and whether there are signs of fraud, such as a creator buying through their
+      own link. These decisions affect what a creator is paid and what a brand is billed. Anyone affected can ask for a person
+      to review a decision, explain their side and contest it, by writing to [[CONTACT EMAIL]]. We tell creators why a sale did
+      not count, without revealing who the buyer was.
+    </p>
+
+    <h2>Who we share it with</h2>
+    <p>
+      We use the service providers below to run the site. They process personal information only on our instructions and
+      under contracts that require them to protect it.
+    </p>
+    <div class="tbl">
+      <table>
+        <thead>
+          <tr><th>Provider</th><th>What they do for us</th><th>Information</th><th>Where</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cloudflare, Inc.</td>
+            <td>Hosts the site and runs our server code (Workers), caches previews (KV), checks for bots (Turnstile), connects to our database (Hyperdrive), and keeps short request logs</td>
+            <td>Everything sent to the site, including IP address and device signals</td>
+            <td>Global network; company in the United States</td>
+          </tr>
+          <tr>
+            <td>Neon</td>
+            <td>Stores the waitlist, page-version assignments and analytics events in a Postgres database</td>
+            <td>Waitlist entries, answers, visitor IDs and events</td>
+            <td>[[NEON REGION]]</td>
+          </tr>
+          <tr>
+            <td>Resend</td>
+            <td>Sends the confirmation email</td>
+            <td>Email, pass number, brand name or handle</td>
+            <td>[[RESEND REGION]]</td>
+          </tr>
+          <tr>
+            <td>[[SUPPORT EMAIL PROVIDER]]</td>
+            <td>Hosts our inbox</td>
+            <td>Messages you send us</td>
+            <td>[[SUPPORT EMAIL REGION]]</td>
+          </tr>
+          <tr>
+            <td>Stripe (when the platform opens)</td>
+            <td>Brand billing, creator payouts, identity checks and tax forms. We also read the brand's own Stripe account, with the brand's permission</td>
+            <td>Billing, payout and tax details; sale data</td>
+            <td>United States, Ireland and other Stripe locations</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>We also share personal information:</p>
+    <ul>
+      <li><b>Between brands and creators, once the platform opens.</b> A brand sees the profile and public statistics of creators it is matched with, and their sales results. A creator sees the brand's offer. Neither sees a shopper's identity through Comarket.</li>
+      <li><b>When the law requires it,</b> or to protect people, our users or Comarket from fraud or harm, and to establish or defend legal claims.</li>
+      <li><b>In a sale or reorganisation of our business,</b> with the buyer or successor, who must respect this policy. We will tell you first.</li>
+    </ul>
+    <p>
+      We don't sell personal information, and we don't share it for cross-context behavioural advertising, as California law
+      uses those terms. We have not done either in the past 12 months.
+    </p>
+
+    <h2>International transfers</h2>
+    <p>
+      Some providers above process information outside the UK, the EU and the EEA, mainly in the United States. Where a
+      country has no adequacy decision, we rely on the European Commission's standard contractual clauses, the UK's
+      International Data Transfer Addendum to them, and the Swiss version of the clauses. Where a provider is certified under
+      the EU-US Data Privacy Framework and its UK and Swiss extensions, we may rely on that instead. You can ask us for a copy
+      of the relevant safeguards at [[PRIVACY EMAIL]].
+    </p>
+
+    <h2>How long we keep it</h2>
+    <p>
+      The table above gives the period for each purpose. When a period ends we delete the information or reduce it to totals
+      that identify no one. On the platform, account information lasts as long as the account and then [[ACCOUNT RETENTION]];
+      invoices, payout records and the records tax law requires last [[TAX RECORD RETENTION]]; and records of counted sales
+      last until their commission period ends, then through the refund and dispute periods that follow and the tax period.
+    </p>
+
+    <h2>How we protect it</h2>
+    <p>
+      Traffic to the site is encrypted. The database is reached only by our server code, through credentials kept as secrets.
+      Analytics use a random ID, not your name or IP address. Access to personal information is limited to the people who
+      need it. No system is perfectly secure; if a breach puts your rights at risk, we will tell you and the regulator as the
+      law requires.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>Depending on where you live, you can ask us to:</p>
+    <ul>
+      <li>tell you whether we hold information about you and give you a copy (access);</li>
+      <li>correct it (rectification);</li>
+      <li>delete it (erasure), for example by leaving the waitlist;</li>
+      <li>limit what we do with it while a question is resolved (restriction);</li>
+      <li>give it to you, or to another company, in a common machine-readable format (portability);</li>
+      <li>stop using it where we rely on legitimate interests, including for analytics (objection); and</li>
+      <li>withdraw consent at any time, without affecting what we did before.</li>
+    </ul>
+    <p>
+      Email <a href="mailto:[[PRIVACY EMAIL]]">[[PRIVACY EMAIL]]</a>, ideally from the address you signed up with, so we can
+      confirm it's you. We may ask for a little more to verify you, and nothing more than that. We answer within one month,
+      or tell you within that month if we need up to two more months for a complex request. Requests are free unless they are
+      clearly unfounded or excessive.
+    </p>
+    <p>
+      You can also complain to a data protection authority, in particular where you live or work. Our lead authority is
+      [[LEAD SUPERVISORY AUTHORITY]]. In the UK it is the Information Commissioner's Office (ico.org.uk). We would like the
+      chance to put things right first.
+    </p>
+
+    <h2>US state privacy rights</h2>
+    <p>
+      This section is our notice for residents of California and other US states with consumer privacy laws. We give the
+      rights below to every user in the US, whether or not a particular state law applies to us yet.
+    </p>
+    <p><b>What we collected in the past 12 months, by the categories California law uses:</b></p>
+    <ul>
+      <li><b>Identifiers:</b> email address, creator handle, visitor ID, pass number.</li>
+      <li><b>Commercial information:</b> the fee rates shown to a brand; on the platform, sales and earnings records.</li>
+      <li><b>Internet or other electronic network activity:</b> pages and versions viewed, events, referrer, campaign tags.</li>
+      <li><b>Geolocation data:</b> country only, from your IP address. Not precise location.</li>
+      <li><b>Professional or employment-related information:</b> your brand's website and name, your platform and audience details.</li>
+    </ul>
+    <p>
+      Sources, purposes and retention are in the tables above. We disclose these categories to the service providers listed,
+      for the business purposes described. We don't sell or share personal information, and we don't knowingly sell or share
+      the information of anyone under 16. On the platform we will collect creators' tax and identity information, which
+      California treats as sensitive (such as a tax ID); we use it only to pay creators and meet the law, never to infer
+      anything about them.
+    </p>
+    <p>
+      <b>Your rights:</b> to know what we collect, use and disclose; to get a copy; to delete; to correct; to opt out of sale or
+      sharing (which we don't do); to limit the use of sensitive information (we already limit it); and not to be treated
+      differently for using any of them. To make a request, email <a href="mailto:[[PRIVACY EMAIL]]">[[PRIVACY EMAIL]]</a>. An
+      authorised agent can make a request for you with your signed permission; we may ask you to confirm your identity
+      directly. If we refuse a request, you can appeal by replying to our answer. If the appeal fails, you can contact your
+      state attorney general.
+    </p>
+    <p>We treat a Global Privacy Control signal from your browser as a request to turn analytics off for that browser.</p>
+
+    <h2>Cookies</h2>
+    <p>
+      We set a small number of first-party cookies, listed with their purposes and lifetimes in our
+      <a href="/cookies">cookie policy</a>, where you can also change your choice. We don't use advertising cookies,
+      third-party analytics or social media pixels, and our fonts are served from our own site.
+    </p>
+
+    <h2>Emails</h2>
+    <p>
+      Joining the waitlist sends one confirmation email, and we email once more when your spot opens. We send other news only
+      if you agree to it, and every such email has a way to stop. We don't sell or rent email addresses.
+    </p>
+
+    <h2>Children</h2>
+    <p>
+      This site is not for children. The waitlist, the Brand Agreement and the Creator Agreement are for adults (18 or older)
+      acting for a business or for their own creator work. We don't knowingly collect personal information from anyone under
+      16. If you think a child has given us information, write to [[PRIVACY EMAIL]] and we will delete it.
+    </p>
+
+    <h2>Changes to this policy</h2>
+    <p>
+      We will post any change here with a new date. If a change matters to how we use information we already hold, we will
+      email the people affected before it applies and, where the law requires, ask for consent again.
+    </p>
+  </Doc>
   <Footer />
 </Base>
-
-<style>
-  .top {
-    padding-block: calc(22px + env(safe-area-inset-top, 0px)) 0;
-    position: relative;
-    z-index: 2;
-  }
-  .wm {
-    font-weight: 700;
-    font-size: 21px;
-    letter-spacing: -0.04em;
-    text-decoration: none;
-  }
-  .doc {
-    position: relative;
-    z-index: 2;
-    max-width: 820px;
-    padding-block: clamp(64px, 10vw, 140px);
-    display: grid;
-    gap: 20px;
-  }
-  .doc h1 {
-    margin-top: 6px;
-  }
-  .doc h2 {
-    margin-top: 28px;
-    font-size: 24px;
-    letter-spacing: -0.02em;
-  }
-  .doc ul {
-    margin: 0;
-    padding-left: 20px;
-    display: grid;
-    gap: 10px;
-    max-width: 62ch;
-  }
-  .doc p {
-    max-width: 62ch;
-  }
-</style>

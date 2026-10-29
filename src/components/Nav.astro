@@ -1,8 +1,10 @@
 ---
+import Icon from './Icon.astro';
 interface Props {
   side: 'brands' | 'creators';
 }
 const { side } = Astro.props;
+const cta = side === 'creators' ? 'Claim my page' : 'Get early access';
 ---
 
 <header class="nav" data-nav>
@@ -11,8 +13,12 @@ const { side } = Astro.props;
     <a href="/brands" aria-current={side === 'brands' ? 'page' : undefined}>Brands</a>
     <a href="/creators" aria-current={side === 'creators' ? 'page' : undefined}>Creators</a>
   </nav>
-  <a class="btn join" href="#waitlist">{side === 'creators' ? 'Claim my page' : 'Get early access'} <span class="arr" aria-hidden="true">→</span></a>
+  <a class="btn convert join" href="#waitlist">{cta} <Icon name="arrow-right" class="arr" /></a>
 </header>
+<!-- phones: the same action, docked at the thumb once the hero's form has scrolled away; gone while the waitlist shows -->
+<div class="dock" data-dock aria-hidden="true">
+  <a class="btn convert" href="#waitlist" tabindex="-1">{cta} <Icon name="arrow-right" class="arr" /></a>
+</div>
 
 <style>
   .nav {
@@ -60,6 +66,12 @@ const { side } = Astro.props;
     border: 1px solid currentColor;
     border-color: color-mix(in oklab, currentColor 30%, transparent);
   }
+  /* the switch can sit over a hero photo, so it carries its own paper */
+  .nav:not(.on-dark) .switch {
+    background: color-mix(in oklab, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
   .switch a {
     font-size: 14px;
     font-weight: 600;
@@ -89,6 +101,9 @@ const { side } = Astro.props;
     color: var(--ink);
     border-color: var(--paper);
   }
+  .dock {
+    display: none;
+  }
   @media (max-width: 720px) {
     .nav {
       grid-template-columns: auto 1fr;
@@ -96,8 +111,46 @@ const { side } = Astro.props;
     .switch {
       justify-self: end;
     }
+    .switch a {
+      padding: 12px 14px;
+    }
     .join {
       display: none;
+    }
+    /* fixed, so showing it never moves the page; it slides in from below the fold */
+    .dock {
+      display: block;
+      position: fixed;
+      z-index: 49;
+      left: var(--gl);
+      right: var(--gr);
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      transform: translateY(calc(100% + 40px));
+      visibility: hidden;
+      transition:
+        transform 0.4s var(--ease),
+        visibility 0s linear 0.4s;
+    }
+    .dock.on {
+      transform: none;
+      visibility: visible;
+      transition:
+        transform 0.4s var(--ease),
+        visibility 0s;
+    }
+    .dock .btn {
+      width: 100%;
+      --h: 56px;
+      font-size: 16px;
+      box-shadow:
+        0 0 0 1px rgb(255 247 236 / 0.35),
+        0 18px 36px -18px rgb(30 14 63 / 0.6);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dock,
+    .dock.on {
+      transition: none;
     }
   }
 </style>
@@ -117,8 +170,73 @@ const { side } = Astro.props;
       nav.classList.toggle('on-dark', dark);
     };
     update();
-    window.addEventListener('scroll', update, { passive: true });
-    document.addEventListener('astro:before-swap', () => window.removeEventListener('scroll', update), { once: true });
+
+    // the docked CTA (phones): on once the hero's form is above the top edge, off while the waitlist is on screen or
+    // passed, and off while someone is typing so it never sits on the keyboard
+    const dock = document.querySelector<HTMLElement>('[data-dock]');
+    const link = dock?.querySelector<HTMLAnchorElement>('a');
+    const form = document.querySelector<HTMLElement>('[data-hero] form') ?? document.querySelector<HTMLElement>('[data-hero]');
+    const wait = document.querySelector<HTMLElement>('#waitlist');
+    // the page's own CTAs to the waitlist: while one is on screen, the dock steps aside so there's one choice, not two
+    const others = Array.from(document.querySelectorAll<HTMLElement>('a[href="#waitlist"]')).filter(
+      (a) => !a.closest('[data-dock], [data-nav]'),
+    );
+    let typing = false;
+    const place = () => {
+      if (!dock || !link) return;
+      const past = form ? form.getBoundingClientRect().bottom < 0 : window.scrollY > innerHeight;
+      const waiting = wait ? wait.getBoundingClientRect().top < innerHeight : false;
+      const shown = others.some((a) => {
+        const r = a.getBoundingClientRect();
+        return r.height > 0 && r.bottom > 0 && r.top < innerHeight;
+      });
+      // never sit on a control someone may be reaching for (a slider, a carousel arrow, Accept or Pass)
+      let covering = false;
+      if (past && !waiting && !typing && !shown) {
+        const r = dock.getBoundingClientRect();
+        // where it sits when shown: offsetTop is its layout box, untouched by the slide transform; 8px to spare above
+        const top = dock.offsetTop - 8;
+        const bottom = dock.offsetTop + dock.offsetHeight;
+        for (const x of [r.left + 12, r.left + r.width / 2, r.right - 12]) {
+          for (let y = top; y <= bottom; y += 8) {
+            const hit = document
+              .elementsFromPoint(x, Math.min(innerHeight - 1, y))
+              .find((e) => !dock.contains(e) && e.closest('input, select, textarea, button, [role="slider"]'));
+            if (hit) covering = true;
+          }
+        }
+      }
+      const on = past && !waiting && !typing && !shown && !covering;
+      dock.classList.toggle('on', on);
+      dock.setAttribute('aria-hidden', String(!on));
+      link.tabIndex = on ? 0 : -1;
+    };
+    const field = (t: EventTarget | null) => t instanceof HTMLElement && t.matches('input, select, textarea');
+    const focusIn = (e: FocusEvent) => {
+      if (field(e.target)) (typing = true), place();
+    };
+    const focusOut = (e: FocusEvent) => {
+      if (field(e.target)) (typing = false), place();
+    };
+    const onScroll = () => {
+      update();
+      place();
+    };
+    place();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', place);
+    document.addEventListener('focusin', focusIn);
+    document.addEventListener('focusout', focusOut);
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', place);
+        document.removeEventListener('focusin', focusIn);
+        document.removeEventListener('focusout', focusOut);
+      },
+      { once: true },
+    );
   }
   document.addEventListener('astro:page-load', bind);
 </script>

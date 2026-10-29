@@ -1,4 +1,5 @@
 ---
+import Icon from '../Icon.astro';
 /**
  * Example posts and the storefronts they open, one pair at a time in a spotlight. Shared by both sides.
  * Every third slide is a "your turn" card with the side's call to action. Hovering slows it down rather than stopping
@@ -6,6 +7,7 @@
  */
 import Post from './Post.astro';
 import StorePhone from './StorePhone.astro';
+
 
 interface Props {
   side: 'brand' | 'creator';
@@ -35,7 +37,7 @@ const copy = isBrand
               <Post pair={s.i} />
             </div>
             <span class="arrow" aria-hidden="true">
-              →
+              <Icon name="arrow-right" />
             </span>
             <div class="to">
               <StorePhone pair={s.i} tag={false} />
@@ -46,8 +48,8 @@ const copy = isBrand
             <div class="turn">
               <b>Your turn.</b>
               <p>{copy.turn}</p>
-              <a class="cta-btn big" href="#top" data-claim-jump>
-                {copy.turnBtn} <span aria-hidden="true">↑</span>
+              <a class="cta-btn big convert" href="#top" data-claim-jump>
+                {copy.turnBtn} <Icon name="arrow-up" />
               </a>
             </div>
           </div>
@@ -57,9 +59,9 @@ const copy = isBrand
   </div>
 
   <div class="ctrl">
-    <button type="button" class="arrowbtn" data-prev aria-label="Previous example">←</button>
+    <button type="button" class="arrowbtn" data-prev aria-label="Previous example"><Icon name="arrow-left" /></button>
     <span class="bar" aria-hidden="true"><i data-progress></i></span>
-    <button type="button" class="arrowbtn" data-next aria-label="Next example">→</button>
+    <button type="button" class="arrowbtn" data-next aria-label="Next example"><Icon name="arrow-right" /></button>
   </div>
 </div>
 
@@ -70,16 +72,26 @@ const copy = isBrand
   }
   .deck {
     position: relative;
-    height: 540px;
+    /* the edge-fade mask hard-crops anything outside this box, so the box reaches 80px past the slides above and
+       below (padding, pulled back with negative margin): shadows spill past the posts instead of being cut */
+    --spill: 80px;
+    height: calc(560px + var(--spill) * 2);
+    margin-block: calc(var(--spill) * -1);
     overflow: hidden;
     -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
     mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   }
+  /* the deck's spill area takes no clicks, only the slides do */
+  .deck {
+    pointer-events: none;
+  }
   .slide {
+    pointer-events: auto;
     --off: 0;
     position: absolute;
     left: 50%;
     top: 50%;
+    width: max-content;
     display: flex;
     align-items: center;
     gap: 26px;
@@ -102,8 +114,11 @@ const copy = isBrand
   .to,
   .to :global(.phone) {
     --w: 190px;
+    --sw: 236;
   }
   .arrow {
+    flex: none;
+    display: grid;
     font-size: 26px;
     color: var(--blue);
   }
@@ -159,7 +174,10 @@ const copy = isBrand
     background: var(--white);
   }
 
+  /* above the deck, whose box reaches past the slides (for shadows) and would otherwise sit over these buttons */
   .ctrl {
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -172,7 +190,10 @@ const copy = isBrand
     border: 1px solid var(--ink);
     background: transparent;
     cursor: pointer;
-    font-size: 18px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: 19px;
     transition:
       background-color 0.3s var(--ease),
       color 0.3s var(--ease);
@@ -204,7 +225,7 @@ const copy = isBrand
   }
   @media (max-width: 700px) {
     .deck {
-      height: 420px;
+      height: calc(440px + var(--spill) * 2);
       -webkit-mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
       mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
     }
@@ -216,6 +237,7 @@ const copy = isBrand
     .to,
     .to :global(.phone) {
       --w: 128px;
+      --sw: 140;
     }
     .arrow {
       font-size: 20px;
@@ -257,6 +279,12 @@ const copy = isBrand
       let last = performance.now();
       let speed = 1; // hovering slows the spotlight to a crawl instead of stopping it
       let raf = 0;
+      /* the clock only runs while the deck is at least half on screen: until someone reaches it, it holds on the first
+         example (never a "Your turn" card), and it waits again whenever they scroll away */
+      let seen = false;
+      const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.5 });
+      io.observe(deck);
+      cleanups.push(() => io.disconnect());
 
       const layout = () => {
         slides.forEach((s, i) => {
@@ -280,7 +308,7 @@ const copy = isBrand
         raf = requestAnimationFrame(tick);
         const dt = Math.min(100, now - last);
         last = now;
-        if (reduceMotion()) return;
+        if (reduceMotion() || !seen) return;
         elapsed += dt * speed;
         const hold = Number(slides[at]?.dataset.hold) || 3800;
         const k = elapsed / hold;

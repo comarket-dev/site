@@ -1,6 +1,10 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
+import '../styles/brand-fonts.css';
+import '../styles/yarn.css';
+import '../styles/switch.css';
+import '../styles/forktrip.css';
 import Stage from '../components/Stage.astro';
 import Consent from '../components/Consent.astro';
 import { priceArm } from '../lib/experiments';
@@ -17,10 +21,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 // the phone's sale split shows the same cut this visitor's pricing shows
 const cut = priceArm(Astro.locals.arms ?? {}).first;
 const ogUrl = new URL(og, Astro.site);
+/* Knitted conversion buttons (src/styles/yarn.css). On trial: false turns them back into plain buttons everywhere. */
+const YARN = true;
 ---
 
 <!doctype html>
-<html lang="en" transition:animate="none">
+<html lang="en" transition:animate="none" data-yarn={YARN ? "" : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -51,7 +57,7 @@ const ogUrl = new URL(og, Astro.site);
       (function () {
         function pick() {
           var w = innerWidth, h = innerHeight, a = w / h, coarse = matchMedia('(pointer: coarse)').matches;
-          var kind = a < 0.72 || (coarse && Math.min(screen.width, screen.height) < 600) ? 'phone' : coarse || a < 1.15 ? 'tablet' : w >= 1800 ? 'monitor' : 'laptop';
+          var kind = w < 600 || (coarse && Math.min(screen.width, screen.height) < 600) ? 'phone' : coarse || a < 1.15 ? 'tablet' : w >= 1800 ? 'monitor' : 'laptop';
           var r = 0.72 / 1.52;
           if (kind === 'tablet') r = 1.064 / ((h + 74) / w + 0.064);
           if (kind === 'laptop') r = (1.032 * 1.015) / ((h + 84) / w + 0.05 + 0.045);
@@ -72,6 +78,9 @@ const ogUrl = new URL(og, Astro.site);
     <script>
       import { bindReveals, onPage } from '../scripts/ui';
       onPage(() => [bindReveals()]);
+      import '../scripts/paper';
+      import '../scripts/switch';
+      import '../scripts/forktrip';
     </script>
   </body>
 </html>

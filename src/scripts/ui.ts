@@ -18,8 +18,20 @@ export function bindReveals(root: ParentNode = document): () => void {
         }
       }
     },
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+    // start a little before an element arrives, so a scroll never waits on it
+    { rootMargin: '0px 0px 15% 0px', threshold: 0 },
   );
+  /* Landing part way down a page (back, or a #waitlist link): what's already on screen is just there. From the
+     top, the first screen keeps its short entrance. */
+  if (scrollY > 0)
+    els.forEach((e) => {
+      const r = e.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) {
+        e.style.transition = 'none';
+        e.classList.add('in');
+        requestAnimationFrame(() => (e.style.transition = ''));
+      }
+    });
   els.forEach((e) => io.observe(e));
   return () => io.disconnect();
 }

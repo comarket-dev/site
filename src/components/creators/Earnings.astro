@@ -1,9 +1,10 @@
 ---
-/* Two scenes that share inputs: what one product could pay you, and where your rate peaks. */
+/* What one product could pay you, from your views, posts, its price and your rate. */
+import Icon from '../Icon.astro';
 ---
 
 <div data-earn>
-  <section class="section est" id="earnings" aria-labelledby="est-h">
+  <section class="section band-2 est" id="earnings" aria-labelledby="est-h">
     <div class="wrap">
       <div class="step-head">
         <h2 class="display-l" id="est-h" data-reveal>See what your link could earn.</h2>
@@ -29,7 +30,10 @@
         </div>
         <div class="result">
           <span class="label">By month 12, per month</span>
-          <b class="big" data-out="range">$90 to $520</b>
+          <div class="peak">
+            <b class="big" data-out="range" aria-live="polite">$90 to $520</b>
+            <a class="btn convert go" href="#waitlist">Claim my page <Icon name="arrow-right" class="arr" /></a>
+          </div>
           <svg class="chart" viewBox="0 0 600 300" data-chart role="img" aria-label="Estimated monthly earnings over twelve months">
             <g data-grid></g>
             <path data-band fill="rgb(0 110 184 / 0.14)"></path>
@@ -41,47 +45,21 @@
       </div>
     </div>
   </section>
-
-  <section class="section band-2 rate" id="rate" aria-labelledby="rate-h">
-    <div class="wrap">
-      <div class="step-head">
-        <h2 class="display-l" id="rate-h" data-reveal>Ask for more, match with fewer brands.</h2>
-      </div>
-      <div class="grid">
-        <div class="controls">
-          <label class="ctl">
-            <span class="row"><span class="label">The rate you ask for</span><b class="num" data-out="ask">20%</b></span>
-            <input type="range" min="5" max="40" step="1" value="20" data-in="ask" aria-label="Commission rate you ask for" />
-          </label>
-          <dl class="reads num">
-            <div><dt>Brands that accept</dt><dd data-out="match">24 of 40</dd></div>
-            <div><dt>Expected per month</dt><dd data-out="pay">$310</dd></div>
-            <div><dt>Your sweet spot</dt><dd data-out="best">22%</dd></div>
-          </dl>
-          <p class="assume">Brands set a maximum rate. You set your ask. You match where they meet.</p>
-        </div>
-        <svg class="chart" viewBox="0 0 600 300" data-rate-chart role="img" aria-label="Expected payout by asking rate">
-          <g data-rgrid></g>
-          <path data-rarea fill="rgb(30 14 63 / 0.06)"></path>
-          <path data-rline fill="none" stroke="#1E0E3F" stroke-width="2" vector-effect="non-scaling-stroke"></path>
-          <line data-rbest stroke="#006EB8" stroke-width="1" stroke-dasharray="4 4" y1="0" y2="270"></line>
-          <circle data-rdot r="7" fill="#FFF200" stroke="#1E0E3F" stroke-width="2"></circle>
-          <g data-rticks></g>
-        </svg>
-      </div>
-    </div>
-  </section>
 </div>
 
 <style>
+  .est {
+    padding-bottom: clamp(64px, 8vw, 128px);
+  }
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: clamp(32px, 5vw, 80px);
-    align-items: center;
+    align-items: stretch;
   }
   .controls {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 26px;
   }
   .ctl {
@@ -101,6 +79,14 @@
   .result {
     display: grid;
     gap: 14px;
+  }
+  /* the estimate and the action that follows it, side by side */
+  .peak {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 28px;
   }
   .big {
     font-size: clamp(48px, 7vw, 112px);
@@ -123,25 +109,6 @@
     font-size: 13.5px;
     color: var(--graphite);
   }
-  .reads {
-    margin: 0;
-    display: grid;
-    border-top: 1px solid var(--ink);
-  }
-  .reads div {
-    display: flex;
-    justify-content: space-between;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--rule);
-    font-size: 16px;
-  }
-  .reads dt {
-    font-family: var(--sans);
-    color: var(--graphite);
-  }
-  .reads dd {
-    margin: 0;
-  }
   @media (max-width: 900px) {
     .grid {
       grid-template-columns: minmax(0, 1fr);
@@ -150,7 +117,7 @@
 </style>
 
 <script>
-  import { brandsMatching, estimate, EXAMPLE_CEILINGS, payoutAtAsk } from '../../lib/estimate';
+  import { estimate } from '../../lib/estimate';
   import { fillRange, onPage, track } from '../../scripts/ui';
 
   const SVGNS = 'http://www.w3.org/2000/svg';
@@ -200,7 +167,7 @@
     const views = () => Math.round(500 * Math.pow(400, Number($in('views').value) / 100) / 100) * 100;
 
     const draw = () => {
-      ['views', 'posts', 'price', 'rate', 'ask'].forEach((k) => fillRange($in(k)));
+      ['views', 'posts', 'price', 'rate'].forEach((k) => fillRange($in(k)));
       const input = { viewsPerPost: views(), postsPerMonth: Number($in('posts').value), price: Number($in('price').value), rate: Number($in('rate').value) };
       $out('views').textContent = input.viewsPerPost.toLocaleString('en-US');
       $out('posts').textContent = String(input.postsPerMonth);
@@ -229,49 +196,13 @@
         text(ticks, 0, y(max * f) - 6, f ? money(max * f) : '$0', 'start');
       });
       [1, 6, 12].forEach((m) => text(ticks, x(m - 1), H + 22, `month ${m}`, m === 1 ? 'start' : m === 12 ? 'end' : 'middle'));
-
-      // rate chart: payout per brand at 1% from the mid estimate at month 12
-      fit(q<SVGSVGElement>('[data-rate-chart]'));
-      const perBrand = e.mid[11] / Math.max(1, input.rate);
-      const ask = Number($in('ask').value);
-      $out('ask').textContent = `${ask}%`;
-      const xs = Array.from({ length: 36 }, (_, k) => 5 + k);
-      const ys = xs.map((a) => payoutAtAsk(a, perBrand));
-      const rmax = niceMax(Math.max(...ys) * 1.1);
-      const rx = (a: number) => ((a - 5) / 35) * W;
-      const ry = (v: number) => H - (v / rmax) * H;
-      const line = ys.map((v, k) => `${k ? 'L' : 'M'}${rx(xs[k])},${ry(v)}`).join('');
-      q('[data-rline]').setAttribute('d', line);
-      q('[data-rarea]').setAttribute('d', `${line}L${W},${H}L0,${H}Z`);
-      const bestK = ys.indexOf(Math.max(...ys));
-      const best = xs[bestK];
-      const bl = q<SVGLineElement>('[data-rbest]');
-      bl.setAttribute('x1', String(rx(best)));
-      bl.setAttribute('x2', String(rx(best)));
-      bl.setAttribute('y2', String(H));
-      const dot = q<SVGCircleElement>('[data-rdot]');
-      dot.setAttribute('cx', String(rx(ask)));
-      dot.setAttribute('cy', String(ry(payoutAtAsk(ask, perBrand))));
-      const rgrid = q('[data-rgrid]');
-      const rticks = q('[data-rticks]');
-      rgrid.replaceChildren();
-      rticks.replaceChildren();
-      [0, 0.5, 1].forEach((f) => {
-        hline(rgrid, ry(rmax * f), '#EADCC6');
-        text(rticks, 0, ry(rmax * f) - 6, f ? money(rmax * f) : '$0', 'start');
-      });
-      [5, 15, 25, 40].forEach((a) => text(rticks, rx(a), H + 22, `${a}%`, a === 5 ? 'start' : a === 40 ? 'end' : 'middle'));
-      text(rticks, rx(best), -10, 'sweet spot');
-      $out('match').textContent = `${brandsMatching(ask)} of ${EXAMPLE_CEILINGS.length}`;
-      $out('pay').textContent = money(payoutAtAsk(ask, perBrand));
-      $out('best').textContent = `${best}%`;
     };
 
-    const onInput = (e: Event) => {
+    const onInput = () => {
       draw();
       if (!used) {
         used = true;
-        track((e.target as HTMLElement).dataset.in === 'ask' ? 'rate_used' : 'estimator_used');
+        track('estimator_used');
       }
     };
     const inputs = Array.from(root.querySelectorAll<HTMLInputElement>('[data-in]'));

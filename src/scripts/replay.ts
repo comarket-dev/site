@@ -158,14 +158,16 @@ export function mountReplay(root: HTMLElement): () => void {
     }
     ctx.stroke();
 
-    // cluster labels
-    ctx.font = '10px "Fragment Mono", ui-monospace, monospace';
-    ctx.textAlign = 'center';
-    centers.forEach((c, i) => {
-      const k = ease((t - T.type) / 1.2);
-      ctx.fillStyle = `rgba(181,173,201,${0.7 * k})`;
-      ctx.fillText(CLUSTERS[i].toUpperCase(), c.x * w, c.y * h - 0.17 * h);
-    });
+    // cluster labels: readable where there's room for them, left out on narrow screens where they'd only be noise
+    if (w >= 560) {
+      ctx.font = '12px "Fragment Mono", ui-monospace, monospace';
+      ctx.textAlign = 'center';
+      centers.forEach((c, i) => {
+        const k = ease((t - T.type) / 1.2);
+        ctx.fillStyle = `rgba(255,247,236,${0.82 * k})`;
+        ctx.fillText(CLUSTERS[i].toUpperCase(), c.x * w, c.y * h - 0.17 * h);
+      });
+    }
 
     // pitch lines from the agent to the shortlist
     if (t > T.vet - 0.2) {

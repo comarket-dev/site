@@ -1,8 +1,13 @@
 ---
-const stores = [
-  { brand: 'Fernwood', kit: 'Trial-to-paid kit', rate: '20% for 12 months', color: '#1E6B47' },
-  { brand: 'Pagewell', kit: 'Launch page template', rate: '18% for 6 months', color: '#7A3EF0' },
-  { brand: 'Tallyhawk', kit: 'Get paid on time', rate: '25% for 12 months', color: '#E4572E' },
+import BrandMark from '../examples/BrandMark.astro';
+import type { BrandId } from '../../lib/marks';
+
+// each storefront as Sarah's readers see it on her page: the brand's mark on its own page color, what it is, her offer
+// (her rate is hers to see, not her readers', so the public page doesn't show it)
+const stores: Array<{ id: BrandId; brand: string; offer: string; what: string; tile: string }> = [
+  { id: 'fernwood', brand: 'Fernwood', offer: '30 days free', what: 'Onboarding analytics for SaaS teams', tile: '#F3F0E8' },
+  { id: 'pagewell', brand: 'Pagewell', offer: 'first page free', what: 'Landing page builder', tile: '#F1ECFF' },
+  { id: 'tallyhawk', brand: 'Tallyhawk', offer: '2 months free', what: 'Invoicing for freelancers', tile: '#F2EEE7' },
 ];
 const links = ['My newsletter', 'Latest video', 'Book a call'];
 ---
@@ -17,18 +22,20 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
         <div class="phone">
           <span class="addr num">comarket.si/sarah</span>
           <div class="screen">
-            <span class="ava" aria-hidden="true">S</span>
+            <span class="ava" aria-hidden="true"></span>
             <b class="nm">Sarah K.</b>
             <span class="bio">Writing about trial-to-paid, weekly.</span>
             {
               stores.map((s, i) => (
-                <div class="store" style={`--c:${s.color};--i:${i}`}>
-                  <span class="logo" aria-hidden="true" />
+                <div class="store" style={`--c:${s.tile};--i:${i}`}>
+                  <span class="logo" aria-hidden="true">
+                    <BrandMark id={s.id} size="22" />
+                  </span>
                   <span class="txt">
-                    <b>{s.kit}</b>
-                    <span>
-                      {s.brand} · {s.rate}
-                    </span>
+                    <b>
+                      {s.brand}, {s.offer}
+                    </b>
+                    <span>{s.what}</span>
                   </span>
                 </div>
               ))
@@ -42,11 +49,11 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
         <div class="phone">
           <span class="addr num">your current link page</span>
           <div class="screen generic">
-            <span class="ava dim" aria-hidden="true">S</span>
+            <span class="ava" aria-hidden="true"></span>
             <b class="nm">@sarah</b>
             {links.slice(0, 2).map((l) => <span class="lnk">{l}</span>)}
             <span class="lnk ours">
-              Sarah’s trial-to-paid kit
+              Fernwood, 30 days free
               <span class="label">fernwood.comarket.si/creators/sarah</span>
             </span>
             {links.slice(2).map((l) => <span class="lnk">{l}</span>)}
@@ -59,6 +66,9 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
 </section>
 
 <style>
+  .hub {
+    padding-top: clamp(48px, 6vw, 96px);
+  }
   .phones {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -100,16 +110,7 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-weight: 700;
-    font-size: 28px;
-    color: #fff;
-    background: conic-gradient(from 210deg, var(--paper-3), var(--blue), var(--paper-3));
-  }
-  .ava.dim {
-    background: var(--paper-3);
-    color: var(--graphite);
+    background: url(/assets/posts/portraits/sarah.jpg) center / cover;
   }
   .nm {
     font-size: 20px;
@@ -140,6 +141,8 @@ const links = ['My newsletter', 'Latest video', 'Book a call'];
     height: 38px;
     border-radius: 10px;
     background: var(--c);
+    display: grid;
+    place-items: center;
   }
   .txt {
     display: grid;

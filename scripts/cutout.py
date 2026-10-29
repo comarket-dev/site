@@ -31,7 +31,9 @@ def person_alpha(path: str) -> Image.Image:
     cg = Quartz.CIContext.context().createCGImage_fromRect_(ci, ci.extent())
     w, h = int(ci.extent().size.width), int(ci.extent().size.height)
     data = Quartz.CGDataProviderCopyData(Quartz.CGImageGetDataProvider(cg))
-    arr = np.frombuffer(bytes(data), dtype=np.uint8).reshape(h, Quartz.CGImageGetBytesPerRow(cg) // 4, 4)[:, :w]
+    bpr = Quartz.CGImageGetBytesPerRow(cg)
+    # the buffer can carry padding past its last row, so take exactly h rows of bpr bytes
+    arr = np.frombuffer(bytes(data), dtype=np.uint8)[: h * bpr].reshape(h, bpr // 4, 4)[:, :w]
     return Image.fromarray(arr[..., 3].copy())
 
 

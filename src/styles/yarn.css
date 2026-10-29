@@ -1,0 +1,91 @@
+/* Knitted conversion buttons. On trial (owner, 2026-10-27).
+
+   Every button that converts carries `.convert` (the claim and join buttons in the heroes, the waitlist submit, the
+   nav and docked CTAs, the Outcome, Split, Earnings and Pitch CTAs, the "Your turn" card, the fork's two choices).
+   With `data-yarn` on <html> (the YARN switch in src/layouts/Base.astro) they're knitted: stockinette in the button's
+   own colour (scripts/yarn.py, calibrated to the palette tokens), its edge rolled under and shaded from the page's
+   light, with a soft fringe of fibres.
+
+   To roll back: set YARN to false in Base.astro. To remove for good: delete this file, its import in Base.astro,
+   scripts/yarn.py and public/assets/yarn/; the `convert` classes are harmless left in place. */
+
+html[data-yarn] .convert:not(.ghost) {
+  /* the knit (scripts/yarn.py, calibrated so it reads as the token), and its rolled edge: --edge is the token a step
+     toward ink, the side of the roll turned away from the light; --sheen the side turned toward it; --fuzz the
+     fibres standing off the roll */
+  --knit: url('/assets/yarn/knit-blue.webp');
+  --knit-hover: url('/assets/yarn/knit-blue-ink.webp');
+  --edge: 14 67 130;
+  --edge-hover: 14 53 107;
+  --sheen: 120 178 222;
+  --fuzz: 70 140 205;
+  --label: #ffffff;
+  --label-shadow: 0 1px 0 rgb(0 30 70 / 0.7), 0 0 6px rgb(0 40 90 / 0.55);
+  position: relative;
+  border: 0;
+  background: var(--knit) 0 0 / 120px 64px;
+  color: var(--label);
+  font-weight: 700;
+  text-shadow: var(--label-shadow);
+  /* the fabric rolls under at its edge, lit from the upper right: the lower left of the roll turns away into shadow,
+     the upper right catches light, and a soft fringe of fibres blurs the outline. One piece of knitting, no border. */
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--edge) / 0.6),
+    inset 4px -5px 7px -2px rgb(var(--edge) / 0.75),
+    inset -3px 4px 6px -2px rgb(var(--sheen) / 0.45),
+    0 0 1.5px 0.5px rgb(var(--fuzz) / 0.55),
+    0 0 4px 0 rgb(var(--fuzz) / 0.25),
+    0 8px 18px -8px rgb(30 14 63 / 0.55);
+}
+html[data-yarn] .convert:not(.ghost):hover {
+  --edge: var(--edge-hover);
+  background: var(--knit-hover) 0 0 / 120px 64px;
+  border-color: transparent;
+}
+html[data-yarn] .convert:not(.ghost) .arr {
+  filter: drop-shadow(0 1px 0 rgb(0 30 70 / 0.7));
+}
+
+/* on ink, and the "Your turn" card: the primary is paper, so the yarn is paper; its shadows go toward ink too */
+html[data-yarn] .band-ink .convert:not(.ghost),
+html[data-yarn] .turn .convert {
+  --knit: url('/assets/yarn/knit-paper.webp');
+  --knit-hover: url('/assets/yarn/knit-paper-hover.webp');
+  --edge: 196 184 196;
+  --edge-hover: 204 193 204;
+  --sheen: 255 255 255;
+  --fuzz: 255 250 242;
+  --label: var(--ink);
+  --label-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+}
+html[data-yarn] .band-ink .convert:not(.ghost) .arr,
+html[data-yarn] .turn .convert .arr {
+  filter: none;
+}
+
+/* the nav over an ink band turns its button paper (Nav.astro's .on-dark .join, which outranks the rules above and
+   would paint a flat paper fill), so it gets the paper yarn here, with the same specificity plus one */
+html[data-yarn] .nav.on-dark .convert:not(.ghost) {
+  --knit: url('/assets/yarn/knit-paper.webp');
+  --knit-hover: url('/assets/yarn/knit-paper-hover.webp');
+  --edge: 196 184 196;
+  --edge-hover: 204 193 204;
+  --sheen: 255 255 255;
+  --fuzz: 255 250 242;
+  --label: var(--ink);
+  --label-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+  background: var(--knit) 0 0 / 120px 64px;
+  border-color: transparent;
+}
+html[data-yarn] .nav.on-dark .convert:not(.ghost):hover {
+  background: var(--knit-hover) 0 0 / 120px 64px;
+}
+html[data-yarn] .nav.on-dark .convert:not(.ghost) .arr {
+  filter: none;
+}
+
+@media (prefers-contrast: more) {
+  html[data-yarn] .convert:not(.ghost) {
+    text-shadow: none;
+  }
+}

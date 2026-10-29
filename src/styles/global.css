@@ -36,6 +36,18 @@
   --on-ink-muted: #b5adc9;
   --ink-rule: #3a2b62;
 
+  /* warmth and texture (design/texture/README.md): --sun is Wada's Cream Yellow used as light, never as a fill; the
+     grain and creases are the paper every section is printed on (scripts/texture.py). A surface that carries them also
+     sets `background-position: var(--paper-x, 0px) var(--paper-y, 0px)` (written out on the surface itself: a var()
+     inside a :root property would resolve at :root). src/scripts/paper.ts gives each its offset on the page, so the tiles
+     line up across section boundaries like one sheet. */
+  --sun: var(--cream);
+  --grain: url('/assets/texture/grain.webp') 0 0 / 384px 384px, url('/assets/texture/creases.webp') 0 0 / 1800px 1800px;
+  --grain-ink: url('/assets/texture/grain-ink.webp') 0 0 / 384px 384px,
+    url('/assets/texture/creases-ink.webp') 0 0 / 1800px 1800px;
+  /* the grain alone, for photos: a photo is printed on the paper, but a fold through a face reads as damage */
+  --tooth: url('/assets/texture/grain.webp') 0 0 / 384px 384px;
+
   /* old names, kept so older components follow the new palette */
   --benzol: var(--blue);
   --benzol-2: var(--blue-2);
@@ -51,7 +63,7 @@
   --gl: max(var(--gutter), env(safe-area-inset-left, 0px));
   --gr: max(var(--gutter), env(safe-area-inset-right, 0px));
   --max: 1440px;
-  --section: clamp(96px, 13vw, 208px);
+  --section: clamp(80px, 10vw, 160px);
 
   --fs-xxl: clamp(64px, 12.5vw, 220px);
   --fs-xl: clamp(52px, 8.4vw, 148px);
@@ -70,12 +82,12 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  background: var(--paper);
+  background: var(--grain), var(--paper);
 }
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--paper);
+  background: var(--grain), var(--paper);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 17px;
@@ -117,7 +129,7 @@ h3 {
   font-weight: 700;
 }
 ::selection {
-  background: var(--yellow);
+  background: var(--blue-2);
   color: var(--ink);
 }
 :focus-visible {
@@ -125,7 +137,7 @@ h3 {
   outline-offset: 3px;
 }
 .on-ink :focus-visible {
-  outline-color: var(--yellow);
+  outline-color: var(--paper);
 }
 [hidden] {
   display: none !important;
@@ -156,14 +168,17 @@ h3 {
   padding-block: var(--section);
 }
 .band-ink {
-  background: var(--ink);
+  background: var(--grain-ink), var(--ink);
+  background-position: var(--paper-x, 0px) var(--paper-y, 0px);
   color: var(--on-ink);
 }
 .band-paper {
-  background: var(--paper);
+  background: var(--grain), var(--paper);
+  background-position: var(--paper-x, 0px) var(--paper-y, 0px);
 }
 .band-2 {
-  background: var(--paper-2);
+  background: var(--grain), var(--paper-2);
+  background-position: var(--paper-x, 0px) var(--paper-y, 0px);
 }
 
 /* ---------- type ---------- */
@@ -289,10 +304,11 @@ h3 {
   border-color: var(--ink);
   color: var(--paper);
 }
+/* on ink, the primary button is paper; yellow stays with the sale */
 .band-ink .btn {
-  background: var(--yellow);
+  background: var(--paper);
   color: var(--ink);
-  border-color: var(--yellow);
+  border-color: var(--paper);
 }
 .band-ink .btn:hover {
   background: var(--white);
@@ -320,7 +336,7 @@ h3 {
   border-radius: 999px;
 }
 .chip.new {
-  background: var(--yellow);
+  background: var(--paper);
   color: var(--ink);
   box-shadow: inset 0 0 0 1px var(--ink);
 }
@@ -337,7 +353,7 @@ h3 {
   display: grid;
   gap: 8px;
 }
-.field input,
+.field input:not([type='radio'], [type='checkbox']),
 .field select {
   height: 56px;
   width: 100%;
@@ -351,13 +367,13 @@ h3 {
     border-color 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
 }
-.field input:focus,
+.field input:not([type='radio'], [type='checkbox']):focus,
 .field select:focus {
   outline: none;
   border-color: var(--blue);
   box-shadow: 0 0 0 4px rgb(0 110 184 / 0.14);
 }
-.band-ink .field input,
+.band-ink .field input:not([type='radio'], [type='checkbox']),
 .band-ink .field select {
   background: var(--ink-2);
   border-color: var(--ink-rule);
@@ -365,10 +381,10 @@ h3 {
 }
 .band-ink .field input:focus {
   border-color: var(--paper);
-  box-shadow: 0 0 0 4px rgb(255 242 0 / 0.16);
+  box-shadow: 0 0 0 4px rgb(255 247 236 / 0.16);
 }
 .band-ink .field .err {
-  color: var(--yellow);
+  color: var(--cream);
 }
 .field .err {
   color: var(--ink);
@@ -503,19 +519,31 @@ html.landing mark.hl {
     0 calc(100% - var(--top) - var(--bot) - 4px),
     0 calc(100% - var(--top) - var(--bot)) !important;
 }
-html.landing .poster {
+html.landing .poster,
+html.leaving .poster {
   opacity: 1 !important;
   transition: none !important;
 }
+/* going back to the fork, the page we leave rides on top of the fork, inside the device's screen */
+html.returning::view-transition-old(*) {
+  z-index: 2;
+}
 
-/* reveal on scroll: complete at rest, animated when JS is present */
+/* reveal on scroll: complete at rest, animated when JS is present. Short and small, so nothing waits on it. */
 .js [data-reveal] {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(12px);
   transition:
-    opacity 1s var(--ease),
-    transform 1.2s var(--ease);
-  transition-delay: var(--d, 0s);
+    opacity 0.35s var(--ease),
+    transform 0.45s var(--ease);
+  transition-delay: min(var(--d, 0s), 0.12s);
+}
+/* the first screen of a page never waits on a reveal */
+.js .hero [data-reveal],
+.js .nav [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 .js [data-reveal].in {
   opacity: 1;
@@ -535,4 +563,20 @@ html.landing .poster {
     opacity: 1;
     transform: none;
   }
+}
+
+/* icons (src/lib/icons.ts): 1em, centred on the line they sit in */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.14em;
+}
+
+/* two ink bands in a row: one section's worth of air, split by a hairline so each still reads as its own region */
+.section.band-ink + .section.band-ink,
+.section.band-ink + script + .section.band-ink {
+  padding-top: clamp(56px, 6vw, 96px);
+  box-shadow: inset 0 1px 0 var(--ink-rule);
 }
