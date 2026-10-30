@@ -45,7 +45,8 @@ These come from the owner's direct feedback. Breaking one gets the work sent bac
 
 **Working with the owner**
 - Show visual and motion work live and early. They judge motion by feel, not stills or descriptions.
-- Never commit or push unless asked. This copy is on the `a-grade` branch; it's pushed when the owner says so.
+- Never commit or push unless asked. Day-to-day work happens on `dev`; `main` deploys to Cloudflare (Workers Builds), so
+  only merge or push to `main` when the owner says so. `staging` is the pre-release branch.
 - The `COMFY_API_KEY` in `.dev.vars` (gitignored) was shared in chat; never print it. Comfy Cloud's free tier
   blocks its API, so it's unused (`scripts/comfy.py`). Suggest the owner rotates it.
 

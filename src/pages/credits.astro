@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Doc from '../components/legal/Doc.astro';
+import Footer from '../components/Footer.astro';
+/* Attribution for licensed photos (CC BY 4.0 asks for it "in any reasonable manner"), off the main pages. */
+const updated = '30 October 2026';
+---
+
+<Base title="Photo credits · Comarket" description="Credits for the photos on comarket.si." stage="none">
+  <Doc title="Photo credits" lede="The people in our examples are real people photographed for open, model-released collections." updated={updated} current="/credits" toc={false}>
+    <h2>Example creators</h2>
+    <p>
+      Photos of the example creators (Sarah, Odessa, Lena, Mika, Imani, Devon, Alma and June) are from
+      <a href="https://affecttheverb.com/disabledandhere/" rel="noopener">Disabled And Here</a> by Affect the Verb, licensed under
+      <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener license">CC BY 4.0</a>. We cropped them and placed them in
+      example posts and storefronts. The names, posts and storefronts are fictional examples; the people photographed haven't used
+      or endorsed Comarket or the example brands.
+    </p>
+    <h2>Other photos</h2>
+    <p>Other photos of people on this site are used under the Pexels License and illustrate the kind of people who use Comarket. They aren't customers.</p>
+  </Doc>
+  <Footer />
+</Base>

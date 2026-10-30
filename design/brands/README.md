@@ -108,8 +108,8 @@ creators' brand-match card, the creator hub, the brands waitlist preview.
   UI.
 - **Signature:** the reminder rail. Day 0, 3, 7, 14 as ticks on a line, ending in a "Paid" status with the date.
 - **Voice:** blunt numbers. "41 days to 4." Don't: "seamless", "effortless", "solution".
-- **Storefront: Poster.** Bone page, a giant condensed caps headline built from Theo's numbers, the invoice card with
-  the reminder rail, Theo's line, and the offer as a solid Signal block.
+- **Storefront: Poster.** Bone page, a giant condensed caps headline built from Odessa's numbers, the invoice card with
+  the reminder rail, Odessa's line, and the offer as a solid Signal block.
 - **References:** [Invoice Builder by Tola](https://www.awwwards.com/sites/invoice-builder-by-tola) (Honorable
   Mention): the invoice as a physical hero object. [Run Payments](https://www.awwwards.com/sites/run-payments)
   (Honorable Mention): one huge two-word headline over the product.
@@ -178,7 +178,7 @@ creators' brand-match card, the creator hub, the brands waitlist preview.
 - **Type:** Newsreader for display and body, italic for warmth; system sans for small UI.
 - **Signature:** the routine row. Three steps, numbered, each with its product and one word: Cleanse, Treat, Repair.
 - **Voice:** warm and direct, no clinical jargon beyond "ceramides". Don't: "miracle", "flawless", "anti-aging".
-- **Storefront: Shop the routine.** Priya's flat lay full-bleed at the top under a co-branded announcement bar, the
+- **Storefront: Shop the routine.** Kindred's flat lay full-bleed at the top under a co-branded announcement bar, the
   routine row, the kit offer, one Clay button.
 - **References:** [Uruoi](https://www.awwwards.com/sites/uruoi-japanese-skincare) (Site of the Day): a full-bleed
   photo, a thin elegant serif, the product resting on the bottom edge. [Soho Skin](https://www.awwwards.com/sites/soho-skin)
@@ -201,7 +201,7 @@ creators' brand-match card, the creator hub, the brands waitlist preview.
 - **Type:** Cormorant Garamond: caps for names, italic for tea names and issue numbers; system sans for small UI.
 - **Signature:** the issue. Every tea is "no. 32" in italic, set like a journal entry, with a hairline rule.
 - **Voice:** quiet and sensory. "Smoky, with a sweet finish." Don't: "detox", "superfood", "boost".
-- **Storefront: Journal.** Ama's pour photo at the top, this month's issue line, her note in her own lowercase,
+- **Storefront: Journal.** Hollow's pour photo at the top, this month's issue line, Alma's note in her own lowercase,
   the half-off offer in Amber, one Sage button.
 - **References:** [Hamada Tea](https://www.awwwards.com/sites/hamada-tea) (Site of the Day): airy white, tea seen from
   above, a thin serif, a small round mark. [Lune Tea](https://www.awwwards.com/sites/lune-tea) (Honorable Mention):
@@ -248,7 +248,7 @@ creators' brand-match card, the creator hub, the brands waitlist preview.
 - **Signature:** the timer ring. One thin circle, the elapsed arc in Lamp, the time left in light numerals.
 - **Voice:** few words, unhurried. "Four focused hours a day, most days." Don't: "productivity hacks", "10x".
 - **Storefront: Night mode.** Midnight page, the timer ring as the hero with the blocked apps dimmed under it,
-  Jonah's note, the lifetime offer, one Lamp button.
+  June's note, the lifetime offer, one Lamp button.
 - **References:** [Fotrack](https://www.awwwards.com/sites/fotrack-pomodoro-timer) (Honorable Mention): one thin
   timer ring and light numerals on black. [MNDFL Meditation](https://www.awwwards.com/sites/mndfl-meditation)
   (Honorable Mention): calm, soft shapes and muted color.

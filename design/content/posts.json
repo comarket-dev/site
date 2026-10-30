@@ -1,4 +1,5 @@
 {
+  "_retired": "Retired 2026-10-30: the site no longer uses generated people (owner rule: no AI people). The 8 example creators are real, model-released Disabled And Here photos; sources in design/content/real-creators.json, personas in src/lib/examples.ts. Kept for history only: these entries describe the old generated personas (theo is now odessa, jonah is now june, ama is now alma, priya is now imani, and every creator's look has changed).",
   "_note": "Source shots for the example posts. Posts are composed in code (platform layout, captions, product UI); these are only the camera footage inside them. 'still' edits the creator's portrait so they stay the same person but in a new moment, outfit and light, never their profile picture. 'still-noref' has no person's face. Products are left blank and labeled in code. Two seeds per shot so we can pick.",
   "style": "Candid phone footage, natural light, true-to-life colors, realistic skin texture, no retouching, no text, no captions, no logos, no labels, no watermark. Not a stock photo.",
   "posts": [

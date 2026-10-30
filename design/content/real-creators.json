@@ -1,238 +1,549 @@
 {
- "_note": "Sources for the real people who play the 8 example creators (src/lib/examples.ts). Each creator uses one shoot: a profile photo, a storefront photo and, where the post shows them, a content photo. Files live in design/content/real as <creator>-<source id>.jpg, ungraded (no warm filter). scripts/render-posts.py crops them.",
- "checked": "2026-10-29",
+ "_note": "Sources for the real people who play the 8 example creators (src/lib/examples.ts). Files live in design/content/real as <creator>-<source>-<id>.jpg, ungraded. scripts/render-posts.py crops them (AVATARS, SHOTS, and the media pages in design/posts/media). Round 12 (2026-10-30): the owner needs a FREE source whose licence allows a real person to be shown recommending a product on a labelled example.",
+ "checked": "2026-10-30 (round 15)",
  "license": {
+  "disabled_and_here": {
+   "verdict": "allowed, used for all 8 creators",
+   "risk": "low",
+   "licence": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)",
+   "quotes": [
+    "The Disabled And Here collection is published under Creative Commons attribution licensing, which means you can use, share, and adapt the images for free with appropriate credit.",
+    "Photographs can simply credit Disabled And Here. When possible, please link back to the Disabled And Here project page.",
+    "Attributions ideally follow the image. For digital use, that might mean a social media caption / thread, website footer, or end credits section.",
+    "All photographed participants have signed a model release form and granted permission for image use in any media for all purposes under Creative Commons attribution, so long as that purpose is not pornographic or defamatory.",
+    "We ask that you be thoughtful in how you put Disabled And Here's images to use."
+   ],
+   "source": "https://affecttheverb.com/usage/",
+   "obligations": "Credit 'Disabled And Here' with a link, link the licence, note changes (CC BY 4.0 s.3(a)(1)(B)). Done in src/components/examples/Showcase.astro under the carousel ('Photos of the example creators: Disabled And Here, CC BY 4.0, cropped.'), on /brands and /creators, every page that shows these photos (Sarah's avatar also appears in Window.astro, Waitlist.astro, creators/Credit.astro and creators/Hub.astro, all on those two pages). CC BY itself does not license publicity rights (s.2(b)(1)); the signed releases DAH states cover that. Ask DAH to confirm in writing (hi@affecttheverb.com) and consider a donation, which they ask of organisations.",
+   "limits": "About 200 photos from a disability-led BIPOC collection; few same-person series fit a creator persona; many subjects are masked. Not suitable for posts that must show a specific action (a skincare routine, holding a gadget)."
+  },
+  "adobe_stock_free": {
+   "verdict": "allowed, not usable without a login: stock.adobe.com answers scripts with a bot check, and the FAQ requires an Adobe ID to download ('If you don't have an Adobe ID, please follow the process to create one and then click the blue button'). No free assets are reachable without signing in.",
+   "risk": "low (not indemnified)",
+   "quotes": [
+    "Free assets meet the same standards as the Adobe Stock paid collection (including model- and property-release requirements) and are downloaded with a commercial license. (helpx.adobe.com/stock/contributor/help/free-collection-contributor-information.html)",
+    "When you download a free collection asset by clicking the blue button, you receive a royalty-free commercial-use license for that asset. ... Photos, vectors, and illustrations: Standard license (helpx.adobe.com/stock/faq.html)",
+    "If you don't have an Adobe ID, please follow the process to create one and then click the blue button to download your free asset. (same FAQ)",
+    "Under a Standard License, we grant you a non-exclusive, perpetual, worldwide ... license to use, reproduce, archive, modify, and display the Work, in all media, for (1) advertising, marketing, promotional and decoration purposes (Stock Additional Terms 3.1(A))",
+    "You must not ... (E) use the Stock Assets in a manner, or in connection with a subject, that a reasonable person could consider unflattering, immoral, offensive, obscene, or controversial ... examples of which could include ads for tobacco; adult entertainment clubs ...; implied or stated endorsements of political parties ...; or implying mental or physical impairment (7.1(E))",
+    "Editorial Works ... you must not (1) use these Editorial Works for any commercial (e.g., promotional, endorsement, advertorial or merchandising) purpose (7.2(B))",
+    "Stock Assets licensed through a Pro Edition Plan are Indemnified Stock Assets even if labeled as 'free.' Otherwise, free assets are not Indemnified Stock Assets. (1.11)"
+   ],
+   "source": "https://wwwimages2.adobe.com/content/dam/cc/en/legal/servicetou/Stock-Additional-Terms_en_US_20230915.pdf",
+   "how": "Sign in at stock.adobe.com with a free Adobe ID, Free tab, Photos, People; turn off generative AI content (the free collection includes AI images: 'generative AI images that meet Adobe Stock's submission guidelines can be found in the Adobe Stock collection'); skip anything marked Editorial; open the contributor's portfolio to find 2 or 3 frames of the same model; License (free). Save the licence history page as PDF next to this file."
+  },
+  "freepik_magnific_free": {
+   "verdict": "probably allowed with attribution; second choice after Adobe",
+   "risk": "medium-low",
+   "quotes": [
+    "Unless otherwise indicated, authorization to use Magnific Content is free of charge and conditioned upon any use by the User being duly attributed to the Website/Company and, where applicable, to the Collaborator",
+    "The Magnific Content is not used in a manner that suggests an association or endorsement of any kind by the Company or the Website",
+    "Does not make any use of the Magnific Content which might be considered defamatory ... such as the use in pornography, adult entertainment, advertisements for escort, dating or similar services, political endorsements, birth control products",
+    "When any Magnific Content is marked or identified as for editorial use, or when within the same there are logos, recognizable products, public buildings, public events or images taken in places where recognizable persons appear in the background, the User shall only be entitled to use it for such editorial use."
+   ],
+   "source": "https://www.freepik.com/legal/terms-of-use",
+   "caveat": "Freepik (now Magnific) asks contributors for releases but the free licence doesn't state them per image; much of the people library is AI-generated (owner rule: no AI people). Attribution required on the page."
+  },
+  "kaboompics": {
+   "verdict": "not allowed as is; possible with written consent",
+   "risk": "medium with consent, high without",
+   "quotes": [
+    "You cannot claim that people, brands, or businesses in the photos endorse your product or service.",
+    "The photos may not be used in a way that is misleading, defamatory, unlawful, or implies personal endorsement of a product, brand, or idea without explicit consent. While Kaboompics ensures that model releases are obtained for photos featuring recognizable individuals, it is the user's responsibility ..."
+   ],
+   "source": "https://kaboompics.com/page/license-and-faq (read via web.archive.org; the live page is behind a bot check)",
+   "route": "Email Karolina Grabowska (the only photographer) with the draft in design/content/release-template.md; proceed only with her written consent and the model's."
+  },
   "pexels": {
    "verdict": "not allowed",
-   "why": "Pexels license, 'What is not allowed': \"Don't imply endorsement of your product by people or brands on the imagery.\" A named creator with a handle and a post promoting a product implies endorsement, fictional product or not.",
-   "source": "https://www.pexels.com/license/"
+   "risk": "high",
+   "quotes": [
+    "Don't imply endorsement of your product by people or brands on the imagery.",
+    "Identifiable people may not appear in a bad light or in a way that is offensive."
+   ],
+   "source": "https://www.pexels.com/license/ (via web.archive.org)",
+   "note": "No model releases. All Pexels stand-ins were deleted in rounds 12 and 15."
   },
   "unsplash_free": {
    "verdict": "not allowed",
-   "why": "Terms section 5: the license excludes \"People's images if they are recognizable in the Images\"; you may need the person's permission.",
-   "source": "https://unsplash.com/terms"
+   "risk": "high",
+   "quotes": [
+    "Terms s.5, the Unsplash License does not include: People's images if they are recognizable in the Images ... you may need the permission of the brand owner of the brand or work of authorship or individual"
+   ],
+   "source": "https://unsplash.com/terms",
+   "note": "Unsplash+ warrants publicity rights ('Unsplash promises that your use will not infringe ... any rights of publicity or privacy') but is paid."
   },
   "pixabay": {
    "verdict": "not allowed",
-   "why": "No releases; bars misleading or deceptive use and leaves third-party consent to the user.",
-   "source": "https://pixabay.com/service/license-summary/"
+   "risk": "high",
+   "quotes": [
+    "You cannot use Content in a way that is misleading or deceptive, including without limit: by suggesting that any depicted person, brand, organisation or other third party endorses or is affiliated with you or your goods or services, unless permission has been granted",
+    "We do not warrant that any consents or licenses have been obtained in relation to any Content"
+   ],
+   "source": "https://pixabay.com/service/terms/ (via web.archive.org)"
   },
-  "kaboompics": {
+  "stocksnap": {
    "verdict": "not allowed",
-   "why": "Terms bar use suggesting a depicted person endorses or is involved with something.",
-   "source": "https://kaboompics.com/page/license-and-faq"
+   "risk": "high",
+   "quotes": [
+    "you cannot use these images to imply any kind of endorsement on the part of the image creator or any person or product depicted in the image"
+   ],
+   "source": "https://stocksnap.io/license (via web.archive.org)"
+  },
+  "gratisography": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "You can't claim the photos as your own or imply that Gratisography or any of the models, brands, or anything in the pictures has endorsed you or your product.",
+    "Gratisography does not represent or make any warranties that it owns or licenses any of these rights [publicity, privacy]"
+   ],
+   "source": "https://gratisography.com/license/"
+  },
+  "iso_republic": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "any images that we provide containing people may not be model-released",
+    "You may not use our images ... to imply endorsement of products and services by identifiable persons, brands or organizations."
+   ],
+   "source": "https://isorepublic.com/license/"
+  },
+  "picjumbo": {
+   "verdict": "not allowed for this",
+   "risk": "high",
+   "quotes": [
+    "some photos do not have model or property release",
+    "We are allowing commercial use from the photographer's perspective ... But we cannot represent others who may claim to be owners of copyright or properties captured on any of the photos."
+   ],
+   "source": "https://picjumbo.com/faq/"
+  },
+  "burst_shopify": {
+   "verdict": "not cleared",
+   "risk": "high",
+   "quotes": [
+    "use the Licensed Photo for free for commercial and noncommercial purposes"
+   ],
+   "source": "https://www.shopify.com/stock-photos/licenses/shopify-some-rights-reserved",
+   "note": "Silent on releases and publicity rights; no warranty for people."
+  },
+  "nappy": {
+   "verdict": "not cleared",
+   "risk": "high",
+   "quotes": [
+    "All photos posted on Nappy are licensed under the Creative Commons Zero (CC0) license",
+    "Our contributors have the ability to remove their photos from Nappy at anytime ... we hope that you'd respect the photographers and model(s) wishes."
+   ],
+   "source": "https://nappy.co/license, https://nappy.co/faq",
+   "note": "CC0 waives copyright only; no statement that models signed releases."
+  },
+  "jopwell": {
+   "verdict": "not cleared",
+   "risk": "medium-high",
+   "quotes": [
+    "Creative Commons Attribution (CC BY 4.0); attribute 'Jopwell'"
+   ],
+   "source": "https://jopwell.com/thewell/posts/a-new-wave-of-stock-photography-introducing-the-jopwell-collection",
+   "note": "No statement on model releases."
+  },
+  "wocintech": {
+   "verdict": "not cleared",
+   "risk": "medium-high",
+   "quotes": [
+    "the first batch of #WOCinTech photos are available under a Creative Commons (Attribution) license ... as long as you attribute #WOCinTech Chat"
+   ],
+   "source": "https://www.wocintechchat.com/blog/wocintechphotos",
+   "note": "No statement on model releases; the ask is representation in tech stories."
+  },
+  "gender_spectrum_collection": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "Per the terms of the Creative Commons license, you may not create derivative work from the images or use the images for commercial purposes."
+   ],
+   "source": "https://genderspectrum.vice.com/guidelines (via web.archive.org)"
+  },
+  "wikimedia_commons": {
+   "verdict": "not allowed without the person's consent",
+   "risk": "high",
+   "quotes": [
+    "The right of publicity is the right to control the commercial use of one's likeness. The most obvious example of this is in advertising ... the subject of the photograph may still refuse permission or demand payment for such reuse.",
+    "It is up to the reusers of Commons-hosted media to ensure that they do not violate any non-copyright restrictions"
+   ],
+   "source": "https://commons.wikimedia.org/wiki/Commons:Photographs_of_identifiable_people"
+  },
+  "us_government_nasa": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "You cannot use government materials in a way that implies endorsement by a government agency, official, or employee. For example, you cannot use a photo in your advertisement of a government official wearing or using your product. (usa.gov)",
+    "If a NASA image ... includes an identifiable person, using the media for commercial purposes may infringe that person's right of privacy or publicity, and permission should be obtained from the person. (NASA)"
+   ],
+   "source": "https://www.usa.gov/government-copyright, https://www.nasa.gov/nasa-brand-center/images-and-media/"
+  },
+  "getty_embed": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "Embedded viewer: non-commercial use only; not for advertising, promotions or merchandising, or to suggest endorsement or sponsorship (as reported at launch; Getty's terms)"
+   ],
+   "source": "https://www.gettyimages.com/eula"
+  },
+  "shutterstock_istock_trials": {
+   "verdict": "not free",
+   "note": "Shutterstock's free trial needs a card and auto-renews into a paid plan; iStock and Getty have no free commercial images. The round 9 iStock shortlist was dropped (the owner wants free)."
   },
   "canva_free": {
    "verdict": "not allowed",
-   "why": "Free Media License bars implying people in an image endorse your product.",
+   "quotes": [
+    "Free Media License bars implying people in an image endorse your product (round 9)"
+   ],
    "source": "https://www.canva.com/policies/free-media"
   },
-  "istock": {
-   "verdict": "allowed (creative, non-editorial images)",
-   "why": "Content license 3.2 bars commercial and endorsement use only for 'editorial use only' content, which is not model released. Creative images are model and property released and 9.1 warrants the releases for use as the agreement allows. 3.5: sensitive uses need 'Stock photo. Posed by model.'; endorsement is not on that list, but the examples are already labeled as examples, and a 'posed by models' line costs nothing. iStock's library is Non-AI. Standard license covers web use.",
-   "source": "https://www.istockphoto.com/legal/license-agreement",
-   "price": "$12 an image (1 credit), or 10 images a month for $70, as shown on the image pages 2026-10-29"
-  },
-  "also_ok_not_checked_in_depth": "Getty creative RF (same terms as iStock), Unsplash+ (warrants publicity rights; only sensitive topics need a 'posed by model' note)."
- },
- "status": "shortlisted on iStock, not purchased. Buy the photos below (Standard license), save full size into design/content/real as <creator>-<istock id>.jpg, delete that creator's Pexels files, then update AVATARS and STORES in scripts/render-posts.py and the cutout keys, and re-render. Zoom into hands, faces and any product labels before using.",
- "creators": {
-  "sarah": {
-   "contributor": "istockphoto.com (search: woman writer home office laptop coffee)",
-   "shoot": "striped shirt, white brick loft, coffee and notebook",
-   "photos": [
-    {
-     "istock": "1579445837",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1579445837"
-    },
-    {
-     "istock": "1460644410",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1460644410"
-    },
-    {
-     "istock": "1411713614",
-     "role": "spare",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1411713614"
-    }
+  "vecteezy_free": {
+   "verdict": "allowed with attribution; needs a free account to download",
+   "risk": "low-medium",
+   "quotes": [
+    "Vecteezy's Free License allows you to use Content for personal and some commercial projects (with limitations), provided you give mandatory attribution to the creator of the work.",
+    "Under the Free License: Attribution is required. ... Content may be used in digital projects with unlimited online use. ... A legal guarantee of up to $500 per claim is included.",
+    "You may not use any Content in a way that implies that the Contributor and/or creator of the Content (or the persons or property appearing in the Content, if any) endorses any political, economic or other opinion-based movements or parties."
    ],
-   "content": "none: her post is a chart screenshot"
+   "source": "https://www.vecteezy.com/licensing-agreement",
+   "note": "Photo pages show a 'Model Released' badge per item (seen on vecteezy.com/photo/13638283, a Pro photo). The endorsement bar covers only political or opinion-based causes, not products. Download needs 'Create Account & Continue to Download', so the owner would have to do it; filter out AI-generated items and pick 'Model Released' free photos."
   },
-  "theo": {
-   "contributor": "miniseries",
-   "shoot": "coworking loft, green overshirt, mustard tee",
-   "photos": [
-    {
-     "istock": "2094338761",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2094338761",
-     "note": "crop to the face; he looks just past the camera"
-    },
-    {
-     "istock": "2094339326",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2094339326"
-    }
+  "body_liberation_free_pack": {
+   "verdict": "allowed (publicity rights warranted), gated behind an email signup",
+   "risk": "low",
+   "quotes": [
+    "Get 20 free photos for commercial use! ... They're free for personal and commercial use. (bodyliberationphotos.com/20-free-body-positive-plus-size-stock-photos/)",
+    "Body Liberation Photos represents and warrants that the Licensed Content does not infringe upon the copyright, trademark, trade secret, publicity rights, or other intellectual property interests of any other person or property. (license)",
+    "Restricted Uses. You are prohibited from using the Licensed Content: For or to illustrate negative or critical body messaging, diets or 'lifestyle changes,' health warnings, or intentional weight loss in any form. ... In association with or on a dating website or conversion therapy website."
    ],
-   "content": "none: his post is a screenshot"
+   "source": "https://bodyliberationphotos.com/license/",
+   "note": "The pack is delivered through a Flodesk email form, so the owner would sign up; 20 photos of different people, unlikely to give 2 or 3 frames of one person."
   },
-  "lena": {
-   "contributor": "Deagreez",
-   "shoot": "desk with code monitors, olive jacket, glasses",
-   "photos": [
-    {
-     "istock": "2217848723",
-     "role": "profile and content",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2217848723",
-     "note": "front-camera selfie"
-    },
-    {
-     "istock": "2217849817",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2217849817"
-    }
+  "libreshot": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "Images depicting identifiable persons may not be used ... to imply endorsement of products and services by those persons",
+    "Since LibreShot does not require a written Model Release for each Image that has identifiable people on it, We cannot guarantee that You will be able to use the Image for any purpose You like."
    ],
-   "content": "the TikTok frame",
-   "weak": "Only two frames of this woman exist in the series (2170631641 and 2233146469 look alike but are other models). Heavily retouched. Re-search before buying if the owner wants a third frame or a less polished look."
+   "source": "https://libreshot.com/license/"
   },
-  "mika": {
-   "contributor": "istockphoto.com (search: asian man laptop cafe)",
-   "shoot": "cafe, brick wall, black cap and glasses",
-   "photos": [
-    {
-     "istock": "1489160720",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1489160720"
-    },
-    {
-     "istock": "1489159660",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1489159660"
-    },
-    {
-     "istock": "1489160162",
-     "role": "spare",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1489160162"
-    }
+  "images_of_empowerment": {
+   "verdict": "not allowed",
+   "risk": "high",
+   "quotes": [
+    "CC BY-NC 4.0 (NonCommercial), per the Hewlett Foundation and Creative Commons announcements"
    ],
-   "content": "none: his post is a screenshot"
+   "source": "https://creativecommons.org/2020/03/10/hewlett-foundation-shares-womens-stories-through-openly-licensed-images/"
   },
-  "imani": {
-   "contributor": "Aja Koska (Pangea8)",
-   "shoot": "home vanity, pink headband, 30+ frames",
-   "photos": [
-    {
-     "istock": "1404379912",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1404379912"
-    },
-    {
-     "istock": "1371922270",
-     "role": "content",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1371922270",
-     "note": "Instagram slide"
-    },
-    {
-     "istock": "1383965690",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=1383965690"
-    }
-   ]
+  "aarp_disrupt_aging_lean_in_showus": {
+   "verdict": "not free",
+   "quotes": [
+    "AARP: the photos are 'available for a fee to media outlets, ad agencies and other firms'; Getty invites users to 'license the imagery for your next campaign'"
+   ],
+   "source": "https://www.aarp.org/about-aarp/info-2019/disrupt-aging-collection/, https://www.gettyimages.com/collections/disrupt-aging",
+   "note": "Lean In and #ShowUs are Getty partner collections on the same paid terms."
   },
-  "devon": {
-   "contributor": "Miljan Živković (Miljan)",
-   "shoot": "home studio, podcast mic, plaid shirt",
-   "photos": [
-    {
-     "istock": "2184233625",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2184233625"
-    },
-    {
-     "istock": "2184232815",
-     "role": "content",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2184232815",
-     "note": "YouTube thumbnail, holding a gadget"
-    },
-    {
-     "istock": "2184233764",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2184233764"
-    }
-   ]
+  "rawpixel_free": {
+   "verdict": "not cleared",
+   "risk": "high",
+   "note": "Free images are public domain or CC0; the licence pages answer scripts with a bot check, and no source states releases for people in the free tier. CC0 covers copyright only."
   },
-  "jonah": {
-   "contributor": "Jose Luis Carrascosa (JLCarras)",
-   "shoot": "desk setup, grey cap, sage overshirt",
-   "photos": [
-    {
-     "istock": "2242617286",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2242617286"
-    },
-    {
-     "istock": "2242617157",
-     "role": "content",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2242617157",
-     "note": "YouTube thumbnail, holding his phone"
-    },
-    {
-     "istock": "2242616562",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2242616562",
-     "note": "top-down desk"
-    }
-   ]
-  },
-  "alma": {
-   "contributor": "Dobrila Vignjevic (Bobajles)",
-   "shoot": "bright kitchen, olive tee, glass teapot, 18+ frames",
-   "photos": [
-    {
-     "istock": "2234899190",
-     "role": "profile",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2234899190"
-    },
-    {
-     "istock": "2234899193",
-     "role": "content",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2234899193",
-     "note": "TikTok pour"
-    },
-    {
-     "istock": "2234899241",
-     "role": "storefront",
-     "url": "https://www.istockphoto.com/search/2/image?phrase=2234899241"
-    }
-   ]
+  "microsoft_google_inclusive_libraries": {
+   "verdict": "none found",
+   "note": "No public, model-released photo library from Microsoft or Google for marketing use turned up; their inclusive-design resources are guidance and illustrations."
   }
  },
- "pexels_files_to_replace": {
-  "files": [
-   "alma-6634928.jpg",
-   "alma-6634961.jpg",
-   "alma-6634975.jpg",
-   "devon-8370427.jpg",
-   "devon-8370781.jpg",
-   "devon-8370788.jpg",
-   "imani-5938590.jpg",
-   "imani-5938600.jpg",
-   "imani-5938601.jpg",
-   "jonah-18935826.jpg",
-   "jonah-18935828.jpg",
-   "jonah-18935832.jpg",
-   "jonah-18935833.jpg",
-   "lena-6347880.jpg",
-   "lena-6347883.jpg",
-   "lena-6347901.jpg",
-   "mika-9553905.jpg",
-   "mika-9553911.jpg",
-   "sarah-6763899.jpg",
-   "sarah-6764188.jpg",
-   "theo-4339952.jpg",
-   "theo-4339953.jpg"
-  ],
-  "why": "Downloaded from Pexels by the previous session (the number is the Pexels photo id, https://www.pexels.com/photo/<id>/). Not cleared for this use; the site's avatars, portraits and post keys are currently cut from them. Do not deploy with them."
- }
+ "status": "All 8 example creators are Disabled And Here photos (CC BY 4.0, model released), credited under the carousel. No Pexels or iStock files remain. Personas were adapted to the photos in round 15: Theo became Odessa (a tarot reader who invoices her clients), Jonah became June (an illustrator's drawing routine), Lena, Imani and Devon kept their names with new people, Imani's post now says the hearing aids go in after the cream.",
+ "creators": {
+  "sarah": {
+   "source": "Disabled And Here",
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/kitchendishes/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/dah-kitchen02.jpg",
+     "title": "Getting dishes out",
+     "role": "profile",
+     "crop": "centre 1230,2170, side 760"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/takingnotes/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/disabledandhere-038-1.jpg",
+     "title": "Taking notes",
+     "role": "storefront",
+     "crop": "800,60,2300,1935"
+    }
+   ],
+   "files": [
+    "sarah-dah-kitchendishes.jpg",
+    "sarah-dah-takingnotes.jpg"
+   ],
+   "content": "none: her post is a chart screenshot",
+   "also_in_series": [
+    "bythewindow",
+    "speakerspeaking",
+    "kitchenoven",
+    "kitchenshelves"
+   ]
+  },
+  "odessa": {
+   "source": "Disabled And Here",
+   "person": "A Black woman with grey twists, cat-eye glasses and a nasal cannula, who reads tarot",
+   "files": [
+    "odessa-dah-onlinetarotreading.jpg",
+    "odessa-dah-inpersonreading.jpg"
+   ],
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/onlinetarotreading/",
+     "file_url": "https://affecttheverb.com/images/stock/dahastro-04-8799d45e.jpg",
+     "title": "Online tarot reading",
+     "role": "profile",
+     "crop": "centre 1290,560, side 800"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/inpersonreading/",
+     "file_url": "https://affecttheverb.com/images/stock/dahastro-06-c49b8580.jpg",
+     "title": "In-person reading",
+     "role": "storefront",
+     "crop": "700,400,1900,1900"
+    }
+   ],
+   "also_in_series": [
+    "thegreatestshirt",
+    "tarotsessionstart",
+    "smokecleansing",
+    "portableoxygenbackpack"
+   ],
+   "fit": "A freelance tarot reader who bills companies for team-night readings: the Tallyhawk invoice reads 'Team-night readings, 3 hours, $1,200' and her invoice screenshot's amounts were scaled to a reader's rates.",
+   "replaces": "theo"
+  },
+  "lena": {
+   "source": "Disabled And Here",
+   "person": "An Asian genderfluid person with red-tipped hair and compression gloves",
+   "files": [
+    "lena-dah-coffeechat.jpg",
+    "lena-dah-arthritistyping.jpg"
+   ],
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/coffeechat/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/06/disabledandhere-t03.jpg",
+     "title": "Disabled friends coffee chat",
+     "role": "profile and TikTok key (laughing over a coffee mug, cut out with scripts/cutout.py soft from 990,170,1490,1000; her friend is outside the crop)",
+     "crop": "avatar centre 1255,400 side 460"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/arthritistyping/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/06/disabledandhere-t01.jpg",
+     "title": "Typing with compression gloves",
+     "role": "storefront (typing on a laptop)",
+     "crop": "100,150,1667,2109"
+    }
+   ],
+   "also_in_series": [
+    "strollscooting"
+   ],
+   "fit": "Her green-screen TikTok's caption is 'shipped my waitlist page before my coffee got cold'; she is holding the coffee."
+  },
+  "mika": {
+   "source": "Disabled And Here",
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/popsocketparkplay/",
+     "file_url": "https://affecttheverb.com/images/stock/disabledlove-11-eff87463.jpg",
+     "title": "Popsocket park play",
+     "role": "profile and storefront (two crops)",
+     "crop": "avatar centre 1140,1110 side 900; storefront 150,450,1850,2575"
+    }
+   ],
+   "files": [
+    "mika-dah-popsocketparkplay.jpg"
+   ],
+   "content": "none: the post is a screenshot",
+   "note": "Mika's gender is never stated in the copy."
+  },
+  "imani": {
+   "source": "Disabled And Here",
+   "person": "A Black woman in a black headwrap and cold-shoulder top, at a vanity mirror",
+   "files": [
+    "imani-dah-hearingaidside.jpg",
+    "imani-dah-hearingaidmirror.jpg",
+    "imani-dah-hearingaidcloseup.jpg"
+   ],
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/hearingaidside/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/disabledandhere-040-1.jpg",
+     "title": "Testing hearing aids",
+     "role": "profile",
+     "crop": "centre 1250,1650, side 1500"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/hearingaidmirror/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/disabledandhere-041-1.jpg",
+     "title": "Putting on hearing aid",
+     "role": "content (Instagram slide 1)",
+     "crop": "CSS cover at 46% center in design/posts/media/imani-slide.html"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/hearingaidcloseup/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/disabledandhere-042-1.jpg",
+     "title": "Hearing aid close-up",
+     "role": "storefront",
+     "crop": "200,300,2667,3384"
+    }
+   ],
+   "also_in_series": [
+    "bakingduo",
+    "bakinglead"
+   ],
+   "fit": "The photos show her putting in hearing aids at the mirror, so the slide's sticker reads 'cream first, aids last' and the caption adds 'aids go in last'."
+  },
+  "devon": {
+   "source": "Disabled And Here",
+   "person": "A Deaf Black man with glasses, a grey beard and a bandana",
+   "files": [
+    "devon-dah-chattingoutdoors.jpg",
+    "devon-dah-pah.jpg",
+    "devon-dah-midsigningoutdoors.jpg"
+   ],
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/chattingoutdoors/",
+     "file_url": "https://affecttheverb.com/images/stock/dahasl-01-03923a28.jpg",
+     "title": "Chatting outdoors",
+     "role": "profile",
+     "crop": "centre 1755,705, side 750"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/pah/",
+     "file_url": "https://affecttheverb.com/images/stock/dahasl-03-29bfa1e9.jpg",
+     "title": "PAH!",
+     "role": "YouTube thumbnail key (pointing at himself; scripts/cutout.py crisp, trimmed at the thighs)",
+     "crop": "1050,450,1850,1990"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/midsigningoutdoors/",
+     "file_url": "https://affecttheverb.com/images/stock/dahasl-02-c9670f61.jpg",
+     "title": "Mid-signing outdoors",
+     "role": "storefront (unmasked, laughing)",
+     "crop": "1150,300,2350,1800"
+    }
+   ],
+   "note": "Was Theo's in round 12; the masked library shots are no longer used."
+  },
+  "alma": {
+   "source": "Disabled And Here",
+   "person": "A Black femme with long curly hair, glasses, compression gloves",
+   "files": [
+    "alma-dah-coupleshot.jpg",
+    "alma-dah-datelighting.jpg",
+    "alma-dah-coffeedatechairinview.jpg"
+   ],
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/coupleshot/",
+     "file_url": "https://affecttheverb.com/images/stock/disabledandhere-030-69619b0f.jpg",
+     "title": "Couple shot",
+     "role": "profile",
+     "crop": "centre 1400,540, side 700 (her face only)"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/datelighting/",
+     "file_url": "https://affecttheverb.com/images/stock/disabledandhere-025-c224d488.jpg",
+     "title": "Date lighting",
+     "role": "content (TikTok frame: tea by the window)",
+     "crop": "CSS cover at 24% 50% in design/posts/media/alma-tiktok.html, her side of the table"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/coffeedatechairinview/",
+     "file_url": "https://affecttheverb.com/images/stock/disabledandhere-027-b10df40d.jpg",
+     "title": "Coffee date with power wheelchair in view",
+     "role": "storefront (laughing over her mug; replaces the cake shot)",
+     "crop": "312,430,792,1030"
+    }
+   ]
+  },
+  "june": {
+   "source": "Disabled And Here",
+   "person": "A Black non-binary person with a shaved head, glasses, red lip and a leopard-print cane",
+   "files": [
+    "june-dah-cafestand.jpg",
+    "june-dah-cafepainting.jpg"
+   ],
+   "photos": [
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/cafestand/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/disabledandhere-044-1.jpg",
+     "title": "Standing proud with cane",
+     "role": "profile",
+     "crop": "centre 1320,1160, side 700"
+    },
+    {
+     "source": "Disabled And Here",
+     "page": "https://affecttheverb.com/gallery/disabledandhere/cafepainting/",
+     "file_url": "https://disabledandhere.files.wordpress.com/2019/10/disabledandhere-045.jpg",
+     "title": "Painting inside cafe",
+     "role": "YouTube thumbnail background and storefront",
+     "crop": "thumbnail: CSS cover at 12% 40% in design/posts/media/june-thumb.html; storefront 380,350,1700,2000"
+    }
+   ],
+   "also_in_series": [
+    "cafedoor"
+   ],
+   "fit": "The video is 'My 4-Hour Drawing Routine (no phone, no willpower)': the thumbnail is a frame of her painting at the café's standing desk, with Quietly's timer.",
+   "replaces": "jonah"
+  }
+ },
+ "removed_round_12": [
+  "sarah-6763899.jpg",
+  "sarah-6764188.jpg",
+  "theo-4339952.jpg",
+  "theo-4339953.jpg",
+  "mika-9553905.jpg",
+  "mika-9553911.jpg",
+  "alma-6634928.jpg",
+  "alma-6634961.jpg",
+  "alma-6634975.jpg"
+ ],
+ "removed_round_15": [
+  "lena-6347880.jpg",
+  "lena-6347883.jpg",
+  "lena-6347901.jpg",
+  "imani-5938590.jpg",
+  "imani-5938600.jpg",
+  "imani-5938601.jpg",
+  "devon-8370427.jpg",
+  "devon-8370781.jpg",
+  "devon-8370788.jpg",
+  "jonah-18935826.jpg",
+  "jonah-18935828.jpg",
+  "jonah-18935832.jpg",
+  "jonah-18935833.jpg",
+  "theo-dah-signingonehanded.jpg (masked)",
+  "alma-dah-cakeserving.jpg (cake)",
+  "alma-dah-coffeedate.jpg",
+  "design/posts/keys/jonah-key.png",
+  "public/assets/posts ama and priya (unused generated people)"
+ ]
 }

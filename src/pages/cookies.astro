@@ -3,118 +3,91 @@ import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
 import Doc from '../components/legal/Doc.astro';
 import { requiresConsent } from '../lib/consent';
-const updated = '29 October 2026';
-// Drafts stay out of search until counsel signs off and every placeholder is filled (design/legal/README.md).
+const updated = '30 October 2026';
+// Shows a draft note and keeps the page out of search until the placeholders are filled (design/legal/README.md).
 const draft = true;
 
-// The choice as the server sees it, so the switch below starts in the right place.
+// Mirrors src/middleware.ts: visitors where we ask first can change their choice here; elsewhere analytics are on.
 const ask = requiresConsent(Astro.locals.country);
 const chosen = Astro.cookies.get('cm_consent')?.value;
-const state = chosen === '1' ? 'on' : chosen === '0' ? 'off' : ask ? 'unset' : 'default';
+const state = chosen === '1' ? 'on' : chosen === '0' ? 'off' : 'unset';
 ---
 
-<Base title="Cookie policy · Comarket" description="Every cookie and browser store comarket.si uses, what each is for, how long it lasts, and how to change your choice." stage="none" noindex={draft}>
+<Base title="Cookie policy · Comarket" description="Every cookie comarket.si sets, what each is for, how long it lasts, and how to change your choice." stage="none" noindex={draft}>
   <Doc
     title="Cookie policy"
-    lede="A short list: one cookie for your choice, three for analytics if you allow them, and Cloudflare's security checks."
+    lede="Four cookies of our own, plus Cloudflare's security checks. No advertising cookies, no third-party analytics."
     updated={updated}
     draft={draft}
     current="/cookies"
+    toc={false}
   >
-    <h2>Your choice</h2>
-    <div class="short" id="cookie-choice" data-state={state}>
-      <p data-status>
-        {state === 'on' && 'Analytics are on for this browser.'}
-        {state === 'off' && 'Analytics are off for this browser.'}
-        {state === 'unset' && 'You haven’t chosen yet, so analytics are off.'}
-        {state === 'default' && 'Where you are, analytics are on unless you turn them off.'}
-      </p>
-      <div class="choice-row">
-        <button type="button" class="btn ghost" data-set="0">Turn analytics off</button>
-        <button type="button" class="btn" data-set="1">Allow analytics</button>
-      </div>
-    </div>
+    <h2>When we set them</h2>
     <p>
-      Your choice is saved in this browser only, so make it again on other devices. Turning analytics off deletes the visitor
-      ID cookie and the side cookie, and stops new events; it doesn't delete events already recorded. To have those deleted,
-      email [[PRIVACY EMAIL]].
+      In the EU, the EEA, the UK and Switzerland, and when we can't tell where a visit comes from, we set no analytics cookie
+      until you choose "Allow". Everywhere else, analytics cookies are on. To block them there, block cookies for comarket.si
+      in your browser settings.
     </p>
+    {
+      ask && (
+        <div class="short" id="cookie-choice">
+          <p data-status>
+            {state === 'on' && 'Analytics are on for this browser.'}
+            {state === 'off' && 'Analytics are off for this browser.'}
+            {state === 'unset' && 'You haven’t chosen yet, so analytics are off.'}
+          </p>
+          <div class="choice-row">
+            <button type="button" class="btn ghost" data-set="0">Turn analytics off</button>
+            <button type="button" class="btn" data-set="1">Allow analytics</button>
+          </div>
+        </div>
+      )
+    }
 
-    <h2>How we decide whether to ask</h2>
-    <p>
-      Our host, Cloudflare, tells our server which country a request comes from. In the EU, the EEA, the UK and Switzerland, and
-      whenever the country is unknown, we set no analytics cookie until you choose "Allow". Everywhere else analytics are on
-      by default, and you can turn them off above. If your browser sends a Global Privacy Control signal, we treat it as
-      turning analytics off.
-    </p>
-
-    <h2>Cookies we set</h2>
+    <h2>Our cookies</h2>
     <div class="tbl">
       <table>
         <thead>
-          <tr><th>Name</th><th>What it does</th><th>Type</th><th>Set when</th><th>Lasts</th></tr>
+          <tr><th>Name</th><th>What it does</th><th>Set when</th><th>Lasts</th></tr>
         </thead>
         <tbody>
           <tr>
             <td><code>cm_consent</code></td>
-            <td>Remembers whether you allowed analytics, so we don't ask again</td>
-            <td>Strictly necessary</td>
-            <td>You make a choice</td>
+            <td>Remembers your analytics choice</td>
+            <td>You choose</td>
             <td>180 days</td>
           </tr>
           <tr>
             <td><code>cm_vid</code></td>
-            <td>A random ID that links your visits, the page versions you saw and simple events, so we can tell which pages work. It contains no name, email or IP address, and scripts on the page can't read it</td>
-            <td>Analytics</td>
-            <td>Analytics are allowed</td>
+            <td>A random visitor ID that links page versions and simple events, so we can tell which pages work. No name, email or IP address</td>
+            <td>Analytics are on</td>
             <td>1 year</td>
           </tr>
           <tr>
             <td><code>cm_x_pricing_v1</code></td>
-            <td>Keeps the version of the brands page you were assigned in a pricing test, so you see the same one each visit and the rates you saw are recorded if you join</td>
-            <td>Analytics (testing)</td>
-            <td>You open the brands page with analytics allowed</td>
+            <td>Keeps the version of the brands page you were shown in a pricing test, so it stays the same and the rates you saw are recorded if you join</td>
+            <td>You open the brands page with analytics on</td>
             <td>180 days</td>
           </tr>
           <tr>
             <td><code>cm_side</code></td>
-            <td>Remembers whether you last chose the brands or the creators page, so the home page takes you back there</td>
-            <td>Preference</td>
-            <td>You open the brands or creators page with analytics allowed</td>
+            <td>Remembers whether you chose the brands or creators page, so the home page takes you back there</td>
+            <td>You open either page with analytics on</td>
             <td>180 days</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p>All four are first-party cookies, sent only to comarket.si over encrypted connections.</p>
-
-    <h2>Cloudflare security</h2>
     <p>
-      Cloudflare protects the site from attacks and bots. To do that it may set its own strictly necessary cookies, such as
-      <code>__cf_bm</code> (about 30 minutes), <code>cf_clearance</code> (after a security check, for the period the site's
-      security settings allow) and <code>_cfuvid</code> (until you close the browser). When bot checks are switched on, the
-      waitlist form loads Cloudflare Turnstile from challenges.cloudflare.com, which looks at signals from your browser and
-      device to tell people from bots. Cloudflare says it doesn't use this information to track you across sites or for
-      advertising; see Cloudflare's Turnstile privacy addendum and cookie policy.
+      Turning analytics off deletes <code>cm_vid</code> and <code>cm_side</code> and stops new events. Events already recorded
+      stay until their 13 months are up; email [[CONTACT EMAIL]] to have them deleted sooner.
     </p>
 
-    <h2>Other browser storage</h2>
+    <h2>Cloudflare</h2>
     <p>
-      None. The site keeps nothing in your browser's local or session storage. Saving your pass image creates the file in
-      your browser; nothing is stored.
-    </p>
-
-    <h2>What we don't use</h2>
-    <p>
-      No advertising or retargeting cookies, no third-party analytics, no social media pixels, and no fonts or scripts from
-      ad networks. Our fonts are served from our own site.
-    </p>
-
-    <h2>Changes</h2>
-    <p>
-      If we add a cookie, we will list it here first, with a new date. If it needs consent, we will ask for it before setting
-      it. Questions: <a href="mailto:[[PRIVACY EMAIL]]">[[PRIVACY EMAIL]]</a>. More about how we use the data is in our
-      <a href="/privacy">privacy policy</a>.
+      Our host, Cloudflare, may set short-lived security cookies (such as <code>__cf_bm</code> and <code>cf_clearance</code>) to
+      stop attacks, and its Turnstile bot check on our signup form reads browser signals to tell people from bots. These are
+      needed for the site to work and aren't used for advertising.
     </p>
   </Doc>
   <Footer />
@@ -154,7 +127,6 @@ const state = chosen === '1' ? 'on' : chosen === '0' ? 'off' : ask ? 'unset' : '
           });
           if (!res.ok) throw new Error(String(res.status));
           status.textContent = TEXT[value];
-          box.dataset.state = value === '1' ? 'on' : 'off';
           // the banner, if it's open, has nothing left to ask
           const banner = document.getElementById('consent');
           if (banner) banner.hidden = true;

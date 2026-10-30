@@ -5,12 +5,12 @@
 import { creator as getCreator, PAIRS } from '../../lib/examples';
 import Alma from './posts/Alma.astro';
 import Devon from './posts/Devon.astro';
-import Jonah from './posts/Jonah.astro';
 import Lena from './posts/Lena.astro';
 import Mika from './posts/Mika.astro';
 import Imani from './posts/Imani.astro';
+import June from './posts/June.astro';
+import Odessa from './posts/Odessa.astro';
 import Sarah from './posts/Sarah.astro';
-import Theo from './posts/Theo.astro';
 
 interface Props {
   pair: number;
@@ -25,10 +25,10 @@ const POSTS = {
   alma: { C: Alma, w: 360, h: 724 },
   imani: { C: Imani, w: 360, h: 752 },
   devon: { C: Devon, w: 400, h: 452 },
-  jonah: { C: Jonah, w: 400, h: 552 },
+  june: { C: June, w: 400, h: 552 },
   sarah: { C: Sarah, w: 400, h: 640 },
   mika: { C: Mika, w: 400, h: 700 },
-  theo: { C: Theo, w: 400, h: 540 },
+  odessa: { C: Odessa, w: 400, h: 540 },
 } as const;
 const post = POSTS[c.id as keyof typeof POSTS];
 const vertical = post.w === 360;

@@ -101,8 +101,9 @@ const STEPS = [
     background: url(/assets/posts/avatars/imani.jpg) center / cover;
     flex: none;
   }
+  /* 180px (and the routine row's 10px) leave Imani's note a clear 24px above the price line */
   .photo {
-    height: 190px;
+    height: 180px;
     background: url(/assets/stores/kindred.jpg) 50% 50% / cover;
   }
   h1 {
@@ -123,7 +124,7 @@ const STEPS = [
   /* the routine: three steps, one word each */
   .steps {
     list-style: none;
-    margin: 14px 22px 0;
+    margin: 10px 22px 0;
     padding: 12px 0 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);

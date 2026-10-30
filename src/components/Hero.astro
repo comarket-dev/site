@@ -366,23 +366,54 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     .hero.band .show {
       width: min(400px, calc(2 * (100cqw - var(--gr) - var(--cx))));
     }
-    /* the browser window (Window.astro) is wider than the phone was: right-aligned to the gutter, as wide as the room
-       right of the people allows but never under 440px, its top level with her hair */
+    /* The browser window (Window.astro). The hero's frame is the centred wrap, widened on big screens (--max), so the
+       copy and the window share its edges at any size. The window stands at the frame's right edge, its top at
+       the band's foot (93% of it, --wt), under the people's faces so it can reach in over shoulders and counter without
+       touching a face, and straddles the band's foot, half on the photo, half on the paper. Its width is 46% of the
+       frame, but never so wide that its landscape body (about 0.56 of its width, tilt included) leaves the first
+       screen. The copy stops 56px short of it. */
+    .hero.band {
+      --W: min(100vw, var(--max));
+      --edge: calc((100vw - var(--W)) / 2);
+      --wt: calc(var(--hb) * 0.93);
+      --ww: clamp(420px, min(calc(var(--W) * 0.42 - var(--gr)), calc((100svh - var(--wt) - 48px) / 0.56)), 1120px);
+    }
     .hero.band > :global(.bandscene.fit .frame > .at) {
-      --ww: clamp(440px, calc((1 - var(--clear)) * 100cqw - 28px - var(--gr)), 600px);
-      left: calc(100cqw - var(--gr) - var(--ww));
+      top: var(--wt);
+      left: calc(100cqw - var(--edge) - var(--gr) - var(--ww));
       transform: none;
     }
     .hero.band .show {
       width: var(--ww);
     }
-    .hero.band .show :global(.win) {
-      --ww: 100%;
-    }
-    /* the copy stops short of the window */
     .band .copy,
     .band .claim {
-      max-width: min(720px, calc(100vw - var(--gr) - clamp(440px, calc((1 - var(--clear)) * 100vw - 28px - var(--gr)), 600px) - 32px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+      max-width: min(760px, calc(var(--W) - var(--gl) - var(--gr) - var(--ww) - 72px));
+    }
+  }
+  /* big screens: a wider frame, so the hero doesn't sit in a narrow strip down the middle */
+  /* Big screens: the hero is drawn at 1440 and scaled as one piece by --k (the screen's width, or its height at 16:9
+     if that's smaller, over 1440, as a plain number): the frame, the copy (zoom) and the window grow together, so the
+     composition keeps its proportions from a laptop to an ultrawide. */
+  @media (min-width: 1600px) {
+    .hero.band {
+      --k: tan(atan2(min(100vw, 177.78svh), 1440px));
+      --max: calc(1440px * var(--k));
+      --ww: min(calc(549px * var(--k)), calc((100svh - var(--wt) - 48px) / 0.56));
+    }
+    .band .copy {
+      zoom: var(--k);
+    }
+    .band .copy,
+    .band .claim {
+      max-width: 707px;
+    }
+    .band .title {
+      font-size: 56px;
+      max-width: 17ch;
+    }
+    .band .sub {
+      font-size: 19.5px;
     }
   }
 
@@ -412,7 +443,6 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     }
     .band .copy {
       isolation: isolate;
-      max-width: min(920px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
     }
     .band .copy::before {
       content: '';
@@ -421,16 +451,6 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
       inset: -6% -14% 40% -18%;
       background: radial-gradient(closest-side, rgb(255 247 236 / 0.78), rgb(255 247 236 / 0.5) 55%, rgb(255 247 236 / 0));
       pointer-events: none;
-    }
-    .band .title {
-      font-size: min(3.3vw, 5.4svh);
-      max-width: 19ch;
-    }
-    .band .sub {
-      font-size: min(1.1vw, 1.8svh);
-    }
-    .band .claim {
-      max-width: min(700px, calc(var(--clear) * 100vw - 12px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
     }
   }
 
@@ -508,11 +528,12 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     }
     /* stacked: the window full width under the people, over the counter and their hands */
     .hero.band > :global(.bandscene .frame > .at) {
-      margin-left: var(--gl);
+      margin-left: calc(var(--gl) + 22px);
       transform: none;
     }
-    .band .show :global(.win) {
-      --ww: 100%;
+    /* the window's lower left corner reaches out past its top left (the turn), so it starts a little in */
+    .hero.band {
+      --ww: calc(100vw - var(--gl) - var(--gr) - 28px);
     }
     .band > :global(.bandscene)::before {
       content: '';

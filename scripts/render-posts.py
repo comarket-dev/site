@@ -4,8 +4,8 @@ Each post on the site is real HTML (src/components/examples/posts) around one pi
 thumbnail, a photo or a screenshot. That media is composed in design/posts/media/*.html from the generated source
 shots, then degraded the way its platform degrades it (a re-encoded video is soft and blocky, a thumbnail is a
 compressed JPEG). The people are real photos in design/content/real, sources and licenses in
-design/content/real-creators.json (iStock, not Pexels: Pexels forbids implying endorsement). Avatars are square crops of one photo per creator; each storefront gets a crop of
-another (STORES).
+design/content/real-creators.json: all eight are Disabled And Here photos (CC BY 4.0, model released, credited under
+the carousel). Avatars are square crops of one photo per creator; each storefront gets a crop of another (SHOTS).
 
     python3 scripts/render-posts.py           everything
     python3 scripts/render-posts.py avatars   only the face crops and storefront photos
@@ -35,22 +35,22 @@ MEDIA = {
     "alma-tiktok": (360, 640, 3, "video", 720),
     "imani-slide": (360, 450, 3, "photo", 720),
     "devon-thumb": (640, 360, 2, "thumb", 800),
-    "jonah-thumb": (640, 360, 2, "thumb", 800),
+    "june-thumb": (640, 360, 2, "thumb", 800),
     "sarah-chart": (600, 300, 2, "shot", 800),
     "mika-shot": (600, 336, 2, "shot", 800),
-    "theo-shot": (600, 338, 2, "shot", 800),
+    "odessa-shot": (600, 338, 2, "shot", 800),
 }
 
 # avatar crops, one photo per creator in design/content/real: photo, centre x, centre y, side, all in its pixels
 AVATARS = {
-    "sarah": ("sarah-6764188", 1046, 838, 1201),
-    "devon": ("devon-8370788", 1117, 1165, 911),
-    "lena": ("lena-6347880", 984, 1516, 1077),
-    "mika": ("mika-9553911", 900, 960, 1300),
-    "imani": ("imani-5938601", 2250, 760, 1500),
-    "theo": ("theo-4339952", 1155, 698, 920),
-    "jonah": ("jonah-18935832", 1007, 1580, 1900),
-    "alma": ("alma-6634928", 800, 1000, 1500),
+    "sarah": ("sarah-dah-kitchendishes", 1230, 2170, 760),
+    "devon": ("devon-dah-chattingoutdoors", 1755, 705, 750),
+    "lena": ("lena-dah-coffeechat", 1255, 400, 460),
+    "mika": ("mika-dah-popsocketparkplay", 1140, 1110, 900),
+    "imani": ("imani-dah-hearingaidside", 1250, 1650, 1500),
+    "odessa": ("odessa-dah-onlinetarotreading", 1290, 560, 800),
+    "june": ("june-dah-cafestand", 1320, 1160, 700),
+    "alma": ("alma-dah-coupleshot", 1400, 540, 700),
 }
 
 # the photo inside each storefront (public/assets/stores/<brand>.jpg): photo, crop box (x0, y0, x1, y1) in its
@@ -60,15 +60,16 @@ STORES = {}
 # the creator's photo beside their note on the storefront (public/assets/stores/creators/<creator>.jpg), 4:5: photo,
 # crop box (x0, y0, x1, y1) in its pixels. A different shot from the avatar where the shoot has one.
 SHOTS = {
-    "sarah": ("sarah-6763899", (200, 0, 1802, 2003)),
-    "devon": ("devon-8370427", (550, 0, 2150, 2000)),
-    "lena": ("lena-6347901", (0, 0, 2000, 2500)),
-    "mika": ("mika-9553911", (0, 250, 2000, 2750)),
-    "imani": ("imani-5938601", (1650, 150, 3000, 1837)),
-    "theo": ("theo-4339953", (1400, 0, 3000, 2000)),
-    "jonah": ("jonah-18935833", (1270, 0, 2870, 2000)),
-    "alma": ("alma-6634928", (0, 150, 2000, 2650)),
+    "sarah": ("sarah-dah-takingnotes", (800, 60, 2300, 1935)),
+    "devon": ("devon-dah-midsigningoutdoors", (1150, 300, 2350, 1800)),
+    "lena": ("lena-dah-arthritistyping", (100, 150, 1667, 2109)),
+    "mika": ("mika-dah-popsocketparkplay", (150, 450, 1850, 2575)),
+    "imani": ("imani-dah-hearingaidcloseup", (200, 300, 2667, 3384)),
+    "odessa": ("odessa-dah-inpersonreading", (700, 400, 1900, 1900)),
+    "june": ("june-dah-cafepainting", (380, 350, 1700, 2000)),
+    "alma": ("alma-dah-coffeedatechairinview", (312, 430, 792, 1030)),
 }
+
 
 
 def degrade(src: Path, kind: str) -> Image.Image:

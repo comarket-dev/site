@@ -1,4 +1,5 @@
 {
+  "_retired": "Retired 2026-10-30: the site no longer uses generated people (owner rule: no AI people). The 8 example creators are real, model-released Disabled And Here photos; sources in design/content/real-creators.json, personas in src/lib/examples.ts. Kept for history only: these entries describe the old generated personas (theo is now odessa, jonah is now june, ama is now alma, priya is now imani, and every creator's look has changed).",
   "_note": "Fictional creators for the site's labeled examples. One reference portrait each, generated locally with Z-Image Turbo (Apache-2.0) via mflux; every later image and clip of a creator is made from their portrait so they stay the same person.",
   "style": "Candid iPhone photo, shot on the main camera, natural light, slight grain, true-to-life colors, realistic skin texture with pores and fine lines, no retouching, no studio lighting, no text, no watermark. It looks like an unedited photo a friend took on their phone, not a stock photo: slightly off-center framing, everyday clutter, uneven light, faint noise in the shadows.",
   "creators": [

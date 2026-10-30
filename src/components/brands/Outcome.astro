@@ -12,10 +12,11 @@ const RATE = 20;
 const FLAT = 400;
 const VIEWS = 18000;
 const CLICKS = 540;
-/* Example month, labelled as one. The same post and the same clicks: sent to the brand's homepage they make 11 sales;
-   sent to a storefront built for the creator's audience, 38. Sales per day across the 30 days, a spike after the
-   post and a long tail (the post keeps getting found). */
-const PER_DAY = [4, 5, 4, 3, 2, 2, 2, 1, 2, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0];
+/* Example month, labelled as one. The same post and the same clicks: sent to the brand's homepage they make 11 sales
+   for a $400 flat fee; sent to a storefront built for the creator's audience, 23, billed per sale. The bills come out
+   about the same, but the storefront brings twice the sales and revenue at half the cost per sale. Sales per day
+   across the 30 days: a spike after the post and a long tail (the post keeps getting found). */
+const PER_DAY = [3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0];
 const SALES = PER_DAY.reduce((a, b) => a + b, 0);
 const OLD_SALES = 11;
 const MAX_DAY = Math.max(...PER_DAY);
@@ -23,11 +24,11 @@ const MAX_DAY = Math.max(...PER_DAY);
 let k = 0;
 const PIPS = PER_DAY.flatMap((n, d) => Array.from({ length: n }, (_, j) => ({ d, j, k: k++ })));
 const fee = (PRICE * (RATE + arm.first)) / 100;
-const usd = (v: number) => `$${v.toFixed(2)}`;
+const usd = (v: number) => `$${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 ---
 
 <section class="outcome" id="outcome" aria-labelledby="out-h">
-  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-old-sales={OLD_SALES} data-views={VIEWS} data-clicks={CLICKS}>
+  <div class="track" data-outcome data-fee={fee} data-flat={FLAT} data-sales={SALES} data-old-sales={OLD_SALES} data-price={PRICE} data-views={VIEWS} data-clicks={CLICKS}>
     <div class="scene">
       <div class="wrap">
         <h2 class="display-l" id="out-h">Pay for sales, not posts.</h2>
@@ -47,6 +48,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
               <div class="line"><i class="pay lump" style="--x:0"><span class="num">${FLAT}</span></i></div>
               <div class="days num"><span>Day 1</span><span>Day 30</span></div>
             </div>
+            <p class="per"><span>Revenue</span><b class="num" data-old-rev>{usd(PRICE * OLD_SALES)}</b></p>
             <p class="per"><span>Cost per sale</span><b class="num" data-old-per>{usd(FLAT / OLD_SALES)}</b></p>
           </article>
 
@@ -67,6 +69,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
               </div>
               <div class="days num"><span>Day 1</span><span>Day 30</span></div>
             </div>
+            <p class="per"><span>Revenue</span><b class="num" data-rev>{usd(PRICE * SALES)}</b></p>
             <p class="per"><span>Cost per sale</span><b class="num">{usd(fee)}</b></p>
           </article>
         </div>
@@ -74,7 +77,7 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
         <div class="end">
           <p class="verdict">If the post flops, one costs you ${FLAT}. The other costs <mark class="hl">nothing.</mark></p>
         </div>
-        <p class="ex" id="out-ex">Example month: one post, 18,000 views, a ${PRICE}/mo product, a {RATE}% creator rate. The storefront converts the same clicks better than a homepage.</p>
+        <p class="ex" id="out-ex">Example month: one post, 18,000 views, a ${PRICE}/mo product, a {RATE}% creator rate. Same clicks: a storefront built for the creator’s audience turns more of them into sales than a homepage.</p>
       </div>
     </div>
   </div>
@@ -268,6 +271,11 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     font-size: 22px;
     font-weight: 400;
   }
+  .per + .per {
+    padding-top: 0;
+    margin-top: -8px;
+    border-top: 0;
+  }
   .end {
     margin-top: clamp(28px, 4vh, 44px);
     display: flex;
@@ -398,6 +406,9 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
     const bill = el.querySelector<HTMLElement>('[data-bill]')!;
     const when = el.querySelector<HTMLElement>('[data-when]')!;
     const oldPer = el.querySelector<HTMLElement>('[data-old-per]')!;
+    const PRICE = Number(el.dataset.price);
+    const rev = el.querySelector<HTMLElement>('[data-rev]')!;
+    const oldRev = el.querySelector<HTMLElement>('[data-old-rev]')!;
     const cols = el.querySelector<HTMLElement>('.cols')!;
     const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
     const ramp = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
@@ -420,31 +431,53 @@ const usd = (v: number) => `$${v.toFixed(2)}`;
       bill.textContent = `$${(fee * n).toFixed(2)}`;
       when.textContent = n ? 'paid only as each sale lands' : 'nothing before a sale';
       oldPer.textContent = o ? `$${(flat / o).toFixed(2)}` : 'no sales yet';
+      const money = (v: number) => `$${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      rev.textContent = money(PRICE * n);
+      oldRev.textContent = money(PRICE * o);
     };
 
-    /* Progress from the scroll: pinned, it's how far the track has scrolled past the pin; unpinned, how far the
-       cards have travelled up through the screen (they finish while still fully in view). */
-    const pinned = () => getComputedStyle(el.querySelector('.scene')!).position === 'sticky';
+    /* Progress from the scroll. The month starts as the cards come up the screen and is done while they're still in
+       full view. Pinned (desktop), the scene sticks where both cards fit on screen (its top may sit above the screen's
+       top), and the month ends two thirds of the way through the pin, so the result holds before the page moves on.
+       Unpinned (phones, short screens), it ends as the second card is fully in view. */
+    const scene = el.querySelector<HTMLElement>('.scene')!;
+    const pinned = () => getComputedStyle(scene).position === 'sticky';
+    let stick = 64;
+    const place = () => {
+      if (!pinned()) return;
+      const colsBottom = cols.offsetTop + cols.offsetHeight;
+      stick = Math.min(64, innerHeight - colsBottom - 24);
+      scene.style.top = `${stick}px`;
+    };
     const progress = () => {
+      const top = el.getBoundingClientRect().top + scrollY;
+      const start = top + cols.offsetTop - innerHeight * 0.85;
       if (pinned()) {
-        const r = el.getBoundingClientRect();
-        return ramp(-r.top, 0, Math.max(1, r.height - innerHeight + 64));
+        const travel = el.offsetHeight - scene.offsetHeight;
+        const end = top - stick + travel * 0.66;
+        return ramp(scrollY, start, end);
       }
       const r = cols.getBoundingClientRect();
-      return ramp(innerHeight - r.top, r.height * 0.25, r.height * 0.25 + innerHeight * 0.6);
+      const end = scrollY + r.bottom - (innerHeight - 96);
+      return ramp(scrollY, start, Math.max(start + 1, end));
     };
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => draw(reduceMotion() ? 1 : progress()));
     };
+    const onResize = () => {
+      place();
+      onScroll();
+    };
+    place();
     onScroll();
     addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', onScroll);
+    addEventListener('resize', onResize);
     return [
       () => {
         removeEventListener('scroll', onScroll);
-        removeEventListener('resize', onScroll);
+        removeEventListener('resize', onResize);
         cancelAnimationFrame(raf);
       },
     ];
