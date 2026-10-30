@@ -224,8 +224,12 @@ const copy = isBrand
     }
   }
   @media (max-width: 700px) {
+    /* below the slides the spill stops short of the arrows: Safari paints a masked box over the next element even
+       when that element is stacked above it, which cut the top off the arrow circles */
     .deck {
-      height: calc(440px + var(--spill) * 2);
+      --spill-b: 22px;
+      height: calc(440px + var(--spill) + var(--spill-b));
+      margin-bottom: calc(var(--spill-b) * -1);
       -webkit-mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
       mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
     }

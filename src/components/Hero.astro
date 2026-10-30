@@ -1,7 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import PhoneSlot from './PhoneSlot.astro';
-import Steps from './Steps.astro';
+import Window from './Window.astro';
 import Person from './Person.astro';
 import Scene from './Scene.astro';
 import { hlClasses } from '../lib/hl';
@@ -27,7 +26,7 @@ interface Props {
       phone on its left edge. */
   look?: 'split' | 'band';
 }
-const { side, title, mark, sub, placeholder, prefix, button, last, label, join, photo, look = 'band' } = Astro.props;
+const { side, title, mark, sub, placeholder, prefix, button, label, join, photo, look = 'band' } = Astro.props;
 const at = title.lastIndexOf(mark);
 const [before, after] = at >= 0 ? [title.slice(0, at), title.slice(at + mark.length)] : [title, ''];
 const brand = side === 'brands';
@@ -42,8 +41,7 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     look === 'band' && (
       <Scene photo={photo} spot="phone" class="bandscene" eager fit>
         <div class="show" data-reveal style="--d:.1s">
-          <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
-          <Steps last={last} class="steps compact" />
+          <Window side={side} label={label} />
         </div>
       </Scene>
     )
@@ -101,8 +99,7 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     {
       look === 'split' && (
         <div class="show" data-reveal style="--d:.1s">
-          <PhoneSlot class="phone" poster={`/assets/stage/poster-${side}.webp`} label={label} />
-          <Steps last={last} class="steps compact" />
+          <Window side={side} label={label} />
         </div>
       )
     }
@@ -369,6 +366,24 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     .hero.band .show {
       width: min(400px, calc(2 * (100cqw - var(--gr) - var(--cx))));
     }
+    /* the browser window (Window.astro) is wider than the phone was: right-aligned to the gutter, as wide as the room
+       right of the people allows but never under 440px, its top level with her hair */
+    .hero.band > :global(.bandscene.fit .frame > .at) {
+      --ww: clamp(440px, calc((1 - var(--clear)) * 100cqw - 28px - var(--gr)), 600px);
+      left: calc(100cqw - var(--gr) - var(--ww));
+      transform: none;
+    }
+    .hero.band .show {
+      width: var(--ww);
+    }
+    .hero.band .show :global(.win) {
+      --ww: 100%;
+    }
+    /* the copy stops short of the window */
+    .band .copy,
+    .band .claim {
+      max-width: min(720px, calc(100vw - var(--gr) - clamp(440px, calc((1 - var(--clear)) * 100vw - 28px - var(--gr)), 600px) - 32px - (100vw - min(100vw, var(--max))) / 2 - var(--gl)));
+    }
   }
 
   /* The band keeps one share of the screen: it ends at --hb, (y1 - y0) of the photo's height, which follows the
@@ -489,6 +504,15 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     }
     .band .show {
       padding-bottom: clamp(40px, 7vh, 88px);
+      width: calc(100cqw - var(--gl) - var(--gr));
+    }
+    /* stacked: the window full width under the people, over the counter and their hands */
+    .hero.band > :global(.bandscene .frame > .at) {
+      margin-left: var(--gl);
+      transform: none;
+    }
+    .band .show :global(.win) {
+      --ww: 100%;
     }
     .band > :global(.bandscene)::before {
       content: '';
@@ -550,11 +574,11 @@ const clear = (person(photo).spots.phone as { clear?: number } | undefined)?.cle
     const input = form.querySelector<HTMLInputElement>('input')!;
     const btn = form.querySelector<HTMLButtonElement>('[data-claim-btn]')!;
     const out = form.querySelector<HTMLElement>('[data-result]')!;
-    const phone = document.querySelector<HTMLElement>('[data-hero] [data-stage-anchor]');
+    const phone = document.querySelector<HTMLElement>('[data-hero] [data-window]');
     const COPY = {
-      brand: 'That’s {name} on Sarah’s storefront. Hold your spot and we’ll build the real one.',
+      brand: 'That’s {name}’s creator sales. Hold your spot and we’ll build the real storefronts.',
       free: '{page} is free. Claim it before someone else does.',
-      unknown: 'That’s {page} on the phone. Claim it now.',
+      unknown: 'That’s what {page} would earn. Claim it now.',
       done: side === 'brands' ? 'You’re No. {no}. We’ll email you once, when your spot opens.' : '{page} is yours. You’re No. {no}.',
       pass: 'See my pass',
     };

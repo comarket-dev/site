@@ -1,0 +1,493 @@
+---
+/* The hero's product shot: a browser window with what each side would see, drawn in HTML (no 3D, so it's light and
+   steady on phones). Brands: their creator-sales dashboard. Creators: their earnings page. Example numbers, labelled.
+   No buyer is ever shown: no names, emails or cards, only "New customer" and an order number.
+   The hero's claim field re-dresses it (stage:brand / stage:creator): a visitor's name, logo and the palette read from
+   their logo (src/lib/palette.ts), which the waitlist's preview card picks up too (brand:palette). */
+interface Props {
+  side: 'brands' | 'creators';
+  label: string;
+}
+const { side, label } = Astro.props;
+const brand = side === 'brands';
+
+/* the first rows, newest first; the script adds more while the window is on screen */
+const rows = brand
+  ? [
+      { who: 'Sarah K.', via: 'Substack', what: 'New customer · Pro', amt: '$49.00', ago: '2m' },
+      { who: 'Devon A.', via: 'YouTube', what: 'New customer · Pro', amt: '$49.00', ago: '18m' },
+      { who: 'Lena O.', via: 'TikTok', what: 'Renewal · Pro', amt: '$49.00', ago: '41m' },
+      { who: 'Sarah K.', via: 'Substack', what: 'New customer · Team', amt: '$129.00', ago: '1h' },
+    ]
+  : [
+      { who: 'Fernwood', via: 'Pro plan', what: 'New customer', amt: '+$9.80', ago: '2m' },
+      { who: 'Tallyhawk', via: 'Annual', what: 'New customer', amt: '+$28.80', ago: '33m' },
+      { who: 'Fernwood', via: 'Pro plan', what: 'Renewal', amt: '+$9.80', ago: '1h' },
+      { who: 'Quietly', via: 'Lifetime', what: 'New customer', amt: '+$14.40', ago: '3h' },
+    ];
+const avatar: Record<string, string> = { 'Sarah K.': 'sarah', 'Devon A.': 'devon', 'Lena O.': 'lena' };
+---
+
+<figure class:list={['win', side]} data-window={side} role="img" aria-label={label}>
+  <div class="chrome" aria-hidden="true">
+    <span class="dots"><i></i><i></i><i></i></span>
+    <span class="url num" data-win-url>{brand ? 'app.comarket.si/fernwood/sales' : 'comarket.si/sarah/earnings'}</span>
+    <span class="ex num">Example</span>
+  </div>
+  <div class="body" aria-hidden="true">
+    <header class="top">
+      {
+        brand ? (
+          <span class="mark" data-win-logo>
+            <span data-win-initial>F</span>
+          </span>
+        ) : (
+          <span class="mark face" data-win-face style="background-image:url(/assets/posts/avatars/sarah.jpg)" />
+        )
+      }
+      <span class="who">
+        <b data-win-name>{brand ? 'Fernwood' : 'Sarah K.'}</b>
+        <span>{brand ? 'Creator sales · this month' : 'Your earnings · this month'}</span>
+      </span>
+    </header>
+
+    <div class="kpis num">
+      {
+        brand ? (
+          <>
+            <div class="kpi hot"><span>New customers</span><b data-win-k0>36</b></div>
+            <div class="kpi"><span>Revenue</span><b data-win-k1>$1,862</b></div>
+            <div class="kpi"><span>Cost per sale</span><b>$17.15</b></div>
+          </>
+        ) : (
+          <>
+            <div class="kpi hot"><span>Earned</span><b data-win-k0>$372.40</b></div>
+            <div class="kpi"><span>Sales</span><b data-win-k1>31</b></div>
+            <div class="kpi"><span>Next payout</span><b>Nov 30</b></div>
+          </>
+        )
+      }
+    </div>
+
+    <div class="feed">
+      <p class="feed-h">{brand ? 'Sales from creators' : 'Your sales'}</p>
+      <ol class="rows" data-win-rows>
+        {
+          rows.map((r) => (
+            <li class="row">
+              {brand ? (
+                <span class="ava" style={avatar[r.who] ? `background-image:url(/assets/posts/avatars/${avatar[r.who]}.jpg)` : undefined} />
+              ) : (
+                <span class="ava brandmark">{r.who.charAt(0)}</span>
+              )}
+              <span class="txt">
+                <b>{brand ? `${r.who}’s storefront` : r.who}</b>
+                <span>
+                  {r.what} · {r.via}
+                </span>
+              </span>
+              <span class="amt">
+                <b>{r.amt}</b>
+                <span>{r.ago}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</figure>
+
+<style>
+  /* the window: our own drawn chrome, the page under it in the brand's palette when there is one */
+  .win {
+    --p: #1e6b47;
+    --p-on: #ffffff;
+    --paper-w: #fbfaf7;
+    --ink-w: #17141f;
+    --muted-w: #6b6577;
+    --line-w: #ece8e1;
+    width: var(--ww, 560px);
+    margin: 0;
+    border-radius: 16px;
+    background: var(--paper-w);
+    color: var(--ink-w);
+    border: 1px solid rgb(30 14 63 / 0.14);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      0 50px 90px -40px rgb(30 14 63 / 0.55),
+      0 18px 36px -24px rgb(30 14 63 / 0.4);
+    overflow: hidden;
+    font-family: var(--sans);
+    text-align: left;
+    transition:
+      --p 0.6s var(--ease),
+      background-color 0.6s var(--ease);
+  }
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    padding: 0 14px;
+    background: #f1eee8;
+    border-bottom: 1px solid var(--line-w);
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d9d3ca;
+  }
+  .url {
+    flex: 1;
+    min-width: 0;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 7px;
+    background: #fff;
+    font-size: 11.5px;
+    color: var(--muted-w);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .ex {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-w);
+  }
+  .body {
+    display: grid;
+    gap: 18px;
+    padding: 20px 22px 22px;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mark {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--p) center / 70% no-repeat;
+    color: var(--p-on);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .mark.has-logo {
+    background-color: #fff;
+    border: 1px solid var(--line-w);
+  }
+  .mark.has-logo span {
+    display: none;
+  }
+  .mark.face {
+    border-radius: 50%;
+    background-size: cover;
+  }
+  .mark.face.initial {
+    background: var(--p);
+    color: var(--p-on);
+  }
+  .who {
+    display: grid;
+    gap: 1px;
+  }
+  .who b {
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+  .who span {
+    font-size: 12.5px;
+    color: var(--muted-w);
+  }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .kpi {
+    display: grid;
+    gap: 6px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid var(--line-w);
+  }
+  .kpi span {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    color: var(--muted-w);
+  }
+  .kpi b {
+    font-size: clamp(18px, 1.7vw, 24px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  /* the number that matters, in the brand's own colour */
+  .kpi.hot {
+    background: var(--p);
+    border-color: var(--p);
+  }
+  .kpi.hot span,
+  .kpi.hot b {
+    color: var(--p-on);
+  }
+  .kpi.hot span {
+    opacity: 0.82;
+  }
+  .feed {
+    display: grid;
+    gap: 8px;
+  }
+  .feed-h {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted-w);
+  }
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    /* four rows show; a new one pushes the last out */
+    max-height: calc(4 * 50px + 3 * 6px);
+    overflow: hidden;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    height: 50px;
+    padding: 0 12px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid var(--line-w);
+  }
+  .row.new {
+    animation: row-in 0.55s var(--ease) both;
+  }
+  @keyframes row-in {
+    from {
+      opacity: 0;
+      transform: translateY(-14px);
+    }
+  }
+  .ava {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--line-w) center / cover;
+  }
+  .ava.brandmark {
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--ink-w);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .txt {
+    display: grid;
+    min-width: 0;
+  }
+  .txt b {
+    font-size: 13.5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .txt span,
+  .amt span {
+    font-size: 11.5px;
+    color: var(--muted-w);
+    white-space: nowrap;
+  }
+  .amt {
+    display: grid;
+    justify-items: end;
+  }
+  .amt b {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    font-weight: 400;
+    padding: 1px 6px;
+    margin-right: -6px;
+    border-radius: 4px;
+  }
+  /* the sale landing: the one place yellow goes */
+  .row.new .amt b {
+    animation: sale 1.6s var(--ease) both;
+  }
+  @keyframes sale {
+    0%,
+    40% {
+      background: var(--yellow);
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  @media (max-width: 520px) {
+    .body {
+      gap: 14px;
+      padding: 16px;
+    }
+    .kpi {
+      padding: 10px;
+    }
+    .kpi b {
+      font-size: 17px;
+    }
+    .kpi span {
+      font-size: 10.5px;
+    }
+    .ex {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .row.new,
+    .row.new .amt b {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { onPage, reduceMotion } from '../scripts/ui';
+  import { paletteFrom } from '../lib/palette';
+
+  type Row = { who: string; via: string; what: string; amt: string; ava?: string };
+
+  onPage(() => {
+    const win = document.querySelector<HTMLElement>('[data-window]');
+    if (!win) return [];
+    const brand = win.dataset.window === 'brands';
+    const list = win.querySelector<HTMLElement>('[data-win-rows]')!;
+    const k0 = win.querySelector<HTMLElement>('[data-win-k0]')!;
+    const k1 = win.querySelector<HTMLElement>('[data-win-k1]')!;
+    const cleanups: Array<() => void> = [];
+
+    /* more example sales, round and round; counts climb as they land */
+    const NEXT: Row[] = brand
+      ? [
+          { who: 'Mika R.', via: 'Reddit', what: 'New customer · Pro', amt: '$49.00', ava: 'mika' },
+          { who: 'Devon A.', via: 'YouTube', what: 'New customer · Team', amt: '$129.00', ava: 'devon' },
+          { who: 'Sarah K.', via: 'Substack', what: 'New customer · Pro', amt: '$49.00', ava: 'sarah' },
+          { who: 'Lena O.', via: 'TikTok', what: 'New customer · Pro', amt: '$49.00', ava: 'lena' },
+        ]
+      : [
+          { who: 'Fernwood', via: 'Pro plan', what: 'New customer', amt: '+$9.80' },
+          { who: 'Pagewell', via: 'Starter', what: 'New customer', amt: '+$5.80' },
+          { who: 'Fernwood', via: 'Team plan', what: 'New customer', amt: '+$25.80' },
+          { who: 'Tallyhawk', via: 'Monthly', what: 'Renewal', amt: '+$2.40' },
+        ];
+    let n0 = brand ? 36 : 372.4;
+    let n1 = brand ? 1862 : 31;
+    let i = 0;
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+    const add = () => {
+      const r = NEXT[i++ % NEXT.length];
+      const li = document.createElement('li');
+      li.className = 'row new';
+      const amount = parseFloat(r.amt.replace(/[^0-9.]/g, ''));
+      li.innerHTML = brand
+        ? `<span class="ava" style="background-image:url(/assets/posts/avatars/${r.ava}.jpg)"></span><span class="txt"><b>${esc(r.who)}’s storefront</b><span>${esc(r.what)} · ${esc(r.via)}</span></span><span class="amt"><b>${esc(r.amt)}</b><span>now</span></span>`
+        : `<span class="ava brandmark">${esc(r.who.charAt(0))}</span><span class="txt"><b>${esc(r.who)}</b><span>${esc(r.what)} · ${esc(r.via)}</span></span><span class="amt"><b>${esc(r.amt)}</b><span>now</span></span>`;
+      // Astro scopes the component's styles by attribute; new rows need it too
+      const scope = [...list.attributes].find((a) => a.name.startsWith('data-astro-cid'));
+      if (scope) li.querySelectorAll('*').forEach((e) => e.setAttribute(scope.name, ''));
+      if (scope) li.setAttribute(scope.name, '');
+      list.prepend(li);
+      while (list.children.length > 5) list.lastElementChild?.remove();
+      list.querySelectorAll('.row:not(:first-child) .amt span').forEach((s) => {
+        if (s.textContent === 'now') s.textContent = '1m';
+      });
+      if (brand) {
+        if (r.what.startsWith('New')) n0 += 1;
+        n1 += amount;
+        k0.textContent = String(n0);
+        k1.textContent = `$${Math.round(n1).toLocaleString('en-US')}`;
+      } else {
+        n0 += amount;
+        n1 += 1;
+        k0.textContent = `$${n0.toFixed(2)}`;
+        k1.textContent = String(n1);
+      }
+    };
+
+    /* a sale every few seconds, only while the window is on screen */
+    let seen = false;
+    const io = new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.4 });
+    io.observe(win);
+    const timer = setInterval(() => {
+      if (seen && !reduceMotion() && !document.hidden) add();
+    }, 3400);
+    cleanups.push(() => {
+      io.disconnect();
+      clearInterval(timer);
+    });
+
+    /* the claim field: a visitor's own brand or handle */
+    const url = win.querySelector<HTMLElement>('[data-win-url]')!;
+    const name = win.querySelector<HTMLElement>('[data-win-name]')!;
+    const onBrand = (e: Event) => {
+      const d = (e as CustomEvent<{ name: string; host: string; color: string | null; icon: string | null }>).detail;
+      name.textContent = d.name;
+      const slug = d.name.toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 24) || 'yourbrand';
+      url.textContent = `app.comarket.si/${slug}/sales`;
+      const mark = win.querySelector<HTMLElement>('[data-win-logo]');
+      const initial = win.querySelector<HTMLElement>('[data-win-initial]');
+      if (initial) initial.textContent = d.name.charAt(0).toUpperCase();
+      if (d.color) win.style.setProperty('--p', d.color);
+      if (mark && d.icon) {
+        const img = new Image();
+        img.onload = () => {
+          mark.style.backgroundImage = `url("${d.icon}")`;
+          mark.classList.add('has-logo');
+          const pal = paletteFrom(img, d.color);
+          if (!pal) return;
+          win.style.setProperty('--p', pal.primary);
+          win.style.setProperty('--p-on', pal.onPrimary);
+          win.style.setProperty('--paper-w', pal.paper);
+          dispatchEvent(new CustomEvent('brand:palette', { detail: pal }));
+        };
+        img.src = d.icon;
+      }
+    };
+    const onCreator = (e: Event) => {
+      const h = String((e as CustomEvent<string>).detail).replace(/^@/, '');
+      url.textContent = `comarket.si/${h}/earnings`;
+      name.textContent = `@${h}`;
+      const face = win.querySelector<HTMLElement>('[data-win-face]');
+      if (face) {
+        face.style.backgroundImage = 'none';
+        face.textContent = h.charAt(0).toUpperCase();
+        face.classList.add('initial');
+      }
+    };
+    addEventListener('stage:brand', onBrand);
+    addEventListener('stage:creator', onCreator);
+    cleanups.push(() => {
+      removeEventListener('stage:brand', onBrand);
+      removeEventListener('stage:creator', onCreator);
+    });
+    return cleanups;
+  });
+</script>

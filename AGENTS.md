@@ -51,8 +51,8 @@ These come from the owner's direct feedback. Breaking one gets the work sent bac
 
 ## Where things stand (2026-10-29)
 
-**This is the A-grade copy**, the `a-grade` branch of comarket-dev/site: a trial of the UX-law audit fixes and the
-people and warmth rounds, on its own database (`comarket_agrade`), dev server on :4322. `A-GRADE.md` has how to run and remove it, the copy deck and a log of every change.
+**This is the main line** (`main` on comarket-dev/site since 2026-10-30; the earlier main is tagged `pre-a-grade-main`). It began as the A-grade trial of the UX-law audit fixes and the
+people and warmth rounds; it uses its own database (`comarket_agrade`), dev server on :4321. `A-GRADE.md` has how to run and remove it, the copy deck and a log of every change.
 Owner decisions on it (2026-10-26): keep the original hero titles and subs on both pages; /brands runs Hero,
 examples, "Pay for sales, not posts", the agent replay, then the rest; no fit line under the claim fields; the fork
 keeps its "One co-branded storefront." highlight and has no price hooks on its cards; the fork trip, with
@@ -142,7 +142,7 @@ Google Chrome (`channel="chrome"`; the bundled Chromium isn't installed).
 | `scripts/qa/spotlight.py` | Every spotlight slide at a given width |
 
 In a cloud session (no Mac, no Chrome) the Python Playwright isn't installed; use Playwright for Node with its bundled
-Chromium (`NODE_PATH=$(npm root -g) node script.js`, `require('playwright')`), and run the dev server on :4322. The 3D
+Chromium (`NODE_PATH=$(npm root -g) node script.js`, `require('playwright')`), and run the dev server on :4321. The 3D
 stage draws there with `--use-gl=angle --use-angle=swiftshader`, slowly; give it a few seconds before a screenshot.
 Check the owner's likely screens too: MacBook Pro 14 (1512x982 full, 1512x860 with browser chrome), Surface Pro 10
 landscape (1440x960), 1920x1080 and an iPhone (390x844).

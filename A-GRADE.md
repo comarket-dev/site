@@ -4,7 +4,7 @@ A trial copy of the site, made 2026-10-24 to try fixing every finding from the U
 then used for the people-photo and "warm stock" rounds (2026-10-26 to 27). It lives on the `a-grade` branch of
 comarket-dev/site; the owner may delete the branch. Nothing on the main site depends on it.
 
-- Dev server: http://localhost:4322 (the original runs on :4321), on its own database (`comarket_agrade`). Without a
+- Since 2026-10-30 this is the main line: `main` on comarket-dev/site (the old main is tagged `pre-a-grade-main`). Dev server: http://localhost:4321, on its own database (`comarket_agrade`). Without a
   database the waitlist answers "isn't connected yet", which is expected.
 - The owner's standing rules in AGENTS.md still apply in full (no em dashes, outcome first, first-person CTAs,
   creators "claim", yellow marks the sale moment, no icon libraries, no clipped text, commit only when asked).
@@ -290,6 +290,12 @@ Next (not done yet):
 3. The hero phone's Fernwood storefront (src/scripts/stage/screens.ts) still draws Sarah's note with her round portrait; match it to the storefront's photo tile (assets/stores/creators/sarah.jpg).
 4. The stand-in photos are Pexels: buy the iStock shortlist (real-creators.json) and swap filenames in AVATARS, SHOTS and the media pages, recut the keys, re-render.
 5. Ask the owner whether the creators page card "Free, always. Brands pay Comarket. Your rate is never cut to pay us." should go too (only the waitlist line was asked for).
+
+### Round 11 (2026-10-30, owner feedback; this copy became main)
+- lead, git: the a-grade line is `main` now. Rollback point: tag `pre-a-grade-main` on GitHub (the main before this round). Dev server back on :4321.
+- lead, Showcase.astro: on phones the deck's lower spill stops 22px under the slides, so its masked box no longer paints over the top of the arrow circles.
+- lead, Find.astro: on phones the graph keeps a 48px strip for its legend, so the dots don't run under "Passed vetting".
+- lead, Window.astro (new), Hero.astro, brands.astro, creators.astro: the hero's 3D phone is replaced by a browser window drawn in HTML (no WebGL on these pages: `stage="none"`), so it's steady on phones. Brands see their creator-sales dashboard (new customers, revenue, cost per sale, sales by creator storefront); creators see their earnings (earned, sales, next payout, sales by brand). Example numbers, labelled. No buyer data: rows say "New customer" or "Renewal" with plan and amount, never a name, email or card. New sales slide in while it's on screen (yellow flash on the amount, the sale moment). The claim field re-dresses it: a brand's name, logo and logo palette (also sent to the waitlist card), or a creator's handle and initial. The 3D stage and fork trips still exist; the hero just no longer uses the phone.
 
 ## HANDOFF (2026-10-29): start here
 

@@ -359,6 +359,13 @@ const sources = [
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
+  /* phones: the legend gets its own strip under the drawing (the canvas fills the graph's padding box less it), so
+     the dots never run under it */
+  @media (max-width: 700px) {
+    .graph {
+      padding-bottom: 48px;
+    }
+  }
 </style>
 
 <script>
